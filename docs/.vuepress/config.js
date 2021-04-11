@@ -3,13 +3,13 @@ const base = process.env.BUILD_ENV ? process.env.BUILD_ENV : "";
 module.exports = {
   base,
   dest: "./dist",
-  title: "言叶之庭",
-  description: "前端常用知识、踩坑记录、软件推荐等",
+  title: "前端小札",
+  description: "前端常用知识、踩坑记录荐等",
   locales: {
     "/": {
       lang: "zh-CN",
-      title: "言叶之庭",
-      description: "前端常用知识、踩坑记录、软件推荐等",
+      title: "前端小札",
+      description: "前端常用知识、踩坑记录等",
     },
   },
   head: [
@@ -44,40 +44,31 @@ module.exports = {
         children: ["online-tools/", "online-tools/bookmark-scripts"],
       },
       {
-        title: "工具方法",
-        children: ["utils/regexp", "utils/function", "utils/library"],
+        title: "CSS",
+        children: ["css/", "css/skill", "css/scss"],
+      },
+      {
+        title: "Js",
+        path: "/js/",
       },
       {
         title: "Vue",
         path: "/vue/",
       },
       {
-        title: "CSS",
-        children: ["css/", "css/skill", "css/scss"],
-      },
-      {
-        title: "Node 相关",
-        children: ["node/npm", "node/toolkit"],
-      },
-      {
         title: "Git",
         path: "/git/",
       },
       {
-        title: "软件相关",
+        title: "uni-app",
         children: [
-          "software/cross-platform",
-          "software/mac",
-          "software/windows",
-          "software/browser",
-          "software/vscode",
-          "software/webstorm",
-          "software/zsh",
+          "uniapp/scroll",
+         
         ],
       },
       {
-        title: "疑难杂症",
-        children: ["issue/h5", "issue/pc"],
+        title: "utils",
+        children: ["utils/regexp"],
       },
     ],
     lastUpdated: "上次更新",
