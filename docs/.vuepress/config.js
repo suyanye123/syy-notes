@@ -26,8 +26,9 @@ module.exports = {
     ["meta", { name: "msapplication-TileImage", content: "/favicon.ico" }],
     ["meta", { name: "msapplication-TileColor", content: "#000000" }],
   ],
+  //http://www.ruanyifeng.com/blog/2019/09/getting-started-with-github-actions.html 
   themeConfig: {
-    repo: "maomao1996/mm-notes/",
+    repo: "yu-nan/syy-notes/",
     nav: [
       {
         text: "后台管理",
@@ -41,11 +42,11 @@ module.exports = {
     sidebar: [
       {
         title: "在线工具",
-        children: ["online-tools/", "online-tools/bookmark-scripts"],
+        children: [],
       },
       {
         title: "CSS",
-        children: ["css/", "css/skill", "css/scss"],
+        children: [''],
       },
       {
         title: "Js",

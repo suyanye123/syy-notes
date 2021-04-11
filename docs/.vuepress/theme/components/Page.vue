@@ -32,13 +32,13 @@ export default {
   },
   methods: {
     init(path) {
-      path = path.includes('/mm-notes') ? path : `/mm-notes${path}`
+      path = path.includes('/syy-notes') ? path : `/syy-notes${path}`
       const gitalk = new Gitalk({
         clientID: '40db65c1f8a836e97eea',
         clientSecret: 'eecd8e449183d4681af6240cbb5abb8db664c712',
-        repo: 'mm-notes',
-        owner: 'maomao1996',
-        admin: ['maomao1996'],
+        repo: 'syy-notes',
+        owner: 'yu-nan',
+        admin: ['yu-nan'],
         id: path,
         body: path,
         distractionFreeMode: false
