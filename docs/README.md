@@ -1,11 +1,12 @@
 ---
-home:true
-actionText:woyaoxuexi=>
-actionLInk:/js/
+home: true
+heroText: 前端小札
+tagline: 前端常用知识、踩坑记录等
+actionText: 立即查看 →
+actionLink: /introduce/
 features:
-- title:JavaScript
-  details:js details
-- title:Node
-  details:node details
-footer: MIT Licensed | power by VuePress
+  - title: JavaScript / Css 相关
+  - title: Vue / React 相关
+  - title: uni-app 相关
+footer: MIT Licensed | Copyright © 2020-present | 简素言也
 ---

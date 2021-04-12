@@ -9,46 +9,46 @@
 
     <slot name="bottom" />
 
-    <div id="gitalk-container"></div>
+    <!-- <div id="gitalk-container"></div> -->
   </main>
 </template>
 
 <script>
-import PageEdit from '@parent-theme/components/PageEdit.vue'
-import PageNav from '@parent-theme/components/PageNav.vue'
-import Gitalk from 'gitalk'
+import PageEdit from "@parent-theme/components/PageEdit.vue";
+import PageNav from "@parent-theme/components/PageNav.vue";
+// import Gitalk from "gitalk";
 
 export default {
   components: { PageEdit, PageNav },
-  props: ['sidebarItems'],
+  props: ["sidebarItems"],
   mounted() {
-    this.init(location.pathname)
+    this.init(location.pathname);
     this.$router.afterEach((to, from) => {
       if (to.path !== from.path) {
-        console.log(to.path, from.path, '页面切换了')
-        this.init(to.path)
+        console.log(to.path, from.path, "页面切换了");
+        this.init(to.path);
       }
-    })
+    });
   },
   methods: {
     init(path) {
-      path = path.includes('/syy-notes') ? path : `/syy-notes${path}`
-      const gitalk = new Gitalk({
-        clientID: '40db65c1f8a836e97eea',
-        clientSecret: 'eecd8e449183d4681af6240cbb5abb8db664c712',
-        repo: 'syy-notes',
-        owner: 'yu-nan',
-        admin: ['yu-nan'],
-        id: path,
-        body: path,
-        distractionFreeMode: false
-      })
-      const dom = document.getElementById('gitalk-container')
-      dom && (dom.innerHTML = '')
-      gitalk.render('gitalk-container')
-    }
-  }
-}
+      path = path.includes("/syy-notes") ? path : `/syy-notes${path}`;
+      // const gitalk = new Gitalk({
+      //   clientID: "40db65c1f8a836e97eea",
+      //   clientSecret: "eecd8e449183d4681af6240cbb5abb8db664c712",
+      //   repo: "mm-notes",
+      //   owner: "maomao1996",
+      //   admin: ["maomao1996"],
+      //   id: path,
+      //   body: path,
+      //   distractionFreeMode: false,
+      // });
+      const dom = document.getElementById("gitalk-container");
+      dom && (dom.innerHTML = "");
+      // gitalk.render("gitalk-container");
+    },
+  },
+};
 </script>
 
 <style lang="stylus">

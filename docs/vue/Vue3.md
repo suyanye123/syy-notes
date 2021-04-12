@@ -1,5 +1,6 @@
 ---
 typora-root-url: ../.vuepress/public
+sidebarDepth: 2
 ---
 
 # Vue3
@@ -42,7 +43,7 @@ ref底层其实还是reactive,所以当运行时系统会自动根据传入的re
 
 ###### 正确写法
 
-![correct]()![vue3](/img/vue/vue3.png)
+![vue3](/img/vue/vue3.png)
 
 ------
 

@@ -1,4 +1,16 @@
-# 将一个项目同时托管至gitee和github
+---
+sidebarDepth: 2
+---
+
+# Git
+
+## 常用API
+
+
+
+## 拓展
+
+#### 1.将一个项目同时托管至gitee和github
 
 ##### 方法1：直接修改git文件中config文件
 

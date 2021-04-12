@@ -26,9 +26,8 @@ module.exports = {
     ["meta", { name: "msapplication-TileImage", content: "/favicon.ico" }],
     ["meta", { name: "msapplication-TileColor", content: "#000000" }],
   ],
-  //http://www.ruanyifeng.com/blog/2019/09/getting-started-with-github-actions.html 
   themeConfig: {
-    repo: "yu-nan/syy-notes/",
+    // repo: "yu-nan/syy-notes/",  //这是github链接
     nav: [
       {
         text: "后台管理",
@@ -37,39 +36,49 @@ module.exports = {
           { text: "后台管理", link: "" },
         ],
       },
-      { text: "Blog", link: "https://www.syy123.com" },
+      { text: "言叶之庭", link: "https://www.syy123.com" },
+      { text: "uniapp", link: "https://www.test.syy123.com" },
     ],
     sidebar: [
       {
-        title: "在线工具",
-        children: [],
+        title: "简单介绍",
+        path: "introduce/",
+      },
+      {
+        title: "网页工具",
+        path: "mytools/",
       },
       {
         title: "CSS",
-        children: [''],
+        children: ["css/", "css/flex"],
       },
       {
-        title: "Js",
-        path: "/js/",
+        title: "前后端交互",
+        children: ["js/promise"],
       },
       {
         title: "Vue",
-        path: "/vue/",
+        children: ["vue/", "vue/vue3", "vue/props"],
+      },
+      {
+        title: "React",
+        path: "react/",
       },
       {
         title: "Git",
-        path: "/git/",
+        path: "git/",
       },
       {
         title: "uni-app",
-        children: [
-          "uniapp/scroll",
-         
-        ],
+        children: ["uniapp/", "uniapp/miniProgram"],
       },
       {
         title: "utils",
-        children: ["utils/regexp"],
+        children: ["utils/timestamp", "utils/regexp"],
+      },
+      {
+        title: "八股文",
+        children: ["interview/quest", "interview/more"],
       },
     ],
     lastUpdated: "上次更新",
