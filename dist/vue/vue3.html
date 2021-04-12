@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Vue3 | 前端小札</title>
+    <meta name="description" content="">
+    <script>
+      var _hmt = _hmt || [];
+      (function() {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?8092fab2f2adfc7938ba5b8885aef5b4";
+        var s = document.getElementsByTagName("script")[0]; 
+        s.parentNode.insertBefore(hm, s);
+      })();
+    </script>
+    <link rel="icon" href="/favicon.ico">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="apple-touch-icon" href="/favicon.ico">
+    <link rel="mask-icon" href="/favicon.ico" color="#3eaf7c">
+    <meta name="description" content="前端常用知识、踩坑记录等">
+    <meta name="theme-color" content="#3eaf7c">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="msapplication-TileImage" content="/favicon.ico">
+    <meta name="msapplication-TileColor" content="#000000">
+    <link rel="preload" href="/assets/css/0.styles.257a9c92.css" as="style"><link rel="preload" href="/assets/js/app.a4af53d7.js" as="script"><link rel="preload" href="/assets/js/2.4ca88a27.js" as="script"><link rel="preload" href="/assets/js/3.44619a6e.js" as="script"><link rel="preload" href="/assets/js/24.fcc2ebc3.js" as="script"><link rel="prefetch" href="/assets/js/10.43f2159f.js"><link rel="prefetch" href="/assets/js/11.3a29457c.js"><link rel="prefetch" href="/assets/js/12.73b31607.js"><link rel="prefetch" href="/assets/js/13.ce37bb00.js"><link rel="prefetch" href="/assets/js/14.611a7c24.js"><link rel="prefetch" href="/assets/js/15.a6d913dd.js"><link rel="prefetch" href="/assets/js/16.73714ff3.js"><link rel="prefetch" href="/assets/js/17.2ba7ff19.js"><link rel="prefetch" href="/assets/js/18.b50dfb4a.js"><link rel="prefetch" href="/assets/js/19.844979b2.js"><link rel="prefetch" href="/assets/js/20.9646d564.js"><link rel="prefetch" href="/assets/js/21.6addec50.js"><link rel="prefetch" href="/assets/js/22.72281494.js"><link rel="prefetch" href="/assets/js/23.b1893d62.js"><link rel="prefetch" href="/assets/js/4.8ae18769.js"><link rel="prefetch" href="/assets/js/5.1f33ed0d.js"><link rel="prefetch" href="/assets/js/6.4ae21bd3.js"><link rel="prefetch" href="/assets/js/7.4633576d.js"><link rel="prefetch" href="/assets/js/8.89b2441f.js"><link rel="prefetch" href="/assets/js/9.3bf8bbff.js">
+    <link rel="stylesheet" href="/assets/css/0.styles.257a9c92.css">
+  </head>
+  <body>
+    <div id="app" data-server-rendered="true"><div class="theme-container"><header class="navbar"><div class="sidebar-button"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewBox="0 0 448 512" class="icon"><path fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path></svg></div> <a href="/" class="home-link router-link-active"><!----> <span class="site-name">前端小札</span></a> <div class="links"><div class="search-box"><input aria-label="Search" autocomplete="off" spellcheck="false" value=""> <!----></div> <nav class="nav-links can-hide"><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="后台管理" class="dropdown-title"><span class="title">后台管理</span> <span class="arrow down"></span></button> <button type="button" aria-label="后台管理" class="mobile-dropdown-title"><span class="title">后台管理</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/vue/.html" class="nav-link">
+  中台管理
+</a></li><li class="dropdown-item"><!----> <a href="/vue/.html" class="nav-link">
+  后台管理
+</a></li></ul></div></div><div class="nav-item"><a href="https://www.syy123.com" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  言叶之庭
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div><div class="nav-item"><a href="https://www.test.syy123.com" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  uniapp
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div> <!----></nav></div></header> <div class="sidebar-mask"></div> <aside class="sidebar"><nav class="nav-links"><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="后台管理" class="dropdown-title"><span class="title">后台管理</span> <span class="arrow down"></span></button> <button type="button" aria-label="后台管理" class="mobile-dropdown-title"><span class="title">后台管理</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/vue/.html" class="nav-link">
+  中台管理
+</a></li><li class="dropdown-item"><!----> <a href="/vue/.html" class="nav-link">
+  后台管理
+</a></li></ul></div></div><div class="nav-item"><a href="https://www.syy123.com" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  言叶之庭
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div><div class="nav-item"><a href="https://www.test.syy123.com" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  uniapp
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div> <!----></nav>  <ul class="sidebar-links"><li><a href="/introduce/" class="sidebar-link">简单介绍</a></li><li><a href="/mytools/" class="sidebar-link">网页工具</a></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>CSS</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>前后端交互</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading open"><span>Vue</span> <span class="arrow down"></span></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/vue/" aria-current="page" class="sidebar-link">Vue</a></li><li><a href="/vue/vue3.html" aria-current="page" class="active sidebar-link">Vue3</a><ul class="sidebar-sub-headers"><li class="sidebar-sub-header"><a href="/vue/vue3.html#一、vue3和vue2的区别" class="sidebar-link">一、vue3和vue2的区别</a></li><li class="sidebar-sub-header"><a href="/vue/vue3.html#二、setup的使用" class="sidebar-link">二、setup的使用</a></li><li class="sidebar-sub-header"><a href="/vue/vue3.html#三、深入vue3响应式原理" class="sidebar-link">三、深入vue3响应式原理</a></li></ul></li><li><a href="/vue/props.html" class="sidebar-link">深入Vue传递数据</a></li></ul></section></li><li><a href="/react/" class="sidebar-link">React</a></li><li><a href="/git/" class="sidebar-link">Git</a></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>uni-app</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>utils</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>八股文</span> <span class="arrow right"></span></p> <!----></section></li></ul> </aside> <main class="page"> <div class="theme-default-content content__default"><h1 id="vue3"><a href="#vue3" class="header-anchor">#</a> Vue3</h1> <h2 id="一、vue3和vue2的区别"><a href="#一、vue3和vue2的区别" class="header-anchor">#</a> 一、vue3和vue2的区别</h2> <hr> <h2 id="二、setup的使用"><a href="#二、setup的使用" class="header-anchor">#</a> 二、setup的使用</h2> <h4 id="_1-通过ref新建响应式数据"><a href="#_1-通过ref新建响应式数据" class="header-anchor">#</a> 1.通过ref新建响应式数据</h4> <h5 id="_1-什么是ref"><a href="#_1-什么是ref" class="header-anchor">#</a> （1）什么是ref?</h5> <p>ref和reactive一样,也是用来实现响应式数据的方法
+由于reactive必须传递一个对象,所以在实际开发中如果只是想让某个变量实现响应式的时候回非常麻烦
+所以Vue3提供了ref方法实现简单值得监听</p> <h5 id="_2-ref本质"><a href="#_2-ref本质" class="header-anchor">#</a> （2）.ref本质</h5> <p>ref底层其实还是reactive,所以当运行时系统会自动根据传入的ref转换成reactive.</p> <h5 id="_3-ref注意点"><a href="#_3-ref注意点" class="header-anchor">#</a> （3）ref注意点</h5> <p>在vue中使用ref的值不用通过value获取
+在js中使用ref的值必须通过value获取</p> <p><img src="/img/vue/vue1.png" alt="vue1"></p> <h5 id="_4-ref获取元素"><a href="#_4-ref获取元素" class="header-anchor">#</a> （4）ref获取元素</h5> <p>在vue2中我们可以通过给元素添加ref=‘xxx’,然后在代码中通过refs.xxx的方式来获取元素,在vue3中也可以通过ref来获取元素.
+但不是像以下这种熟悉的方式,因为在vue3中没有$和refs这些东西.</p> <h6 id="错误示范"><a href="#错误示范" class="header-anchor">#</a> 错误示范</h6> <p><img src="/img/vue/vue2.png" alt="wrong"></p> <h6 id="正确写法"><a href="#正确写法" class="header-anchor">#</a> 正确写法</h6> <p><img src="/img/vue/vue3.png" alt="vue3"></p> <hr> <h4 id="_2-通过props接收传递的数据"><a href="#_2-通过props接收传递的数据" class="header-anchor">#</a> 2.通过props接收传递的数据</h4> <hr> <h2 id="三、深入vue3响应式原理"><a href="#三、深入vue3响应式原理" class="header-anchor">#</a> 三、深入vue3响应式原理</h2></div> <footer class="page-edit"><!----> <!----></footer> <div class="page-nav"><p class="inner"><span class="prev">
+      ←
+      <a href="/vue/" class="prev router-link-active">
+        Vue
+      </a></span> <span class="next"><a href="/vue/props.html">
+        深入Vue传递数据
+      </a>
+      →
+    </span></p></div> </main></div><div class="global-ui"></div></div>
+    <script src="/assets/js/app.a4af53d7.js" defer></script><script src="/assets/js/2.4ca88a27.js" defer></script><script src="/assets/js/3.44619a6e.js" defer></script><script src="/assets/js/24.fcc2ebc3.js" defer></script>
+  </body>
+</html>

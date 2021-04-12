@@ -11,7 +11,7 @@ sidebarDepth: 2
 
 
 \- [GitHub Actions 入门教程 ]( http://www.ruanyifeng.com/blog/2019/09/getting-started-with-github-actions.html) 
-<br>阮一峰老师写的教程，用于源码推送后，自动发布到服务器
+<br>阮一峰老师写的教程，用于源码推送后，自动deploy部署发布到服务器
 
 
 \- [ gitalk ](https://github.com/gitalk/gitalk/blob/master/readme-cn.md) 
