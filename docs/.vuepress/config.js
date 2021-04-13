@@ -1,4 +1,4 @@
-const base = process.env.BUILD_ENV ? process.env.BUILD_ENV : "/syy-notes/";
+const base = process.env.BUILD_ENV ? process.env.BUILD_ENV : "/syy-notes/"
 
 module.exports = {
   base,
