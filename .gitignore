@@ -2,6 +2,8 @@
 node_modules
 dist
 .temp
+gh-pages
+gh-pages.pub
 
 # Log files
 npm-debug.log*
