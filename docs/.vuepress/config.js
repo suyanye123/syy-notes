@@ -27,7 +27,7 @@ module.exports = {
     ["meta", { name: "msapplication-TileColor", content: "#000000" }],
   ],
   themeConfig: {
-    repo: "yu-nan/syy-notes/", //这是github链接
+    repo: "suyanye123/syy-notes/", //这是github链接
     nav: [
       {
         text: "后台管理",

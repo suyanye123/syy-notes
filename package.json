@@ -11,9 +11,16 @@
     "deploy:build": "npm run build && npm run deploy",
     "lint": "prettier --write **/*.{js,scss,md,json}"
   },
-  "author": "syy",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/suyanye123/syy-notes.git"
+  },
+  "author": "syy123",
   "license": "MIT",
   "devDependencies": {
-    "vuepress": "^1.8.2"
+    "vuepress": "^1.8.2",
+    "gh-pages": "^2.2.0",
+    "gitalk": "^1.7.0",
+    "prettier": "^2.2.0"
   }
 }

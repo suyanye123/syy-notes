@@ -45,7 +45,7 @@ export default {
       });
       const dom = document.getElementById("gitalk-container");
       dom && (dom.innerHTML = "");
-      // gitalk.render("gitalk-container");
+      gitalk.render("gitalk-container");
     },
   },
 };
