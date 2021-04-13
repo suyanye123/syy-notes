@@ -58,7 +58,7 @@ module.exports = {
       },
       {
         title: "Vue",
-        children: ["vue/", "vue/vue3", "vue/props"],
+        children: ["vue/", "vue/props"],
       },
       {
         title: "React",
