@@ -25,9 +25,9 @@ jobs:
       # 部署
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@releases/v3
-        with:
+        env:
           # GitHub 密钥
-          ACCESS_TOKEN: ${{ secrets.GHPAGES }}
+          ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
           # GitHub Pages 读取的分支
           BRANCH: gh-pages
           # 静态文件所在目录
