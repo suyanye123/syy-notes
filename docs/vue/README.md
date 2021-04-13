@@ -8,6 +8,7 @@ sidebarDepth: 2
 ## 一、vue3 和 vue2 的区别
 
 composition API
+响应式原理，从 object.defineProperty 变成 proxy
 
 ---
 
