@@ -10,7 +10,7 @@ sidebarDepth: 2
 
 ## 拓展
 
-#### 1.将一个项目同时托管至gitee和github
+### 1.将一个项目同时托管至gitee和github
 
 ##### 方法1：直接修改git文件中config文件
 
@@ -36,4 +36,6 @@ git remote set-url --add origin git@github.com:yourAccount.git
 //然后使用下面命令提交：
 git push origin --all
 ```
+
+### 2.git-hooks
 

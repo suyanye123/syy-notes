@@ -2,7 +2,7 @@
   "name": "syy-notes",
   "version": "1.0.0",
   "private": true,
-  "description": "",
+  "description": "Development related notes",
   "scripts": {
     "dev": "vuepress dev docs --temp .temp",
     "build": "vuepress build docs",

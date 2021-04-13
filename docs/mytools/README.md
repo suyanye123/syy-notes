@@ -27,15 +27,22 @@ sidebarDepth: 2
 
 ### 其他工具
 
-**#### JS 相关**
+**####  项目相关**
 
 
 
-\- [Babel](https://www.babeljs.cn/repl)
-
-\- [TypeScript](https://www.typescriptlang.org/play)
+\- [ husky ](https://typicode.github.io/husky/#/)
 
 
+
+\- [ lint-staged ](https://www.npmjs.com/package/lint-staged)
+<br>仅过滤出 Git 代码暂存区文件的工具
+
+\- [ mrm ](https://github.com/sapegin/mrm)
+
+根据 `package.json` 依赖项中的代码质量工具（如 Prettier 和 ESlint）来安装和配置 husky 和 lint-staged
+
+<br>
 
 **#### CSS 预处理器**
 

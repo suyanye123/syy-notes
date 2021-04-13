@@ -9,14 +9,14 @@
 
     <slot name="bottom" />
 
-    <!-- <div id="gitalk-container"></div> -->
+    <div id="gitalk-container"></div>
   </main>
 </template>
 
 <script>
 import PageEdit from "@parent-theme/components/PageEdit.vue";
 import PageNav from "@parent-theme/components/PageNav.vue";
-// import Gitalk from "gitalk";
+import Gitalk from "gitalk";
 
 export default {
   components: { PageEdit, PageNav },
@@ -33,16 +33,16 @@ export default {
   methods: {
     init(path) {
       path = path.includes("/syy-notes") ? path : `/syy-notes${path}`;
-      // const gitalk = new Gitalk({
-      //   clientID: "40db65c1f8a836e97eea",
-      //   clientSecret: "eecd8e449183d4681af6240cbb5abb8db664c712",
-      //   repo: "mm-notes",
-      //   owner: "maomao1996",
-      //   admin: ["maomao1996"],
-      //   id: path,
-      //   body: path,
-      //   distractionFreeMode: false,
-      // });
+      const gitalk = new Gitalk({
+        clientID: "5800ca32a72b2d040c1d",
+        clientSecret: "58a53aefa780bce77e94e2118281709146d05015",
+        repo: "syy-notes",
+        owner: "suyanye123",
+        admin: ["suyanye123"],
+        id: path,
+        body: path,
+        distractionFreeMode: false,
+      });
       const dom = document.getElementById("gitalk-container");
       dom && (dom.innerHTML = "");
       // gitalk.render("gitalk-container");
