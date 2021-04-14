@@ -17,7 +17,7 @@
   },
   "author": "syy123",
   "license": "MIT",
-  "homepage": "https://github.com/suyanye123/syy-notes#readme",
+  "homepage": "https://suyanye123.github.io/syy-notes/",
   "devDependencies": {
     "@vuepress/plugin-back-to-top": "^1.8.2",
     "@vuepress/plugin-google-analytics": "^1.8.2",
