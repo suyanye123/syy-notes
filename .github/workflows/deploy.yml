@@ -18,17 +18,14 @@ jobs:
         with:
           persist-credentials: false
 
-      # 打包静态文件
-      - name: Build
-        run: npm install && npm run build
-
       # 部署
-      - name: Deploy
+      - name: Build and Deploy
         uses: JamesIves/github-pages-deploy-action@master
-        with:
+        env:
           # GitHub 密钥
           ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
           # GitHub Pages 读取的分支
           BRANCH: gh-pages
           # 静态文件所在目录
           FOLDER: dist
+          BUILD_SCRIPT: npm install && npm run build
