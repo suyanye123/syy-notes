@@ -12,14 +12,6 @@ module.exports = {
       description: "前端常用知识、踩坑记录等",
     },
   },
-  // 设置依赖图片路径为~@alias
-  configureWebpack: {
-    resolve: {
-      alias: {
-        "@": "vuepress/alias/img",
-      },
-    },
-  },
   head: [
     ["link", { rel: "icon", href: "/favicon.ico" }],
     ["link", { rel: "manifest", href: "/manifest.json" }],

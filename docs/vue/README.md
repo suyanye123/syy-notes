@@ -30,7 +30,7 @@ ref 底层其实还是 reactive,所以当运行时系统会自动根据传入的
 在 vue 中使用 ref 的值不用通过 value 获取
 在 js 中使用 ref 的值必须通过 value 获取
 
-![vue1](~@/vue1.png)
+![vue1](../.vuepress/alias/img/vue/vue1.png)
 
 ##### （4）ref 获取元素
 
