@@ -1,5 +1,4 @@
 ---
-typora-root-url: ../.vuepress/public
 sidebarDepth: 2
 ---
 
@@ -31,7 +30,7 @@ ref 底层其实还是 reactive,所以当运行时系统会自动根据传入的
 在 vue 中使用 ref 的值不用通过 value 获取
 在 js 中使用 ref 的值必须通过 value 获取
 
-![vue1](/img/vue/vue1.png)
+![vue1](~@/vue1.png)
 
 ##### （4）ref 获取元素
 
@@ -40,11 +39,11 @@ ref 底层其实还是 reactive,所以当运行时系统会自动根据传入的
 
 ###### 错误示范
 
-![wrong](/img/vue/vue2.png)
+![wrong](../.vuepress/alias/img/vue/vue2.png)
 
 ###### 正确写法
 
-![vue3](/img/vue/vue3.png)
+![vue3](../.vuepress/alias/img/vue/vue3.png)
 
 ---
 
@@ -53,3 +52,5 @@ ref 底层其实还是 reactive,所以当运行时系统会自动根据传入的
 ---
 
 ## 三、深入 vue3 响应式原理
+
+![]()

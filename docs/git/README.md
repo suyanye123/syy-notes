@@ -37,6 +37,10 @@ git remote set-url --add origin git@github.com:yourAccount.git
 git push origin --all
 ```
 
+
+
+
+
 ### 2.githooks
 
 Git Hooks 就是在 Git 执行特定事件（如commit、push、receive等）时触发运行的脚本，类似于“钩子函数”，没有设置可执行的钩子将被忽略。
@@ -91,4 +95,74 @@ yarn commitlint --config .commitlintrc.js --edit $1
 第 3 步：清理 package.json 中 husky 字段内容
 
 PS：仅删除husky配置，`lint-staged`配置不用删除， 参考 [ husky更新配置 ](https://zhuanlan.zhihu.com/p/356924268)
+
+
+
+
+
+### 3.Github Actions
+
+[ Github Actions ](http://www.ruanyifeng.com/blog/2019/09/getting-started-with-github-actions.html) 提供一个 Actions 市场，这是它另一个优势，可以复用别人提供的 action，减少编写 workflow 文件工作量
+
+相关的 steps如下，第一步是准备 Github Pages 相关的静态资源，第二步是借助 GitHub Pages Deploy Action 自动一步部署静态资源至 gh-pages 分支，简单快捷。
+
+```yaml
+- name: Init Github pages
+    run: |
+    mv ./candelas/.git $GITHUB_WORKSPACE
+    mv ./candelas ./hexo-theme-unit-test/themes
+    cd ./hexo-theme-unit-test
+    npx hexo clean
+    npx hexo config theme candelas
+    npx hexo new page categories
+    cp ./themes/candelas/.github/resources/categories.md ./source/categories/index.md
+    npx hexo generate
+    mv ./public $GITHUB_WORKSPACE
+- name: Deploy
+    uses: JamesIves/github-pages-deploy-action@3.1.5
+    with:
+    ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+    BRANCH: gh-pages
+    FOLDER: public
+```
+
+我们选用一个别人已经写好的 action复用即可，这里选的是[ JamesIves ](JamesIves/github-pages-deploy-action@4.1.1)
+
+需要注意的是，截止至2021年，JamesIves已升至V4版本，相关配置有所改变，不再需要填写环境密钥
+
+我的workflows配置如下：
+
+```yaml
+name: Build and Deploy
+# 触发条件: push 到 master 分支后
+on:
+  push:
+    branches:
+      - master
+# 任务
+jobs:
+  build-and-deploy:
+    # 服务器环境：最新版 ubuntu
+    runs-on: ubuntu-latest
+    steps:
+      # 拉取代码
+      - name: Checkout
+        uses: actions/checkout@v2.3.1
+        with:
+          persist-credentials: false
+      # 安装依赖及打包    
+      - name: Install and Build
+        run: |
+          npm install
+          npm run build
+      # 部署
+      - name: Deploy
+        uses: JamesIves/github-pages-deploy-action@4.1.1
+        with:
+          # GitHub Pages 读取的分支
+          branch: gh-pages
+          # 静态文件所在目录
+          folder: dist
+
+```
 

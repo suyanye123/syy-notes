@@ -1,4 +1,4 @@
-const base = process.env.BUILD_ENV ? process.env.BUILD_ENV : "/syy-notes/"
+const base = process.env.BUILD_ENV ? process.env.BUILD_ENV : "/syy-notes/";
 
 module.exports = {
   base,
@@ -10,6 +10,14 @@ module.exports = {
       lang: "zh-CN",
       title: "前端小札",
       description: "前端常用知识、踩坑记录等",
+    },
+  },
+  // 设置依赖图片路径为~@alias
+  configureWebpack: {
+    resolve: {
+      alias: {
+        "@": "vuepress/alias/img",
+      },
     },
   },
   head: [
