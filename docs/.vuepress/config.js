@@ -54,7 +54,7 @@ module.exports = {
       },
       {
         title: "前后端交互",
-        children: ["js/promise"],
+        children: ["js/promise", "js/http"],
       },
       {
         title: "Vue",
