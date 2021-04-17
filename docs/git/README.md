@@ -1,5 +1,5 @@
 ---
-sidebarDepth: 2
+sidebarDepth: 3
 ---
 
 # Git
@@ -10,8 +10,9 @@ sidebarDepth: 2
 - [Windows 版下载镜像站](https://npm.taobao.org/mirrors/git-for-windows/)
 - [下载技巧 - 使用 jsdelivr 加速 Github 仓库资源](https://github.com/maomao1996/daily-notes/issues/7)
 
-
 ## 常用API
+
+### 初始化
 
 ```markdown
 # 新建一个目录，将其初始化为 Git 仓库
@@ -44,7 +45,13 @@ git commit -m [提交信息]
 
 # 替换上一次 commit（如无代码改动，就重写上一次 commit 的提交信息）
 git commit --amend -m [提交信息]
+```
 
+
+
+### 分支
+
+```markdown
 # 列出所有本地分支
 git branch
 
@@ -84,7 +91,11 @@ git branch -d [分支名]
 # 删除远程分支
 git push origin --delete [分支名]
 git branch -dr [remote/分支名]
+```
 
+### tag相关
+
+```markdown
 # 列出所有 tag
 git tag
 
@@ -112,6 +123,43 @@ git push [remote] --tags
 # 新建一个分支，指向某个tag
 git checkout -b [分支名] [tag]
 
+```
+
+### 重置
+
+```markdown
+# 强行推送当前分支到远程仓库，即使有冲突
+git push [remote] --force
+
+# 推送所有分支到远程仓库
+git push [remote] --all
+
+# 重置暂存区的指定文件，与上一次 commit 保持一致，但工作区不变
+git reset [文件路径]
+
+# 重置暂存区与工作区，与上一次 commit 保持一致
+git reset --hard
+
+# 重置当前分支的指针为指定 commit，同时重置暂存区，但工作区不变
+git reset [commit id]
+
+# 重置当前分支的 HEAD 为指定 commit，同时重置暂存区和工作区，与指定 commit 一致
+git reset --hard [commit id]
+
+# 重置当前 HEAD 为指定 commit，但保持暂存区和工作区不变
+git reset --keep [commit id]
+
+# 新建一个 commit，用来撤销指定 commit 后者的所有变化都将被前者抵消，并且应用到当前分支
+git revert [commit id]
+
+# 暂时将未提交的变化移除，稍后再移入
+git stash
+git stash pop
+```
+
+### 小技巧
+
+```markdown
 # 显示变更的文件
 git status
 
@@ -170,33 +218,7 @@ git pull [remote] [branch]
 # 上传本地指定分支到远程仓库
 git push [remote] [branch]
 
-# 强行推送当前分支到远程仓库，即使有冲突
-git push [remote] --force
 
-# 推送所有分支到远程仓库
-git push [remote] --all
-
-# 重置暂存区的指定文件，与上一次 commit 保持一致，但工作区不变
-git reset [文件路径]
-
-# 重置暂存区与工作区，与上一次 commit 保持一致
-git reset --hard
-
-# 重置当前分支的指针为指定 commit，同时重置暂存区，但工作区不变
-git reset [commit id]
-
-# 重置当前分支的 HEAD 为指定 commit，同时重置暂存区和工作区，与指定 commit 一致
-git reset --hard [commit id]
-
-# 重置当前 HEAD 为指定 commit，但保持暂存区和工作区不变
-git reset --keep [commit id]
-
-# 新建一个 commit，用来撤销指定 commit 后者的所有变化都将被前者抵消，并且应用到当前分支
-git revert [commit id]
-
-# 暂时将未提交的变化移除，稍后再移入
-git stash
-git stash pop
 ```
 
 [参考地址：阮一峰 -- 常用 Git 命令清单](https://www.ruanyifeng.com/blog/2015/12/git-cheat-sheet.html)

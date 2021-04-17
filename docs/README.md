@@ -1,7 +1,7 @@
 ---
 home: true
 heroText: 前端小札
-tagline: 前端常用知识、业务记录等
+tagline: 唯有热爱，可抵岁月桓久
 heroImage: /logo1.jpg
 actionText: 立即查看 →
 actionLink: /introduce/

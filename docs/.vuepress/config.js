@@ -49,12 +49,17 @@ module.exports = {
         path: "mytools/",
       },
       {
+        title: "Demo",
+        path: "/demo/",
+        children: ["demo/suUI", "demo/vuepress", "demo/vitepress"],
+      },
+      {
         title: "CSS",
         children: ["css/", "css/flex"],
       },
       {
         title: "前后端交互",
-        children: ["js/promise", "js/http"],
+        children: ["js/promise", "js/axios", "js/http"],
       },
       {
         title: "Vue",
