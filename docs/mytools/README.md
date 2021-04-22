@@ -13,7 +13,7 @@ sidebarDepth: 2
 **##  项目相关**
 
 \- [ husky ](https://typicode.github.io/husky/#/)
-<br>Git hooks 钩子工具，在commit或push之前进行指定操作
+<br>Git hooks 钩子工具，在commit或push之前进行指定操作，比如 eslint 检查
 
 \- [ lint-staged ](https://www.npmjs.com/package/lint-staged)
 <br>仅过滤出 Git 代码暂存区文件的工具

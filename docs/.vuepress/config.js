@@ -27,17 +27,17 @@ module.exports = {
     ["meta", { name: "msapplication-TileColor", content: "#000000" }],
   ],
   themeConfig: {
-    repo: "suyanye123/syy-notes/", //这是github链接
+    // repo: "suyanye123/syy-notes/", //这是github链接
     nav: [
       {
-        text: "后台管理",
+        text: "工作项目",
         items: [
-          { text: "中台管理", link: "" },
-          { text: "后台管理", link: "" },
+          { text: "后台管理系统", link: "http://admin.yuke520.com/" },
+          { text: "裕客商城小程序", link: "../uniapp/yukexcx" },
         ],
       },
+      { text: " suUI ", link: "https://yu-nan.gitee.io/suui" },
       { text: "言叶之庭", link: "https://www.syy123.com" },
-      { text: "uniapp", link: "https://www.test.syy123.com" },
     ],
     sidebar: [
       {
@@ -55,7 +55,7 @@ module.exports = {
       },
       {
         title: "CSS",
-        children: ["css/", "css/flex"],
+        children: ["css/", "css/others"],
       },
       {
         title: "前后端交互",
