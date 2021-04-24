@@ -55,7 +55,7 @@ module.exports = {
       },
       {
         title: "CSS",
-        children: ["css/", "css/others"],
+        children: ["css/", "css/others", "css/canvas"],
       },
       {
         title: "前后端交互",
@@ -80,6 +80,10 @@ module.exports = {
       {
         title: "utils",
         children: ["utils/timestamp", "utils/regexp"],
+      },
+      {
+        title: "webGL",
+        path: "webGL/threejs",
       },
       {
         title: "八股文",
