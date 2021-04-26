@@ -1,3 +1,5 @@
+# canvas
+
 ## 微信小程序canvas 2d模式
 
 [微信canvas 2d官方文档](https://developers.weixin.qq.com/miniprogram/dev/component/canvas.html)

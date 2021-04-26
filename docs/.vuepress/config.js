@@ -42,14 +42,14 @@ module.exports = {
     sidebar: [
       {
         title: "简单介绍",
-        path: "introduce/",
+        path: "/introduce/",
       },
       {
         title: "网页工具",
-        path: "mytools/",
+        path: "/mytools/",
       },
       {
-        title: "Demo",
+        title: "我的项目",
         path: "/demo/",
         children: ["demo/suUI", "demo/vuepress", "demo/vitepress"],
       },
@@ -58,36 +58,37 @@ module.exports = {
         children: ["css/", "css/others", "css/canvas"],
       },
       {
-        title: "前后端交互",
+        title: "JavaScript",
         children: ["js/promise", "js/axios", "js/http"],
       },
       {
         title: "Vue",
         children: ["vue/", "vue/props"],
       },
-      {
-        title: "React",
-        path: "react/",
-      },
-      {
-        title: "Git",
-        path: "git/",
-      },
+
       {
         title: "uni-app",
         children: ["uniapp/", "uniapp/miniProgram"],
       },
       {
+        title: "Git",
+        path: "/git/",
+      },
+      {
+        title: "WebGL",
+        path: "/webGL/",
+        children: ["webGL/threejs"],
+      },
+      {
         title: "utils",
+        path: "/utils/",
         children: ["utils/timestamp", "utils/regexp"],
       },
+
       {
-        title: "webGL",
-        path: "webGL/threejs",
-      },
-      {
-        title: "八股文",
-        children: ["interview/quest", "interview/more"],
+        title: "写点东西",
+        path: "/freeTalk/",
+        children: ["freeTalk/quest", "freeTalk/dairy", "freeTalk/more"],
       },
     ],
     lastUpdated: "上次更新",
