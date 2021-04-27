@@ -2,6 +2,7 @@
 sidebarDepth: 2
 ---
 # 微信小程序业务
+###### ——本文为简素言也原创手打，转载请注明出处哦——
 
 ## 一、微信授权登录全流程
 
@@ -142,9 +143,33 @@ uniapp提供了一种封装好的unipay插件模板，只需要将小程序的 A
 
 同理，小程序云开发也提供了同种功能，但是因为云开发需要付费，未曾尝试过。。。
 
+## 三、动态计算显示高度
+
+##### 1.获取手机型号
+
+```js
+uni.getsystemInfo(){}
+```
+##### 2.获取节点高度
+
+```js
+//获取节点信息
+uni.createSelectorQuery()
+    .in(this)
+    .select("#one")
+//根据节点高度与页面滚动距离scrollTop得到所需滑动的距离
+    .boundingClientRect(data => {
+        uni.pageScrollTo({
+            duration:0,
+            scrollTop: that.scrollTop + data.top-44
+        });   
+}).exec(
+```
 
 
-## 三、scroll吸附贴顶效果
+
+
+## 四、scroll吸附贴顶效果
 
 #### 方法1. 监听`onPageScroll`事件，滚动到指定位置添加fixed样式
 
@@ -203,7 +228,7 @@ destroyed () {
 
 
 
-## 四、小程序生成海报图片并保存至本地
+## 五、小程序生成海报图片并保存至本地
 
 这里的痛点在于，uniapp和小程序不能直接操作DOM元素，所以一开始想使用 html2canvas ，不能实现
 
@@ -221,3 +246,13 @@ canvas 常用api和 canvas 2D用法 [跳转这里](../css/canvas)
 
 - 性能上的优化和提升，复杂动画上帧数明显
 - BUG修复，以及一些不支持的条件完善
+
+#### 方法2.  使用插件
+
+较为可行的插件有painter
+
+小程序原生内置扩展组件，[ wxml-to-canvas ](https://developers.weixin.qq.com/miniprogram/dev/extended/component-plus/wxml-to-canvas.html)
+
+但是由于uniapp打包后生成的node_modules和项目原来的node_modules不是一个东西，所以使用wxml-to-canvas需要另外的办法
+
+除此之外还有uni版本的 html-to-canvas插件，请自行搜索~

@@ -1,12 +1,109 @@
 # canvas
 
+常用步骤及需求（个人用法）
+
+1. 画布初始化
+
+```js
+ const ctx = uni.createCanvasContext("shareCanvas"); //获取上下文
+      const padding = uni.upx2px(24);	//定义画布padding
+      const cardHeight = uni.upx2px(840);//定义内容卡片高度
+      const cw = this.canvasW - 2 * padding;//计算内容宽度
+      const r = uni.upx2px(16);	//定义圆角
+```
+
+
+
+2. 自定义方法绘制 圆角矩阵
+
+```js
+/**
+ * @param {CanvasContext} ctx 执行上下文 
+ * @param {number} x 起始点（即左上角）x坐标 
+ * @param {number} y 起始点y坐标
+ * @param {number} w 矩阵宽度 
+ * @param {number} h 矩阵高度 
+ * @param {number} r 圆角半径
+ */
+drawRoundRect(ctx, x, y, w, h, r) {
+      ctx.beginPath();
+      // 左上角
+      ctx.arc(x + r, y + r, r, Math.PI, Math.PI * 1.5);
+      // 右上角
+      ctx.arc(x + w - r, y + r, r, Math.PI * 1.5, Math.PI * 2);
+      // 右下角
+      ctx.arc(x + w - r, y + h - r, r, 0, Math.PI * 0.5);
+      // 左下角
+      ctx.arc(x + r, y + h - r, r, Math.PI * 0.5, Math.PI);
+      ctx.closePath();
+      ctx.fillStyle = "#FFFFFF";  //底色白色
+      ctx.fill();
+    },
+```
+
+3. 绘制文字
+
+4. 绘制图片，注意图片需要先保存至本地才能使用
+
+```js
+//保存网络图片
+downloadImage(url) {
+     return new Promise((resolve, reject) => {
+          uni.downloadFile({
+          // 还可以使用 uni.getImageInfo 方法，但需要先配置白名单
+          url: url,
+          success: (res) => {
+            return resolve(res);
+          },
+          fail: (err) => {
+            return reject(err);
+          },
+        });
+      });
+    },
+        
+//绘制图片（必须在异步获取图片后）
+async drawpic() {
+     let baner = await this.downloadImage("http://xxx");
+      if (baner.tempFilePath) {
+        ctx.save();  //压栈，即保存绘图之前的图像状态
+        ctx.drawImage(
+          baner.tempFilePath,
+          padding + 10,
+          padding + 140,
+          310,
+          260
+        );
+        ctx.restore(); //弹出栈顶，即取出画板属性、剪切路径等
+      }
+	}
+```
+
+   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ## 微信小程序canvas 2d模式
 
 [微信canvas 2d官方文档](https://developers.weixin.qq.com/miniprogram/dev/component/canvas.html)
 
 基于uni-app平台的，原生微信小程序写法类似
-
-1、在template模板中写入canvas标签，用CSS把Canvas定位出去就看不到了
 
 1、在template模板中写入canvas标签，用CSS把Canvas定位出去就看不到了
 
@@ -129,3 +226,10 @@ data() {
         },
       });
 ```
+
+
+
+canvas 2d的优点：支持同层渲染
+
+[什么是同层渲染？](./xuanran)
+

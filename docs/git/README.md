@@ -10,16 +10,13 @@ sidebarDepth: 3
 - [Windows 版下载镜像站](https://npm.taobao.org/mirrors/git-for-windows/)
 - [下载技巧 - 使用 jsdelivr 加速 Github 仓库资源](https://github.com/maomao1996/daily-notes/issues/7)
 
-## 常用API
+## 备忘API
 
 ### 初始化
 
 ```markdown
 # 新建一个目录，将其初始化为 Git 仓库
 git init [project-name]
-
-# 下载一个项目和它的整个代码历史
-git clone [url]
 
 # 显示当前的Git配置
 git config --list
@@ -30,9 +27,6 @@ git config [--global] user.email "邮箱地址"
 
 # 添加指定文件或指定目录到暂存区
 git add [文件路径 / 目录路径]
-
-# 添加所有文件到暂存区
-git add .
 
 # 停止追踪指定文件并保留在工作区
 git rm --cached [文件路径]
@@ -47,14 +41,39 @@ git commit -m [提交信息]
 git commit --amend -m [提交信息]
 ```
 
+### 关联远端仓库
 
+- 在项目根目录下，右键点击 Git Bash Here ，执行关联指令
+
+```
+git remote add origin 远端仓库地址
+```
+
+- **注意**，执行成功后，**先拉取远端仓库**，执行拉取指令
+
+```
+git pull  <remote> <branch> 
+例如：git pull origin master     
+```
+
+- - 注意，这里需要设置拉取的分支信息，否则会提示：
+
+  - - ***There is no tracking information for the current branch.***
+    - *当前分支没有跟踪信息。*
+    - **Please specify which branch you want to merge with.**
+    - 请指定您要合并的分支。
+
+  - 这里涉及到了 **pull** 和 **fetch** 的区别
+
+  - - pull 从远程拉取最新版本到本地，自动合并
+
+    - fetch 从远程获取最新版本到本地，不会自动合并
+
+      
 
 ### 分支
 
 ```markdown
-# 列出所有本地分支
-git branch
-
 # 列出所有远程分支
 git branch -r
 

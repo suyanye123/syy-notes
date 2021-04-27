@@ -55,11 +55,13 @@ module.exports = {
       },
       {
         title: "CSS",
+        path: "/css/",
         children: ["css/", "css/others", "css/canvas"],
       },
       {
         title: "JavaScript",
-        children: ["js/promise", "js/axios", "js/http"],
+        path: "/js/",
+        children: ["js/promise", "js/axios"],
       },
       {
         title: "Vue",

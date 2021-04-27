@@ -2,9 +2,18 @@
 sidebarDepth: 2
 ---
 
-# uniapp语法
+# uniapp
 
-## 一、vue文件，使用的webview渲染
+uni-app是逻辑和渲染分离的，渲染层在app端提供了两套排版引擎。
+
+**vue文件走的webview渲染**
+**nvue走weex方式的原生渲染**
+
+注：在 uni-app 中，nvue 和 vue 页面可以混搭使用，使用uni.$on,uni.$emit的方式进行页面通讯。
+
+## 一、vue文件
+
+##### vue文件，使用的webview渲染，[什么是webview渲染？](./xuanran)
 
 #### html标签的变化：
 
@@ -67,7 +76,9 @@ cover-view需要多强调几句，uni-app的非h5端的video、map、canvas、te
 
 ------
 
-## 二、nvue是weex方式的原生渲染，适用于app客户端，且必须使用flex布局
+## 二、nvue文件
+
+##### nvue是基于weex方式的原生渲染，适用于app客户端，且必须使用flex布局
 
 1.选择器仅支持class 选择器
 / *错误* /
@@ -124,7 +135,7 @@ vue和nvue页面可以混用
 
 ------
 
-## 三、使用vscode做uniapp项目的配置
+## 三、vscode构建uniapp项目配置
 
 1.全局安装vue-cli, 用脚手架创建uniapp项目；
 2.去gitee下载 uniapp 代码块，放在.vscode 项目本地配置；
@@ -147,7 +158,9 @@ vue和nvue页面可以混用
 
 ------
 
-## 四、uniapp不支持keep-alive
+## 四、uniapp的一些坑
+
+##### 1.uniapp不支持keep-alive
 
 什么是keep-alive？ 就是对动态组件选项状态的缓存
 
