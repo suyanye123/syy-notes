@@ -249,10 +249,48 @@ canvas 常用api和 canvas 2D用法 [跳转这里](../css/canvas)
 
 #### 方法2.  使用插件
 
-较为可行的插件有painter
+1.较为可行的插件有painter
 
-小程序原生内置扩展组件，[ wxml-to-canvas ](https://developers.weixin.qq.com/miniprogram/dev/extended/component-plus/wxml-to-canvas.html)
 
-但是由于uniapp打包后生成的node_modules和项目原来的node_modules不是一个东西，所以使用wxml-to-canvas需要另外的办法
 
-除此之外还有uni版本的 html-to-canvas插件，请自行搜索~
+2.小程序原生内置扩展组件，[ wxml-to-canvas ](https://developers.weixin.qq.com/miniprogram/dev/extended/component-plus/wxml-to-canvas.html)
+
+正常原生小程序开发，如果要增加扩展组件wxml-to-canvas
+
+只需要 npm install --save wxml-to-canvas,后面再增加JSON组件声明，wxml引入组件即可
+
+执行之后，会在项目根目录下创建node_modules目录，但是这个node_modules 目录不会参与小程序编译、上传和打包，所以要通过开发者工具“工具-构建 npm”，这样就会在node_modules 的同级目录下会生成一个 miniprogram_npm 目录，里面会存放构建打包后的 npm 包，也就是小程序真正使用的 npm 包。
+
+但是uniapp开发的小程序不一样，首先uniapp项目里会有自己的package.json文件，安装npm install之后，会在项目根目录生成一个node_modules目录，里面是所有第三方的安装包，包括uniapp的所有包，核心、编译、解析等等。
+
+经过uniapp打包之后，生成的原生小程序项目（也就是我们最终给开发者工具使用的项目包），里面是不包含node_modules目录，也就没办法通过开发者工具“工具-构建 npm”生成miniprogram_npm 目录
+
+##### 解决方案是
+
+下载官方wxml-to-canvas的代码片段
+
+我们在目录里找到miniprogram_npm目录，里面包含三个已经打包好的文件，分别是eventemitter3、widget-ui、wxml-to-canvas
+
+我们将其中两个个文件widget-ui、wxml-to-canvas拷贝下来，放到我们的uniapp项目里
+
+widget-ui文件放到wxcomponents/widget-ui/miniprogram_npm/widget-ui
+
+wxml-to-canvas文件放到wxcomponents/wxml-to-canvas/miniprogram_npm/wxml-to-canvas
+
+然后在全局引入wxml-to-canvas
+
+```js
+"usingComponents": {
+    "wxml-to-canvas": "/wxcomponents/wxml-to-canvas/miniprogram_npm/wxml-to-canvas/index",
+ }
+```
+
+另外需要修改wxml-to-canvas/index.js
+
+```js
+module.exports = require("../../../widget-ui/miniprogram_npm/widget-ui/index")
+```
+
+
+
+3.除此之外还有uni版本的 html-to-canvas插件，请自行搜索~
