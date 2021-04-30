@@ -45,3 +45,23 @@ minutes = "0" + minutes;
 var nowDate = year + "-" + month + "-" + day+ " "+ hours + ":" + minutes;
 ```
 
+
+
+## [Moment.js](http://momentjs.cn/)
+
+##### 	日期格式化
+
+```js
+moment().format('MMMM Do YYYY, h:mm:ss a'); // 四月 29日 2021, 11:13:36 上午
+```
+
+##### 	相对时间
+
+```
+moment("20111031", "YYYYMMDD").fromNow(); // 9 年前
+moment("20120620", "YYYYMMDD").fromNow(); // 9 年前
+moment().startOf('day').fromNow();        // 11 小时前
+moment().endOf('day').fromNow();          // 13 小时内
+moment().startOf('hour').fromNow();       // 14 分钟前
+```
+

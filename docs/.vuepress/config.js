@@ -65,12 +65,14 @@ module.exports = {
       },
       {
         title: "Vue",
-        children: ["vue/", "vue/props"],
+        path: "/vue/",
+        children: ["vue/props"],
       },
 
       {
         title: "uni-app",
-        children: ["uniapp/", "uniapp/miniProgram"],
+        path: "/uniapp/",
+        children: ["uniapp/miniProgram"],
       },
       {
         title: "Git",
