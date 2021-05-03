@@ -66,7 +66,7 @@ module.exports = {
       {
         title: "Vue",
         path: "/vue/",
-        children: ["vue/props"],
+        children: ["vue/props", "vue/webpack"],
       },
 
       {
