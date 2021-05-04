@@ -4,7 +4,7 @@ sidebarDepth: 2
 
 # uniapp
 
-uni-app是逻辑和渲染分离的，渲染层在app端提供了两套排版引擎。
+uni-app是逻辑和渲染分离的，渲染层在app端提供了两套排版渲染引擎。
 
 **vue文件走的webview渲染**
 **nvue走weex方式的原生渲染**
@@ -13,7 +13,7 @@ uni-app是逻辑和渲染分离的，渲染层在app端提供了两套排版引�
 
 ## 一、vue文件
 
-##### vue文件，使用的webview渲染，[什么是webview渲染？](./xuanran)
+##### vue文件，使用的webview渲染，[什么是webview渲染？](../css/xuanran)
 
 #### html标签的变化：
 

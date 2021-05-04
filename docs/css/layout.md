@@ -2,7 +2,7 @@
 sidebarDepth: 2
 ---
 
-# CSS布局及API
+# CSS布局
 
 ## flex布局
 

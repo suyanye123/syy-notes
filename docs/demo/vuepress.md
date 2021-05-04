@@ -2,7 +2,9 @@
 
 ## 前言
 
-VuePress是尤大为了支持 Vue 及其子项目的文档需求而写的一个项目，VuePress界面十分简洁，并且**非常容易上手，一个小时就可以将项目架构搭好**。现在已经有很多这种类型的文档，如果你有写技术文档的项目的话，VuePress绝对可以成为你的备选项之一。
+VuePress是尤大为了支持 Vue 及其子项目的文档需求而写的一个项目，VuePress界面十分简洁，并且**非常容易上手，一个小时就可以将项目架构搭好**。
+
+现在已经有很多这种类型的文档，如果你有写技术文档的项目的话，VuePress绝对可以成为你的备选项之一。
 
 ### VuePress特性：
 
@@ -21,7 +23,7 @@ VuePress是尤大为了支持 Vue 及其子项目的文档需求而写的一个�
 
 ### 全局安装VuePress
 
-```
+```bash
 yarn global add vuepress # 或者 npm install -g vuepress
 ```
 
@@ -29,13 +31,13 @@ yarn global add vuepress # 或者 npm install -g vuepress
 
 这个文档将作为项目文档的根目录来使用：
 
-```
+```bash
 mkdir docs
 ```
 
 ### 在docs文件夹下创建`.vuepress`文件夹：
 
-```
+```bash
 mkdir .vuepress
 ```
 
@@ -43,7 +45,7 @@ mkdir .vuepress
 
 ### 在`.vuepress`文件夹下面创建`config.js`:
 
-```
+```bash
 touch config.js
 ```
 
@@ -51,7 +53,7 @@ config.js是VuePress必要的配置文件，它导出一个javascript对象。
 
 ### 在`.vuepress`文件夹下面创建public文件夹:
 
-```
+```bash
 mkdir public
 ```
 
@@ -109,7 +111,7 @@ project
 
 默认是`localhost:8080`端口。
 
-```
+```bash
 yarn docs:dev # 或者 npm run docs:dev
 ```
 
@@ -117,7 +119,7 @@ yarn docs:dev # 或者 npm run docs:dev
 
 build生成静态的HTML文件,默认会在 `.vuepress/dist` 文件夹下
 
-```
+```bash
 yarn docs:build # 或者 npm run docs:build
 ```
 
@@ -260,7 +262,7 @@ cd -
 
 然后你每次可以运行下面的命令行，来把最新更改推到`github`上：
 
-```
+```bash
     npm run d
 ```
 
@@ -325,3 +327,69 @@ cd -
 \- [ Dependabot ](https://github.com/dependabot) 
 <br>自动检查项目依赖项是否有更新版本，然后pr提交的机器人<br>
 <br>[参考教程](https://www.jianshu.com/p/9ac44e72a04e)
+
+
+
+
+
+##  前端小札2.0(重构中)
+
+基于[ vitePress ](https://github.com/vuejs/vitepress)——vuePress升级版，Vite & Vue 驱动的静态网站生成器，整体重构静态博客
+
+建议参考[官方文档](https://vitepress.vuejs.org/)
+
+### VitePress新特性：
+
+**1. 使用Vue 3** 
+
+**2. 在后台使用vite**
+
+- 开发服务器启动更快
+- 更快的热更新
+- 更快的构建（内部使用汇总）
+
+**3. 页面更轻**
+
+- 不为每个请求的每个页面发送元数据。这将使页面权重与页面总数解耦。只发送当前页面的元数据。客户端导航会将新页面的组件和元数据一起获取。
+- Vue 3 tree-shaking + Rollup 代码分割。
+- 不使用vue-router，因为VitePress的需求是非常简单和具体的--使用一个简单的自定义路由器（200LOC以下）来代替。
+- (WIP) i18n locale数据也要按需获取。
+
+### 其他的区别
+
+更多固定内容，可配置性更低。VitePress的目标是缩减当前VuePress的复杂性，并从极简主义的根源上重新出发。 面向未来：VitePress只针对支持原生ES模块导入的浏览器。它鼓励使用原生JavaScript和CSS变量进行主题设计。
+
+### 搭建
+
+#### 定制化
+
+可以通过.vitepress/config.js进行配置（见src/config.ts）。 您可以通过添加以下文件来开发您的自定义主题。
+
+##### Layout.vue文件
+
+```vue
+<template>
+  <h1>Custom Layout!</h1>
+  <Content/><!-- make sure to include markdown outlet -->
+</template>
+```
+
+##### index.js文件
+
+```js
+import Layout from './Layout.vue'
+
+export default {
+  Layout,
+  NotFound: () => 'custom 404', // <- this is a Vue 3 functional component
+  enhanceApp({ app, router, siteData }) {
+    // app is the Vue 3 app instance from createApp()
+    // router is VitePress' custom router (see `lib/app/router.js`)
+    // siteData is a ref of current site-level metadata.
+  }
+}
+```
+
+与VuePress不同，在一个主题中唯一有固定位置的文件是index.js
+
+其他的东西都是在那里导入和导出，就像在一个普通的应用程序中一样。

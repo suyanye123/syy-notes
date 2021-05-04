@@ -51,22 +51,19 @@ module.exports = {
       {
         title: "我的项目",
         path: "/demo/",
-        children: ["demo/suUI", "demo/vuepress", "demo/vitepress"],
+        children: ["demo/suUI", "demo/vuepress", "demo/yanye"],
       },
       {
         title: "CSS",
-        path: "/css/",
-        children: ["css/", "css/others", "css/canvas"],
+        children: ["css/layout", "css/others", "css/canvas"],
       },
       {
         title: "JavaScript",
-        path: "/js/",
-        children: ["js/promise", "js/axios"],
+        children: ["js/basic", "js/promise", "js/axios"],
       },
       {
         title: "Vue",
-        path: "/vue/",
-        children: ["vue/props", "vue/webpack"],
+        children: ["vue/props", "vue/webpack", "vue/diff"],
       },
 
       {
@@ -81,7 +78,7 @@ module.exports = {
       {
         title: "WebGL",
         path: "/webGL/",
-        children: ["webGL/threejs"],
+        children: ["webGL/threejs", "webGL/pixijs"],
       },
       {
         title: "utils",

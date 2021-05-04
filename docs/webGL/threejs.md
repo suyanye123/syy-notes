@@ -1,12 +1,24 @@
 # Threejs
 
-Three.js引擎嵌入引入
+Three.js 制作 3D 的五要素：
+
+1. 渲染器（render）
+我们可以把渲染器想想成为一个画布，我们需要在这个画布上去画出我们需要展示的东西。
+2. 场景（scene）
+相当于一个空间，我们需要将展示的东西放在这个空间里，然后再在画布上绘制出来。
+3. 照相机（camera）
+相当于眼睛，我们想要看到物体，就需要眼睛去看。
+4. 光源（light）
+物体需要光照才能看见，不然就是漆黑一片（但是在某些情况下展示物体不需要光源）。
+5. 物体（object）
+    我们想要表现的内容，会有形状和材质属性。
+
+##### 例如一个完整的Threejs如下案例：
 
 ```js
+/* Three.js引擎嵌入引入 */
 <script src="https://raw.github.com/mrdoob/three.js/master/build/three.js"></script>
 ```
-
-三大要素：场景、相机、渲染器
 
 1.场景
 
@@ -67,9 +79,7 @@ function render(){
 //requestAnimationFrame函数让浏览器去执行一次参数中的函数，这样通过上面render中再次调用，即形成游戏循环
 ```
 
-
-
-一个完整的Threejs例子
+##### 完整代码如下：
 
 ```html
 <!DOCTYPE html>
