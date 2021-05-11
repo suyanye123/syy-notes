@@ -249,11 +249,101 @@ canvas 常用api和 canvas 2D用法 [跳转这里](../css/canvas)
 
 #### 方法2.  使用插件
 
-1.较为可行的插件有painter
+##### 1.painter
+
+painter git地址：https://github.com/Kujiale-Mobile/Painter
+可以在这个演示地址 https://lingxiaoyi.github.io/painter-custom-poster 先布局好，然后复制代码
+
+具体使用步骤：
+1.下载painter 将components文件下的 painter 文件复制到自己的项目里，然后再使用的页面进行引入
+注意：第三方框架编写的小程序需要放到 wxcomponents或者static文件下，默认会报错
+不能放在
+
+```js
+"usingComponents": {
+	 "painter":"/wxcomponents/painter/painter"
+}
+```
+
+如果使用时遇到这个问题，regeneratorRuntime is not defined，解决方案：勾选增强编译 即可
+
+2.在页面中使用
+
+```js
+ <painter customStyle='width:630rpx; height: 732rpx;' :palette="canvasdata" :dancePalette="canvasdata" @imgOK="onImgOK"/>
+```
+
+```js
+data(){
+	return{
+		canvasdata:'',
+		canvasImgUrl:''
+	}
+}
+```
+
+
+设置动态数据
+
+```js
+onSelect() { //设置数据的方法，内容较少仅举例方便理解
+				var _this = this
+		this.canvasdata = {
+		 		width:"630rpx",
+				height:"732rpx",
+				background:'#fff',
+				views:[
+					{
+						type: 'image',
+						url: _this.DetailData.avatar,
+						css: {
+							width: '78rpx',
+							height: '78rpx',
+							borderRadius: '39rpx',
+							top: '30rpx',
+							left: '30rpx',
+						}
+					},
+					{
+					    "type": "text",
+					    "text":  _this.DetailData.nickname,
+					    "css": {
+					        "color": "#434343",
+					        "width": "200rpx",
+					        "top": "28rpx",
+					        "left": "128rpx",
+							"fontSize": "28rpx"
+					    }
+					}
+				]
+			}
+		},
+```
+
+3.保存图片
+
+```js
+onImgOK(e){
+	// console.log(e)
+	this.canvasImgUrl = e.detail.path
+}
+savePoster(){ //保存海报
+		var _this = this;
+		uni.saveImageToPhotosAlbum({
+		  filePath: _this.canvasImgUrl,
+		  success(result) {
+			uni.showToast({
+			  title: '图片保存成功',
+			  icon: 'none'
+			})
+		  }
+		})
+	}
+```
 
 
 
-2.小程序原生内置扩展组件，[ wxml-to-canvas ](https://developers.weixin.qq.com/miniprogram/dev/extended/component-plus/wxml-to-canvas.html)
+##### 2.小程序原生内置扩展组件，[ wxml-to-canvas ](https://developers.weixin.qq.com/miniprogram/dev/extended/component-plus/wxml-to-canvas.html)
 
 正常原生小程序开发，如果要增加扩展组件wxml-to-canvas
 
@@ -293,4 +383,4 @@ module.exports = require("../../../widget-ui/miniprogram_npm/widget-ui/index")
 
 
 
-3.除此之外还有uni版本的 html-to-canvas插件，请自行搜索~
+##### 3.除此之外还有uni版本的 html-to-canvas插件，请自行搜索~

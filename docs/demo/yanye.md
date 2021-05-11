@@ -8,11 +8,11 @@
 
 #### 服务器
 
-尝试的操作系统主要为 ubuntu 18.04 LTS，
+操作系统主要为 ubuntu 18.04 LTS，
 
 ubuntu操作较为简便，且可以安装图形化版本，适合个人
 
-CentOS（redhat社区版）会更适合做大服务器  [centOS下载](https://www.centos.org/centos-linux/)
+CentOS（redhat社区版）更适合做大服务器  [centOS下载](https://www.centos.org/centos-linux/)
 
 这里不多做解释相关Linux相关知识 
 
@@ -65,5 +65,104 @@ MRJU ： https://mrju.cn/
 
 下载Docker镜像之后，Docker容器可以运行在集群的任何一个节点。一方面，各个组件可以共享主机，且互不干扰；另一方面，也不需要在集群的节点上安装和配置任何组件。至于整个Docker集群的管理，业界有很多成熟的解决方案，例如[Mesos](https://link.zhihu.com/?target=http%3A//mesos.apache.org/)，[Kubernetes](https://link.zhihu.com/?target=https%3A//kubernetes.io/)与[Docker Swarm](https://link.zhihu.com/?target=https%3A//github.com/docker/swarm)。这些集群系统提供了**调度**，**服务发现**，**负载均衡**等功能，让整个集群变成一个整体。
 
-[参考原文](https://blog.fundebug.com/2017/03/27/nodejs-docker/)
+[参考文章](https://blog.fundebug.com/2017/03/27/nodejs-docker/)
+
+
+
+### Docker安装配置
+
+#### 1.新建一个centOS7 虚拟机 ![image-20210510131501899](E:\syy-notes\docs\.vuepress\alias\centos.png)
+
+ping 127.0.0.1 然后 ping www.baidu.com 
+
+如果百度ping不通，说明没有IP或者你没有启用联网功能，此时请更改网络配置文件
+
+```bash
+vi /etc/sysconfig/network-scripts/ifcfg-ens33  //用vi编辑器打开网络配置文件
+ONBOOT=no----->ONBOOT=yes	//修改这一项，即 开机启动该网卡
+service network restart		//网络重启
+```
+
+关于vim编辑器的使用： 打开后按a或者i才能进入编辑模式，编辑完后按esc退出编辑模式，变成命令模式，然
+
+​	后再输入：即可跳转至末行，最后输入x命令即可保存。
+
+#注：`vi /etc/sysconfig/network-scripts/ifcfg-ens33`   网络配置文件名可能会有不同，在输入到ifcfg时，可以连续按两下tab键，获取提示，比如我的机器 为 ifcfg-ens33
+
+完整网络配置内容如下：
+
+```bash
+TYPE=Ethernet
+BOOTPROTO=static                 #静态连接
+NAME=ens33
+UUID=1f093d71-07de-4ca5-a424-98e13b4e9532 
+DEVICE=ens33 
+ONBOOT=yes                             #网络设备开机启动 
+IPADDR=192.168.0.101              #192.168.59.x, x为3~255. 
+NETMASK=255.255.255.0          #子网掩码 
+GATEWAY=192.168.66.2          #网关IP
+DNS1= 192.168.66.2
+```
+
+
+
+##### Xshell连接虚拟机
+
+在虚拟机中输入 `ifconfig`，显示虚拟机ip地址
+
+然后在Xshell中新建会话，ssh协议，22端口，输入虚拟机root账号密码，即可维持连接登录
+
+
+
+##### 安装vsftpd（ftp服务端）  
+安装好vsftpd后，发现root用户怎么都访问不了ftp
+
+修改以下两个文件，将其中的root字段删除
+
+```bash
+vi /etc/vsftpd/ftpusers
+vi /etc/vsftpd/user_list
+```
+
+然后重启vsftpd服务，ok，问题解决。 
+
+```bash
+service vsftpd restart
+```
+
+[深入vsftpd配置](./vsftpd)
+
+
+
+##### 安装FileZilla Client（多线程ftp客户端）
+
+根据虚拟机ip地址，添加站点，然后关闭**selinux**限制
+
+先运行`getsebool -a | grep ftp` (查看selinux里有哪些关于ftp的)
+
+```bash
+allow_ftpd_anon_write –> off
+allow_ftpd_full_access –> off
+allow_ftpd_use_cifs –> off
+allow_ftpd_use_nfs –> off
+ftp_home_dir –> off
+ftpd_connect_db –> off
+httpd_enable_ftp_server –> off
+sftpd_anon_write –> off
+sftpd_enable_homedirs –> off
+sftpd_full_access –> off
+sftpd_write_ssh_home –> off
+tftp_anon_write –> off
+```
+
+接下来我们allow_ftpd_anon_write  、 allow_ftpd_full_access 这两个ON掉。
+
+```bash
+setsebool -P allow_ftpd_anon_write on 
+setsebool -P allow_ftpd_full_access on
+```
+
+即可实现文件上传下载
+
+##### 或者使用Xftp也可以，使用基本类似。
 
