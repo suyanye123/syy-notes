@@ -51,7 +51,7 @@ module.exports = {
       {
         title: "我的项目",
         path: "/demo/",
-        children: ["demo/suUI", "demo/vuepress", "demo/yanye"],
+        children: ["demo/vuepress", "demo/yanye", "demo/suUI"],
       },
       {
         title: "CSS",

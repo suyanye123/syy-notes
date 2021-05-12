@@ -1,16 +1,14 @@
 ---
 sidebarDepth: 2
 ---
-### 前端相关
-
-
+### 各种工具
 
 
 ------
 
-### 其他工具
+### 
 
-**##  项目相关**
+**##  前端相关**
 
 \- [ husky ](https://typicode.github.io/husky/#/)
 <br>Git hooks 钩子工具，在commit或push之前进行指定操作，比如 eslint 检查
@@ -23,12 +21,10 @@ sidebarDepth: 2
 
 <br>
 
-**## CSS 预处理器**
+**## 其他相关**
 
-\- [Scss](https://www.dute.org/sass-to-css)
+\- [Docker-api](../demo/docker)
+<br>  Docker常用基本命令
 
-\- [Less](https://www.dute.org/less-to-css)
-
-\- [Stylus](https://stylus-lang.com/try.html)
-
-\- [Stylus 中文站点](https://stylus.bootcss.com/try.html)
+\- [Linux-api](./linux)
+<br>  Linux常用基本命令
