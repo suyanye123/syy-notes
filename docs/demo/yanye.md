@@ -168,14 +168,14 @@ docker version		//查看docker版本
 修改daemon配置文件
 
 ```bash
-sudo mkdir -p /etc/docker
-sudo tee /etc/docker/daemon.json <<-'EOF'
+mkdir -p /etc/docker
+tee /etc/docker/daemon.json <<-'EOF'
 {
   "registry-mirrors": ["https://ytvgdcuq.mirror.aliyuncs.com"]
 }
 EOF
-sudo systemctl daemon-reload
-sudo systemctl restart docker
+systemctl daemon-reload
+systemctl restart docker
 ```
 
 #### 卸载docker
@@ -187,7 +187,7 @@ rm -rf /var/lib/docker 		//删除资源
 
 
 
-### 4.使用docker搭建镜像
+### 4.使用docker搭建容器
 
 
 

@@ -45,7 +45,11 @@ docker exec -it 88f /bin/bash		//进入镜像中的shell
 service --status-all				//查看开启的服务
 ```
 
+​	
 
+```
+docker restart 容器ID    //重启
+```
 
 如果直接建立容器，不映射端口的话，只能通过docker的IP访问网站。
 
@@ -54,6 +58,20 @@ service --status-all				//查看开启的服务
 ```
 
 就能直接通过虚拟机ip加端口访问 
+
+进入容器
+
+```bash
+docker attach 容器ID
+docker exec -it 容器ID /bin/bash 
+```
+
+退出容器
+
+```bash
+exit  或
+Ctrl+P+Q
+```
 
 [如何创建一个docker镜像](https://linux.cn/article-9541-1.html)
 [如何使用Dockerhub](https://linux.cn/article-9551-1.html)

@@ -27,7 +27,6 @@ module.exports = {
     ["meta", { name: "msapplication-TileColor", content: "#000000" }],
   ],
   themeConfig: {
-    repo: "suyanye123/syy-notes/", //这是github链接
     nav: [
       {
         text: "工作项目",
@@ -38,12 +37,15 @@ module.exports = {
       },
       { text: " suUI ", link: "https://yu-nan.gitee.io/suui" },
       { text: "言叶之庭", link: "https://www.syy123.com" },
+      {
+        text: "关于",
+        items: [
+          { text: "GitHub", link: "suyanye123/syy-notes/" },
+          { text: "关于我", link: "../introduce/README.md" },
+        ],
+      },
     ],
     sidebar: [
-      {
-        title: "简单介绍",
-        path: "/introduce/",
-      },
       {
         title: "网页工具",
         path: "/mytools/",
