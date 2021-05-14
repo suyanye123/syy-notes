@@ -40,8 +40,8 @@ module.exports = {
       {
         text: "关于",
         items: [
-          { text: "GitHub", link: "suyanye123/syy-notes/" },
-          { text: "关于我", link: "../introduce/README.md" },
+          { text: "GitHub", link: "https://github.com/suyanye123/syy-notes" },
+          { text: "关于我", link: "../introduce/" },
         ],
       },
     ],
