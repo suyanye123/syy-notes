@@ -5,7 +5,7 @@ sidebarDepth: 3
 # Git
 - [Git 学习教程](https://learngitbranching.js.org/?locale=zh_CN)
 - [Windows 版 Github](https://github.com/git-for-windows/git)
-- [Windows 版下载镜像站](https://npm.taobao.org/mirrors/git-for-windows/)
+- [Windows 版下载镜像站](https://npm.taobao.org/mirrors/git-for-windows/) 
 - [下载技巧 - 使用 jsdelivr 加速 Github 仓库资源](https://github.com/maomao1996/daily-notes/issues/7)
 
 ## 备忘API
