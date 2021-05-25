@@ -10,15 +10,371 @@
 
 操作系统主要为 ubuntu 18.04 LTS，ubuntu操作较为简便，且可以安装图形化版本，适合个人，CentOS（redhat社区版）更适合做大服务器  [centOS下载](https://www.centos.org/centos-linux/)
 
-这里不多做解释相关Linux基础知识 
+这里不多做解释相关Linux基础知识 ，如果看不懂，请看本章后半段 **虚拟机教程**
 
 常用开放端口，比如80(web)、443(https)、21(ftp)、22(ssh)、3306(mysql)等
 
 
 
-## 虚拟机
+### 一、使用docker构建 Vue 应用镜像
 
-### 1.新建一个centOS7 虚拟机 
+#### 获取 Nginx 镜像
+
+```
+service docker start  //记得启动docker
+docker pull nginx
+```
+
+- Docker镜像（Image）一个特殊的文件系统。Docker 镜像是一个特殊的文件系统，除了提供容器运行时所需的程序、库、资源、配置等文件外，还包含了一些为运行时准备的一些配置参数（如匿名卷、环境变量、用户等）。 镜像不包含任何动态数据，其内容在构建之后也不会被改变。
+
+- Docker 镜像名称由 REPOSITORY 和 TAG 组成 [REPOSITORY[:TAG]]，TAG默认为 latest。
+
+#### 创建 Nginx Config配置文件
+
+在项目根目录下创建 nginx 文件夹，该文件夹下新建文件 default.conf：
+
+```nginx
+server {
+listen       80;
+server_name  localhost;
+
+#charset koi8-r;
+access_log  /var/log/nginx/host.access.log  main;
+error_log  /var/log/nginx/error.log  error;
+
+location / {
+    root   /usr/share/nginx/html;
+    index  index.html index.htm;
+}
+
+#error_page  404              /404.html;
+    #redirect server error pages to the static page /50x.html
+#
+error_page   500 502 503 504  /50x.html;
+location = /50x.html {
+    root   /usr/share/nginx/html;
+}
+} 
+```
+
+
+
+
+
+该配置文件定义了首页的指向为 /usr/share/nginx/html/index.html，所以我们可以一会把构建出来的 index.html 文件和相关的静态资源放到 /usr/share/nginx/html 目录下。
+
+#### 创建 Dockerfile 文件
+
+[怎么新建Dockerfile文件](./docker)
+
+```nginx
+FROM nginx
+COPY dist/ /usr/share/nginx/html/
+COPY nginx/default.conf /etc/nginx/conf.d/default.conf
+```
+
+- 自定义构建镜像的时候基于 Dockerfile 来构建。
+- FROM nginx 命令的意思该镜像是基于 nginx:latest 镜像而构建的。
+- COPY dist/ /usr/share/nginx/html/ 命令的意思是将项目根目录下 dist 文件夹下的所有文件复制到镜像中 /usr/share/nginx/html/ 目录下。
+- COPY nginx/default.conf /etc/nginx/conf.d/default.conf 命令的意思是将 Nginx 目录下的 default.conf 复制到 etc/nginx/conf.d/default.conf，用本地的 default.conf 配置来替换 Nginx 镜像里的默认配置。
+
+#### 基于该 Dockerfile 构建 Vue 应用镜像
+
+运行命令（注意不要少了最后的 “.” ）：
+
+```bash
+docker build -t vuenginxcontainer .
+```
+
+-t 是给镜像命名，. 是基于当前目录的 Dockerfile 来构建镜像。
+<img src="../.vuepress/alias/yanye/1.png" alt="1" style="zoom: 67%;" />
+
+
+
+查看本地镜像，运行命令：
+
+```
+docker image ls | grep vuenginxcontainer
+```
+
+
+
+![2](../.vuepress/alias/yanye/2.png)
+
+到此时我们的 Vue 应用镜像 vuenginxcontainer 已经成功创建。接下来，我们基于该镜像启动一个 Docker 容器。
+
+#### 启动 Vue app 容器
+
+Docker 容器Container： 镜像运行时的实体。镜像（Image）和容器（Container）的关系，就像是面向对象程序设计中的类和实例一样，镜像是静态的定义，容器是镜像运行时的实体。容器可以被创建、启动、停止、删除、暂停等 。
+
+基于 vuenginxcontainer 镜像启动容器，运行命令：
+
+```bash
+docker run \
+-p 3000:80 \
+-d --name vueApp \
+vuenginxcontainer
+```
+
+- docker run 基于镜像启动一个容器
+- -p 3000:80 端口映射，将宿主的3000端口映射到容器的80端口
+- -d 后台方式运行
+- --name 容器名，查看 Docker 进程
+
+```bash
+docker ps   //显示所有容器
+```
+
+![3](../.vuepress/alias/yanye/3.png)
+
+
+
+可以发现名为 vueApp 的容器已经运行起来。此时访问 http://localhost:3000 应该就能访问到该 Vue 应用：
+![4](../.vuepress/alias/yanye/4.png)
+
+目前为止，已经通过 Docker 容器部署了一个静态资源服务，可以访问到静态资源文件。
+
+**注意如果用了vue-router的history模式，要配个默认主页防止nginx或者其他服务端找不到路由直接报404。vue的dockerfile在官方文档里是有示例**
+
+### 二、使用docker构建Node容器
+
+再部署一个 Node 的容器来提供接口服务。
+
+#### Express 服务
+
+用 Node.js web 框架 Express 来写一个服务，注册一个返回 json 数据格式的路由 Server.js：
+
+```
+'use strict';
+
+const express = require('express');
+
+const PORT = 8080;
+const HOST = '0.0.0.0';
+
+const app = express();
+app.get('/', (req, res) => {
+res.send('Hello world\n');
+});
+
+app.get('/json', (req, res) => {
+res.json({
+    code: 0,
+    data :'This is message from node container'
+})
+});
+
+app.listen(PORT, HOST);
+console.log(`Running on http://${HOST}:${PORT}`);
+```
+
+
+运行该 Express 应用需要 Node 环境，我们基于 Node 镜像来构建一个新镜像。
+
+#### 获取 Node 镜像
+
+```
+docker pull node
+```
+
+
+
+#### 编写 Dockerfile 将 Express 应用 Docker 化
+
+```
+FROM node
+
+WORKDIR /usr/src/app
+
+COPY package*.json ./
+
+RUN npm install
+
+COPY . .
+
+EXPOSE 8080
+CMD [ "npm", "start" ]
+```
+
+
+构建镜像的时候 node_modules 的依赖直接通过 RUN npm install 来安装，项目中创建一个 .dockerignore文件来忽略一些直接跳过的文件：
+
+```
+node_modules
+npm-debug.log
+```
+
+
+
+#### 构建 NodeWebServer 镜像
+
+运行构建命令：
+
+```
+docker build -t nodewebserver .
+```
+
+#### 启动 NodeServer 容器
+
+基于刚刚构建的 NodeWebServer 镜像 启动一个名为 NodeServer 的容器来提供接口服务8080端口，并映射宿主的5000端口：
+
+```
+docker run \
+-p 5000:8080 \
+-d --name nodeserver \
+nodewebserver
+```
+
+
+查看当前 Docker 进程：
+
+```bash
+docker ps
+```
+
+![5](../.vuepress/alias/yanye/5.png)
+
+可以发现 NodeServer 的容器也正常的运行起来。访问以下 http://localhost:5000/json 能访问到前面写的 json 数据。
+
+<img src="../.vuepress/alias/yanye/6.png" alt="6" style="zoom:67%;" />
+
+到目前为止，后端接口服务也正常启动了。只需最后把页面请求的接口转发到后端接口服务就能调通接口。
+
+### 跨域转发
+
+想要将 vueApp 容器 上的请求转发到 NodeServer 容器上。首先需要知道 NodeServer 容器的 IP 地址和端口，目前已知 NodeServer 容器内部服务监听在 8080 端口，还需要知道 IP 即可。
+
+#### 查看 NodeServer 容器的 IP 地址
+
+查看容器内部 IP 有多种方式，这里提供两种：
+
+1、进入容器内部查看：
+
+```
+docker exect -it 02277acc3efc bash
+```
+
+
+
+```bash
+cat /etc/hosts
+```
+
+<img src="../.vuepress/alias/yanye/7.png" alt="7" style="zoom:67%;" />
+
+2、docker inspect [ containerId ] 直接查看容器信息：
+
+```
+docker inspect 02277acc3efc
+```
+
+
+在其中找到 Networks 相关配置信息：
+
+<img src="../.vuepress/alias/yanye/8.png" alt="8"  />
+
+记录下 Node 服务容器对应的 IP，一会儿配置 Nginx 转发的时候会用到。
+
+#### 修改 Nginx 配置
+
+Nginx 配置 Location 指向 Node 服务 default.conf （前端想要了解的Nginx，关于 Nginx 的配置已经 Location 的具体写法可以参考《[一文弄懂 Nginx 的 Location 匹配](https://juejin.im/post/5cbe89b6f265da0373718707)》）。
+
+添加一条重写规则，将 /api/{path} 转到目标服务的 /{path} 接口上。
+在前面的 nginx/default.conf 文件中加入：
+
+```
+location /api/ {
+rewrite  /api/(.*)  /$1  break;
+proxy_pass http://172.17.0.2:8080;
+} 
+```
+
+
+修改完了之后意识到一个问题：vueApp 容器是基于 vuenginxcontainer 这个镜像运行的，而在一开始构建镜像的时候是将 Nginx 配置 default.conf 直接构建进去了。因此如果需要修改 default.conf 还得再重新构建一个新的镜像，再基于新镜像来运行新的容器。
+
+### 改进
+
+能不能每次修改配置文件后直接重启容器就能让新配置生效，答案当然是有。
+
+在构建镜像的时候 不把 Nginx 配置复制到镜像中，而是直接挂载到宿主机上，每次修改配置后，直接重启容器即可。
+
+#### 修改 Dockerfile 文件
+
+把 vueclidemo 项目下的 Dockerfile 修改一下：
+
+```
+FROM nginx
+COPY dist/  /usr/share/nginx/html/
+COPY nginx/default.conf /etc/nginx/conf.d/default.conf
+```
+
+
+将 COPY nginx/default.conf /etc/nginx/conf.d/default.conf 命令删除，Nginx 配置都通过挂载命令挂载在宿主机上。再看 COPY dist/ /usr/share/nginx/html/ 命令，如果每次构建的项目 dist/ 下的内容变动都需要重新走一遍构建新镜像再启动新容器的操作，因此这条命令也可以删除，使用挂载的方式来启动容器。
+
+#### 重新运行 Vue 应用容器
+
+直接基于 Nginx 镜像来启动容器 vuenginxnew，运行命令：
+
+```
+docker run \
+-p 3000:80 \
+-d --name vuenginxnew \
+--mount type=bind,source=$HOME/SelfWork/docker/vueclidemo/nginx,target=/etc/nginx/conf.d \
+--mount type=bind,source=$HOME/SelfWork/docker/vueclidemo/dist,target=/usr/share/nginx/html \
+nginx
+```
+
+
+
+- --mount type=bind,source={sourceDir},target={targetDir} 将宿主机的 sourceDir 挂载到容器的 targetDir 目录上。
+- 此处运行的命令较长，如果每次重新输入难免麻烦，我们可以将完整的命令保存到一个 shell 文件 vueapp.sh 中，然后直接执行 sh vueapp.sh。
+
+
+这样就能每次修改了 Nginx 配置或者重新构建了 Vue 应用的时候，只需重启容器就能立马生效。
+
+此时我们再访问 http://localhost:3000/api/json 能看到接口能正常返回，说明转发生效了。
+
+![9](../.vuepress/alias/yanye/9.png)
+
+至此接口服务的转发也调通了。
+
+#### 配置负载均衡
+
+后端服务一般都是双机或者多机以确保服务的稳定性。我们可以再启动一个后端服务容器，并修改 Nginx 的配置来优化资源利用率，最大化吞吐量，减少延迟，确保容错配置。
+
+基于前面『启动 Vue app 容器』章节的类似操作，新启动一个容器，并基于『Express 服务』章节类似的操作，查看到新容器的 IP（172.17.0.3）。
+
+修改一下 nginx/default.conf（新增 upstream ，修改 location /api/ 中的 proxy_pass）：
+
+```
+upstream backend {
+  server 172.17.0.2:8080;
+  server 172.17.0.3:8080;
+}
+
+……
+
+location /api/ {
+  rewrite  /api/(.*)  /$1  break;
+  proxy_pass backend;
+} 
+```
+
+### 写在后面
+
+不习惯命令行的同学可以选用 Kitematic 来管理 Docker 容器的状态、数据目录和网络。所有对容量的操作都可以可视化的操作，这里就不做过多介绍了，有兴趣的同学可以自行体验下。
+
+[参考原文](https://juejin.cn/post/6844903837774397447)
+
+ [**更多：JAVA项目如何通过Docker实现持续部署**](https://blog.51cto.com/dadonggg/1957691)
+
+------
+
+
+
+## 虚拟机教程
+
+### 1.新建centOS7 虚拟机 
 
 ![image-20210510131501899](../.vuepress/alias/centos.png)
 
@@ -187,9 +543,13 @@ rm -rf /var/lib/docker 		//删除资源
 
 
 
-### 4.使用docker搭建容器
+### 4.自助git服务，私人仓库
 
+Gogs 轻量级，图形化的git服务，方便不超过5个人的小团队在上面同步下项目，那么gogs就非常好了。安装便捷，托管/issue/wiki都有，使用简单，学习迅速，足够使用
 
+[gogs使用方法](./gogs)
+
+gitlab 集成比较强的ci/cd功能，也支持自家omnibus懒人包的docker安装，gitlab集成jenkins和自己设置webhook也方便，功能很多。确点是很重，最少需要服务器4G以上运行内存，
 
 
 

@@ -73,11 +73,135 @@ exit  或
 Ctrl+P+Q
 ```
 
+
+
+### 新建一个Docker镜像
+
+#### 1.新建一个目录和一个Dockerfile
+
+```bash
+# mkdir suui
+# cd suui
+# touch Dockerfile
+```
+
+用文本编辑器打开Dockerfile文件，我喜欢用nano，因为简单操作，也可以用vim
+
+Dockerfile中每一条指令都创建镜像的一层，例如：
+
+```bash
+# This is a comment 
+FROM ubuntu:14.04 
+MAINTAINER  Docker Newbee <newbee@docker.com> 
+RUN apt-get -qq update 
+RUN apt-get -qqy install ruby ruby-dev 
+#RUN gem install suui
+```
+
+Dockerfile基本的语法是
+
+```markdown
+使用  #来注释    
+FROM 指令告诉 Docker 使用哪个镜像作为基础 
+接着是维护者的信息   
+RUN 开头的指令会在创建中运行，比如安装一个软件包，在这里使用apt-get来安装了一些软件
+```
+
+每一个指令都会在镜像上创建一个新的层，每一个指令的前缀都必须是大写的。
+
+第一条FROM，指定使用哪个镜像源
+
+RUN 指令告诉docker 在镜像内执行命令，安装了什么…
+
+
+
+#### 2.编写完成Dockerfile后可以使用docker build 来生成镜像
+
+```bash
+# docker build -t newuser/ubuntu:v3 . 
+```
+
+其中 -t 标记来添加tag，指定新的镜像的用户信息。“.”是Dockerfile所在的路径（当前目录），也可以替换为一个具体的 Dockerfile的路径。
+
+通俗来讲：
+-t ：指定要创建的目标镜像名
+. ：Dockerfile 文件所在目录，可以指定Dockerfile 的绝对路径
+
+可以看到 build进程在执行操作。
+
+它要做的第一件事情就是上传这个Dockerfile 内容，因为所有的操作都要 依据Dockerfile来进行。
+
+然后Dockfile中的指令被一条一条的执行。每一步都创建了一个新的容器，在容器中执行指令并提交修改。
+
+当所有的指令都执行完毕之后，返回了最终的镜像 id。
+
+所有的中间步骤所产生的容器都被删除和清理了。
+
+新的镜像创建完之后我们就可以使用`docker images来查看，然后就可以使用该镜像了
+
+*注意一个镜像不能超过127层
+
+
+
+Docker 允许你在容器内运行应用程序， 使用 docker run 命令来在容器内运行一个应用程序。
+
+输出Hello world,输入命令 `docker run ubuntu:14.04 /bin/echo "Hello world"`
+
+```markdown
+各个参数解析：
+docker: Docker 的二进制执行文件。
+
+run:与前面的 docker 组合来运行一个容器。
+
+ubuntu:14.04指定要运行的镜像，Docker首先从本地主机上查找镜像是否存在，如果不存在，Docker 就会从镜像仓库 Docker Hub 下载公共镜像。
+
+/bin/echo "Hello world": 在启动的容器里执行的命令
+
+以上命令完整的意思可以解释为：Docker 以 ubuntu14.04镜像创建一个新容器，然后在容器里执行 bin/echo "Hello world"，然后输出结果。
+```
+
+
+
+#### 3.运行交互式的容器
+
+通过docker的两个参数 -i -t，让docker运行的容器实现”对话”的能力
+
+```bash
+docker run -i -t ubuntu:14.04 /bin/bash
+```
+
+各个参数解析：
+
+```markdown
+-t:在新容器内指定一个伪终端或终端。
+-i:允许你对容器内的标准输入 (STDIN) 进行交互。
+```
+
+可以使用ls查看当前目录下的文件，cat /proc/version查看当前系统的版本信息
+
+运行exit命令或者使用CTRL+D来退出容器
+
+#### 4.后台模式
+
+使用以下命令创建一个以进程方式运行的容器
+
+```bash
+docker run -d ubuntu:14.04 /bin/sh -c "while true; do echo hello world; sleep 1; done"
+```
+
+#### 5.停止容器
+
+使用`docker stop`来停止容器
+
+------------------------------------------------
+
+
 [如何创建一个docker镜像](https://linux.cn/article-9541-1.html)
 [如何使用Dockerhub](https://linux.cn/article-9551-1.html)
 
 
-#### 将容器的状态保存为镜像
+
+### 将容器的状态保存为镜像
 
 ```bash
 docker commit c43c web1  //容器ID，镜像名
@@ -109,13 +233,17 @@ docker cp /www/runoob 96f7f14e99ab:/www
 docker cp  96f7f14e99ab:/www /tmp/
 ```
 
-#### 存储镜像
+### 存储镜像
 
 如果要导出镜像到本地文件，可以使用 docker save 命令。
 
 ```bash
 docker save -o web.tar web1
 ```
+
+
+
+#### [**通过dockerHub上传你构建的镜像**](https://hub.docker.com/)
 
 
 

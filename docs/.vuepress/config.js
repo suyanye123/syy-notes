@@ -69,9 +69,9 @@ module.exports = {
       },
 
       {
-        title: "uni-app",
-        path: "/uniapp/",
-        children: ["uniapp/miniProgram"],
+        title: "混合开发",
+        path: "/mix/",
+        children: ["mix/uniapp", "mix/miniProgram", "mix/flutter"],
       },
       {
         title: "Git",
