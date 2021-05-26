@@ -6,19 +6,23 @@
 
 ### 1. 前端小札
 
-基于尤大的 [ VuePress ](https://github.com/vuejs/vuepress)（Vue 驱动的静态网站生成器）、gitalk、gh-pages、github Action搭建的静态博客  [ 点击跳转](./vuepress)
+基于 [ VuePress ](https://github.com/vuejs/vuepress)（Vue 驱动的静态网站生成器）、gitalk、gh-pages、github Action搭建的静态博客  [ 点击跳转](./vuepress)
 
 
 
-### 2. suUI
+
+
+### 2. 言叶之庭
+
+配置服务器、通过Docker部署项目、虚拟机等相关内容    [ 点击跳转](./yanye)
+
+
+
+
+
+### 3. suUI
 
 使用 vite + vue3 练手UI库造轮子 [ 点击跳转](./suUI)
-
-
-
-### 3. 言叶之庭
-
-个人服务器的部署、应用，以及动态网站搭建等相关    [ 点击跳转](./yanye)
 
 
 

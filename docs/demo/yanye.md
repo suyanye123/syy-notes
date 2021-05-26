@@ -87,13 +87,13 @@ docker build -t vuenginxcontainer .
 ```
 
 -t 是给镜像命名，. 是基于当前目录的 Dockerfile 来构建镜像。
-<img src="../.vuepress/alias/yanye/1.png" alt="1" style="zoom: 67%;" />
+<img src="../.vuepress/alias/yanye/1.png" alt="1" style="zoom: 45%;" />
 
 
 
 查看本地镜像，运行命令：
 
-```
+```bash
 docker image ls | grep vuenginxcontainer
 ```
 
@@ -101,7 +101,9 @@ docker image ls | grep vuenginxcontainer
 
 ![2](../.vuepress/alias/yanye/2.png)
 
-到此时我们的 Vue 应用镜像 vuenginxcontainer 已经成功创建。接下来，我们基于该镜像启动一个 Docker 容器。
+到此时我们的 Vue 应用镜像 vuenginxcontainer 已经成功创建。
+
+接下来，我们基于该镜像启动一个 Docker 容器。
 
 #### 启动 Vue app 容器
 
@@ -134,7 +136,9 @@ docker ps   //显示所有容器
 
 目前为止，已经通过 Docker 容器部署了一个静态资源服务，可以访问到静态资源文件。
 
-**注意如果用了vue-router的history模式，要配个默认主页防止nginx或者其他服务端找不到路由直接报404。vue的dockerfile在官方文档里是有示例**
+***注意如果用了vue-router的history模式，要配个默认主页防止nginx或者其他服务端找不到路由直接报404。vue的dockerfile在官方文档里是有示例**
+
+
 
 ### 二、使用docker构建Node容器
 
@@ -144,7 +148,7 @@ docker ps   //显示所有容器
 
 用 Node.js web 框架 Express 来写一个服务，注册一个返回 json 数据格式的路由 Server.js：
 
-```
+```bash
 'use strict';
 
 const express = require('express');
@@ -173,7 +177,7 @@ console.log(`Running on http://${HOST}:${PORT}`);
 
 #### 获取 Node 镜像
 
-```
+```bash
 docker pull node
 ```
 
@@ -181,7 +185,7 @@ docker pull node
 
 #### 编写 Dockerfile 将 Express 应用 Docker 化
 
-```
+```bash
 FROM node
 
 WORKDIR /usr/src/app
@@ -210,7 +214,7 @@ npm-debug.log
 
 运行构建命令：
 
-```
+```bash
 docker build -t nodewebserver .
 ```
 
@@ -218,7 +222,7 @@ docker build -t nodewebserver .
 
 基于刚刚构建的 NodeWebServer 镜像 启动一个名为 NodeServer 的容器来提供接口服务8080端口，并映射宿主的5000端口：
 
-```
+```bash
 docker run \
 -p 5000:8080 \
 -d --name nodeserver \
@@ -250,7 +254,7 @@ docker ps
 
 1、进入容器内部查看：
 
-```
+```bash
 docker exect -it 02277acc3efc bash
 ```
 
@@ -264,7 +268,7 @@ cat /etc/hosts
 
 2、docker inspect [ containerId ] 直接查看容器信息：
 
-```
+```bash
 docker inspect 02277acc3efc
 ```
 
@@ -282,7 +286,7 @@ Nginx 配置 Location 指向 Node 服务 default.conf （前端想要了解的Ng
 添加一条重写规则，将 /api/{path} 转到目标服务的 /{path} 接口上。
 在前面的 nginx/default.conf 文件中加入：
 
-```
+```nginx
 location /api/ {
 rewrite  /api/(.*)  /$1  break;
 proxy_pass http://172.17.0.2:8080;
@@ -302,7 +306,7 @@ proxy_pass http://172.17.0.2:8080;
 
 把 vueclidemo 项目下的 Dockerfile 修改一下：
 
-```
+```dockerfile
 FROM nginx
 COPY dist/  /usr/share/nginx/html/
 COPY nginx/default.conf /etc/nginx/conf.d/default.conf
@@ -315,7 +319,7 @@ COPY nginx/default.conf /etc/nginx/conf.d/default.conf
 
 直接基于 Nginx 镜像来启动容器 vuenginxnew，运行命令：
 
-```
+```bash
 docker run \
 -p 3000:80 \
 -d --name vuenginxnew \
@@ -346,7 +350,7 @@ nginx
 
 修改一下 nginx/default.conf（新增 upstream ，修改 location /api/ 中的 proxy_pass）：
 
-```
+```bash
 upstream backend {
   server 172.17.0.2:8080;
   server 172.17.0.3:8080;
@@ -422,6 +426,14 @@ DNS1= 192.168.66.2
 
 
 #### 安装vsftpd（ftp服务端） 或Xftp
+
+```bash
+yum install -y vsftpd  //安装vsftp服务端
+vim /etc/vsftpd/vsftpd.conf  //修改vsftp配置
+anonymous_enable=NO		//不允许匿名访问
+local_enable=YES		//允许使用本地帐户进行FTP用户登录验证
+```
+
 安装好vsftpd后，发现root用户怎么都访问不了ftp
 
 修改以下两个文件，将其中的root字段删除
@@ -501,6 +513,7 @@ docker的安装要求64位系统且内核版本大于3.10。所以如果是cento
 ```shell
 yum -y update // 全系统的软件版本升级
 uname -r  //3.10.0-1160.el7.x86_64 查看内核版本
+yum -y install git   //yum安装git,注意：使用yum安装的git在/usr/bin/git下
 ```
 
 安装方法
@@ -549,7 +562,9 @@ Gogs 轻量级，图形化的git服务，方便不超过5个人的小团队在�
 
 [gogs使用方法](./gogs)
 
-gitlab 集成比较强的ci/cd功能，也支持自家omnibus懒人包的docker安装，gitlab集成jenkins和自己设置webhook也方便，功能很多。确点是很重，最少需要服务器4G以上运行内存，
+gitlab 集成比较强的ci/cd功能，也支持自家omnibus懒人包的docker安装，gitlab集成jenkins和自己设置webhook也方便，功能很多。
+
+缺点是很重，对运行机器配置有要求，最少需要服务器4G以上运行内存，
 
 
 
