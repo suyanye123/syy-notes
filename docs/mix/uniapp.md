@@ -4,6 +4,8 @@ sidebarDepth: 2
 
 # Uni-app
 
+[细节：uni-app的开发经历（持续更新）](https://juejin.cn/post/6844903910876905486#heading-18)
+
 uni-app是逻辑和渲染分离的，渲染层在app端提供了两套排版渲染引擎。
 
 **vue文件走的webview渲染**
@@ -135,26 +137,50 @@ vue和nvue页面可以混用
 
 ------
 
-## 三、vscode构建uniapp项目配置
+## 三、快速构建uniapp项目
 
-1.全局安装vue-cli, 用脚手架创建uniapp项目；
-2.去gitee下载 uniapp 代码块，放在.vscode 项目本地配置；
+1.全局安装vue-cli；
 
-3.安装组件语法提示
-`npm i @dcloudio/uni-helper-json`
+```bash
+npm install -g @vue/cli
+```
 
-4.使用scss样式
-先安装node-sass
-`npm install node-sass`
+2.去gitee下载 uniapp 代码块，放在.vscode 项目本地配置； 		//此步可不做
+
+3.安装组件语法提示     	//此步可不做
+
+```
+npm i @dcloudio/uni-helper-json
+```
+
+4.创建模板小程序项目
+
+```bash
+vue create -p dcloudio/uni-preset-vue myproject
+npm install
+```
+
+使用scss样式，先安装node-sass
+
+```bash
+npm install node-sass
+```
+
 然后安装sass-loader，这里安装7.3.1版本，版本可选择性更新，因为高版本可能会报错
 使用 cnpm 会快一些
-`cnpm install sass-loader@7.3.1`
 
-5.运行项目（配置好package.json后直接使用npm run 即可 ）
-`npm run dev:%PLATFORM%`
-发布项目
-`npm run build:%PLATFORM%`
-%PLATFORM% 可选值参见package.json中的scripts
+```bash
+cnpm install sass-loader@7.3.1
+```
+
+5.运行项目
+
+```bash
+npm run dev:%PLATFORM% mp-weixin 
+或直接 npm run dev:mp-weixin
+```
+
+%PLATFORM% 可选值，与不同平台指令，参见package.json中的scripts
 
 ------
 

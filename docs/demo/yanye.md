@@ -364,13 +364,91 @@ location /api/ {
 } 
 ```
 
-### 写在后面
+#### 写在后面
 
 不习惯命令行的同学可以选用 Kitematic 来管理 Docker 容器的状态、数据目录和网络。所有对容量的操作都可以可视化的操作，这里就不做过多介绍了，有兴趣的同学可以自行体验下。
 
 [参考原文](https://juejin.cn/post/6844903837774397447)
 
  [**更多：JAVA项目如何通过Docker实现持续部署**](https://blog.51cto.com/dadonggg/1957691)
+
+
+
+### 三、宿主机配置nginx搭建多端口站点
+
+#### [安装nginx](./nginx)
+
+#### 配置nginx的配置文件nginx.conf
+
+如果你项目上要两个或者多个vue项目 可以直接在你的80端口下新加一个location
+也可以新开一个端口 也就是新建一个serve
+
+![nginx](../.vuepress/alias/nginx.jpg)
+
+
+
+#### 安全配置 [参照文章](https://juejin.cn/post/6966171037713219614#heading-28)
+
+##### 禁用server_tokens项
+
+```
+server {    listen 192.168.1.250:80;    
+			Server_tokens off;    
+			server_name mingongge.com www.mingongge.com;    
+            access_log /var/www/logs/mingongge.access.log;    
+            error_log /var/www/logs/mingonggex.error.log error;    
+            root /var/www/mingongge.com/public_html;    
+            index index.html index.htm;
+        }
+#server_tokens在打开的情况下会使404页面显示Nginx的当前版本号,重启Nginx后生效
+
+```
+
+##### 禁止非法的HTTP User Agents
+
+```
+include /etc/nginx/blockuseragents.rules;并加入if语句设置阻止后进入的页面：
+```
+
+##### 禁掉不需要的 HTTP 方法
+
+```
+if ($request_method !~ ^(GET|HEAD|POST)$) {    return 444;}
+```
+
+##### 禁止 SSL 并且只打开 TLS
+
+```
+ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+```
+
+
+
+#### 启动nginx
+
+```bash
+cd usr/local/nginx/sbin
+
+./nginx
+```
+
+#### 查看nginx服务是否启动成功
+
+```bash
+ps -ef | grep nginx
+```
+
+#### 平滑重启nginx服务
+
+```bash
+cd /usr/local/nginx/sbin	//nginx安装目录
+
+./nginx -s reload
+```
+
+
+
+
 
 ------
 
