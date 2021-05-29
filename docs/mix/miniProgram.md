@@ -6,19 +6,73 @@ sidebarDepth: 2
 
 ## 一、微信授权登录全流程
 
-1.定位授权
+#### 定位授权
+
+```js
+onLoad(){
+  let that = this;
+  wx.getLocation({
+    type: 'gcj02',
+    success(res) {
+          
+    },
+    fail(error) {
+      that.getSetFun();  // 没有获取到位置，不停获取
+    }
+  })
+}
+// 没有获取到位置，不停获取
+getSetFun() {
+  wx.getSetting({
+    success(res) {
+      if (!res.authSetting['scope.userLocation']) {
+        wx.showModal({
+          title: '是否授权当前位置',
+          content: '请确认授权，否则无法正常使用',
+          success(res) {
+            if (res.confirm) {
+              wx.openSetting({
+                success() {
+                  // 跳到首页
+                }
+              })
+            } else if (res.cancel) {
+                  // 跳到首页
+            }
+          }
+        })
+      } else {
+         //用户已授权，但是获取地理位置失败，提示用户去系统设置中打开定位
+         wx.showModal({
+           title: '您手机定位功能没有开启',	
+           content: '请在系统设置中打开定位服务',
+           success() {
+                  // 跳到首页
+           }
+         })
+       }
+     }
+   })
+ }
+```
 
 
 
-2.个人信息授权
+#### 获取个人信息
 
+##### 步骤：
 
+1. 调用 wx.login() 获取 临时登录凭证code ，传给后端。
 
-3.获取唯一 openID
+2. 服务端调用 auth.code2Session 接口，换取 用户唯一标识 OpenID 和 会话密钥 session_key。
 
+   这一步已经可以通过openid，辨别数据库中保存的用户身份的目的。
 
+   但是如果需要知道用户的微信头像、名字、电话等私密信息还需下一步。
 
+3. 前端通过调用  `wx.getUserInfo` ( 此接口在21年4月28日已更改) 方法获取encryptedData和iv ，发送给后端。后端根据 微信小程序的appid，用户openid ， encryptedData和iv 这四个参数进行解析，返回数据。
 
+<img src="..\.vuepress\alias\wxlogin.jpg" alt="login" style="zoom:80%;" />
 
 
 
