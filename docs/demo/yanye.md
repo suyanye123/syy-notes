@@ -1,6 +1,6 @@
 # 言叶之庭
 
-这里主要是我个人服务器部署，以及搭建动态网站的点点滴滴记录
+这里主要是我个人服务器部署多种应用，以及搭建动态网站的点点滴滴记录
 
 大部分涉及到的是运维相关知识~
 
@@ -448,8 +448,6 @@ cd /usr/local/nginx/sbin	//nginx安装目录
 
 
 
-
-
 ------
 
 
@@ -645,6 +643,44 @@ gitlab 集成比较强的ci/cd功能，也支持自家omnibus懒人包的docker�
 缺点是很重，对运行机器配置有要求，最少需要服务器4G以上运行内存，
 
 
+
+### 5.搭建私有网盘
+
+开源私有云盘主要有owncloud 、 sealife 、nextcloud 等等，这里使用的是Nextcloud
+
+```bash
+方法1：
+docker pull nextcloud		//下载镜像
+mkdir /nextcloud
+docker run --name nextcloud -p 8080:80   -v /nextcloud:/var/www/html/data -d nextcloud
+// -- name：设定容器名称为nextcloud
+
+// -p 8080:80 ：端口映射，将宿主机8080端口映射到容器中的80端口
+
+// -v /nextcloud:/var/www/html/data 将容器中项目的data目录映射到本地/nextcloud目录下方便配置
+
+// -d nextcloud：就是刚刚所拉取的镜像名称
+
+```
+
+```bash
+方法2：
+docker run -d -p 8080:80 nextcloud   //直接拉取并运行
+```
+
+开启8080端口，访问服务器ip地址8080端口，进入nextcloud设置页面，设置账号密码，搭建即成功。
+
+可以发现docker安装 nextcloud非常方便，1分钟即可搞定，美滋滋。
+
+但是此时性能有一些问题，上传和下载速度比较慢，只有几百kb，网页打开会有一点顿卡。
+
+如果说就为了保存自己的私密文件，不会频繁下载大文件，那么 此时就够用了
+
+<img src="..\.vuepress\alias\bqb\lyh.png" alt="image-20210530164235100" style="zoom:50%;" />
+
+但是如果想优化一下的话，就需要更改许多配置了。
+
+[详见：Nextcloud配置](./nextcloud)
 
 
 
