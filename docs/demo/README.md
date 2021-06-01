@@ -19,8 +19,13 @@
 
 
 
+### 3. syy-uniapp-template
 
-### 3. suUI
+基于官方模板，二次封装的uniapp小程序模板，引入了uView UI库，封装了request、微信登录等功能 [ 点击跳转](./uni-template)
+
+
+
+### 4. suUI
 
 使用 vite + vue3 练手UI库造轮子 [ 点击跳转](./suUI)
 

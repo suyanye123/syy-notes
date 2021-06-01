@@ -137,7 +137,7 @@ vue和nvue页面可以混用
 
 ------
 
-## 三、快速构建uniapp项目
+## 三、构建uniapp项目
 
 1.全局安装vue-cli；
 
@@ -156,7 +156,7 @@ npm i @dcloudio/uni-helper-json
 4.创建模板小程序项目
 
 ```bash
-vue create -p dcloudio/uni-preset-vue myproject
+vue create -p dcloudio/uni-preset-vue syy-uniapp-template
 npm install
 ```
 
