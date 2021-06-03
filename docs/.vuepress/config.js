@@ -36,7 +36,7 @@ module.exports = {
         ],
       },
       { text: " suUI ", link: "https://yu-nan.gitee.io/suui" },
-      { text: "言叶之庭", link: "https://www.syy123.com" },
+      { text: "言叶之庭", link: "http://www.syy123.com" },
       {
         text: "关于",
         items: [

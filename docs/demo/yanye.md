@@ -446,7 +446,10 @@ cd /usr/local/nginx/sbin	//nginx安装目录
 ./nginx -s reload
 ```
 
+### 四、配置CDN
+服务器搭建好后，为了提高网站速度，以及解决网站图片加载问题，我们需要配置cdn加速
 
+免费的cdn有 BootCDN、七牛云、又拍云 ，这里选用七牛云 [免费cdn怎么选择](./cdn)
 
 ------
 
