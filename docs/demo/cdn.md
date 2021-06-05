@@ -12,7 +12,7 @@
 
 ![img](https://pic4.zhimg.com/50/v2-12132f0e09bd1f20a45ce61d312b8b49_hd.jpg?source=1940ef5c)![img](https://pic4.zhimg.com/80/v2-12132f0e09bd1f20a45ce61d312b8b49_720w.jpg?source=1940ef5c)
 
- 站长有洁癖症的，同时又拍云认证比较麻烦，所以选用了七牛云。
+ 又拍云认证比较麻烦，所以选用了七牛云。
 
 
 

@@ -53,7 +53,12 @@ module.exports = {
       {
         title: "我的项目",
         path: "/demo/",
-        children: ["demo/vuepress", "demo/yanye", "demo/suUI"],
+        children: [
+          "demo/vuepress",
+          "demo/yanye",
+          "demo/uni-template",
+          "demo/suUI",
+        ],
       },
       {
         title: "CSS",
@@ -64,8 +69,14 @@ module.exports = {
         children: ["js/basic", "js/promise", "js/axios"],
       },
       {
-        title: "Vue",
-        children: ["vue/props", "vue/webpack", "vue/diff"],
+        title: "框架",
+        children: [
+          "frame/props",
+          "frame/webpack",
+          "frame/diff",
+          "frame/react",
+          "frame/mock",
+        ],
       },
 
       {

@@ -10,8 +10,6 @@
 
 
 
-
-
 ### 2. 言叶之庭
 
 配置服务器、通过Docker部署项目、虚拟机等相关内容    [ 点击跳转](./yanye)
@@ -19,9 +17,9 @@
 
 
 
-### 3. syy-uniapp-template
+### 3. syy-template
 
-基于官方模板，二次封装的uniapp小程序模板，引入了uView UI库，封装了request、微信登录等功能 [ 点击跳转](./uni-template)
+各种我二次封装及自定义的项目模板~ [ 点击跳转](./uni-template)
 
 
 
