@@ -87,7 +87,7 @@ docker build -t vuenginxcontainer .
 ```
 
 -t 是给镜像命名，. 是基于当前目录的 Dockerfile 来构建镜像。
-<img src="../.vuepress/alias/yanye/1.png" alt="1" style="zoom: 45%;" />
+<img src="https://i.loli.net/2021/06/10/siwTHA7yjoF4QXI.png" alt="1" style="zoom: 45%;" />
 
 
 
@@ -99,7 +99,7 @@ docker image ls | grep vuenginxcontainer
 
 
 
-![2](../.vuepress/alias/yanye/2.png)
+![2](https://i.loli.net/2021/06/10/cOvlIKXMFTd27C4.png)
 
 到此时我们的 Vue 应用镜像 vuenginxcontainer 已经成功创建。
 
@@ -459,7 +459,7 @@ cd /usr/local/nginx/sbin	//nginx安装目录
 
 ### 1.新建centOS7 虚拟机 
 
-![image-20210510131501899](../.vuepress/alias/centos.png)
+![image-20210510131501899](https://i.loli.net/2021/06/10/tYEjF2xfCrwP6gM.png)
 
 `ping 127.0.0.1`    然后   `ping www.baidu.com`	测试虚拟机能否正常联网 
 

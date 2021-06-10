@@ -31,6 +31,98 @@
 ![img](https://pic4.zhimg.com/50/v2-cf5df0a2bc9776c39cf3e420e950c98f_hd.jpg?source=1940ef5c)
 原文链接：https://www.zhihu.com/question/30319173/answer/1060498256
 
+
+
+## 图床的使用
+
+**[PicGo](https://github.com/Molunerfinn/PicGo): 一个用于快速上传图片并获取图片 URL 链接的工具**
+
+PicGo 本体支持如下图床：
+
+- `七牛图床` v1.0
+- `腾讯云 COS v4\v5 版本` v1.1 & v1.5.0
+- `又拍云` v1.2.0
+- `GitHub` v1.5.0
+- `SM.MS V2` v2.3.0-beta.0
+- `阿里云 OSS` v1.6.0
+- `Imgur` v1.6.0
+
+
+
+[参考教程](https://blog.csdn.net/weixin_39777540/article/details/110491770)
+
+或[https://blog.csdn.net/Henghao123/article/details/106961488/](https://blog.csdn.net/Henghao123/article/details/106961488/)
+
+
+
+### 比如GitHub
+
+#### 1.先解决访问慢的问题
+
+   在C:\Windows\System32\drivers\etc目录下找到hosts文件，右键用记事本或者其他编辑器打开，在最下面另起一行添加下面的文本：
+
+```css
+192.30.253.112 github.com 
+185.199.109.153 assets-cdn.github.com 
+199.232.5.194 github.global.ssl.fastly.net 
+140.82.114.9 codeload.github.com 
+199.232.28.133 raw.githubusercontent.com
+```
+
+   保存。
+
+#### 2.创建一个GitHub账号
+
+   在官网[https://github.com/](https://links.jianshu.com/go?to=https%3A%2F%2Fgithub.com%2F)注册登录即可，过程略。
+
+#### 3.新建一个仓库（Repositories）用来存放图片
+
+```dart
+1. 登录后在主页左侧点击New
+2. 填写Repository name名称，这里以img为例。
+3. Description随便填，如这是我的图床。
+4. 选择Public公开。
+5. Initialize this repository with a README可不选。
+6. 最后单击Create repository即可。
+```
+
+#### 3.获取Token
+
+1. 单击右上角头像，下来菜单中选择settings。
+
+2. 在左侧导航栏找到Developer settings。
+
+   ![img](https:////upload-images.jianshu.io/upload_images/17029678-7656c08d619ed359.png?imageMogr2/auto-orient/strip|imageView2/2/w/1002/format/webp)
+
+   img
+
+1. 在弹出的产生token页面，Token description随意填写，但是一定要勾选上这几项。
+
+   ![img](https:////upload-images.jianshu.io/upload_images/17029678-55b2842f6875b416.png?imageMogr2/auto-orient/strip|imageView2/2/w/784/format/webp)
+
+   img
+
+   注：token要保管好，丢了只能重新获取，之前的就失效了。
+
+#### 4.配置PicGo
+
+
+
+```cpp
+1. 打开后左侧选择图床设置，找到GitHub图床。
+2. 仓库名填写自己的ID/刚刚创建的仓库名，如Tom/img。
+3. 分支名填master。
+4. Token填入刚刚获取到的Token。
+5. 存储路径不用填。
+6. 自定义域名按https://raw.githubusercontent.com/id名/仓库名/master的格式填写。
+7. 单击确定，大功告成。
+```
+
+
+
+
+
+
 ## 公共库cdn 
 
 #### 1.[BootCDN](https://www.bootcdn.cn/) 
