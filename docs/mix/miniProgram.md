@@ -6,6 +6,52 @@ sidebarDepth: 2
 
 ## 一、微信授权登录全流程
 
+#### 整体流程思路：
+
+用户凭证使用token机制
+
+openid用来做用户唯一标识关联用户id，这样后端就可以根据openid来为小程序进行登录，具体流程如下:
+
+1.小程序调用wx.login()获取code
+
+2.调用后端登录接口,将code作为参数传给后端，后端通过code调用微信后端登录接口换取openid
+
+3.后端通过Openid查询数据库，若查询到用户数据则返回token和refreshToken完成登录流程，若查询不到则设置为未登录状态，仅可浏览部分公开内容
+
+4.在浏览需要登录权限的页面时，如果返回 invalidToken，则根据refreshToken刷新token，用于维持登录状态
+
+
+
+#### 后端处理：
+
+通过https://api.weixin.qq.com/sns/jscode2session?appid=APPID&secret=SECRET&js_code=JSCODE&grant_type=authorization_code这个官方api
+
+就能获取到openid和unionid。
+
+去查询 openId和unionId用户唯一标识，然后传给前端
+
+同时查询该唯一标识对应数据库内有无注册信息，返回给前端，判定是否应该登录
+
+
+
+#### token刷新机制流程：
+
+1.用户登录之后,后端会返回两个 token ,分别为 accessToken 和 refreshToken 存储到 Storage，有效时间为2h，
+
+如果状态码为 401 ,则表明 token 过期,需要前端请求新的 token，
+
+平时请求数据时,请求头使用 accessToken 来发送接口
+
+2.当返回错误Token 过期后， 我们通过接口向后端获取新的 token ，请求参数为 refreshToken
+
+3.我们拿到新的 accessToken 和 refreshToken 之后, 替换掉之前的 Storage 中存储的 token
+
+4.同时还要将我们请求失败的那个接口 ,使用新的 accessToken ,重新请求一次, 拿到数据,实现无痛刷新 token
+
+5.如果返回的新的 token 也无法使用，表明需要重新登录,跳到登录页
+
+
+
 #### 定位授权
 
 ```js

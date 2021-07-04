@@ -75,6 +75,55 @@ Ctrl+P+Q
 
 
 
+## docker使用流程
+
+```
+docker build -t xxl .	//构建images
+
+docker run -p 808:80 -d --name xxl xxl			//新建容器并运行，命名
+```
+
+
+
+```
+/usr/local/nginx/conf					// nginx默认位置
+
+cd /usr/local/nginx/sbin	//nginx安装目录
+./nginx -s reload					//重启nginx
+```
+
+
+
+```
+1.登录dockerhub
+
+docker login
+
+2.修改正确的镜像名
+
+注意要保证image的tag是账户名，如果镜像名字不对，需要改一下tag
+
+语法是： docker tag 仓库名 用户名/仓库名
+
+docker tag zero/centos-vim 用户名/centos-vim
+
+3.推送docker image到dockerhub
+
+docker push 用户名/镜像名
+
+4.在dockerhub中检查镜像
+
+https://hub.docker.com/
+
+5.拉取
+
+docker pull suyanye/syy-xxl:latest
+```
+
+
+
+
+
 ### 新建一个Docker镜像
 
 #### 1.新建一个目录和一个Dockerfile
@@ -180,6 +229,44 @@ docker run -i -t ubuntu:14.04 /bin/bash
 可以使用ls查看当前目录下的文件，cat /proc/version查看当前系统的版本信息
 
 运行exit命令或者使用CTRL+D来退出容器
+
+##### 常用参数如下：
+
+-i 让容器的标准输入保持打开
+
+-t 分配一个伪终端
+
+-d 容器处于守护进程运行
+
+--name 设置容器的名字
+
+-p 可以映射宿主机端口至容器端口，如 -p 8080:8081 ，左边为宿主机端口，右边为容器端口
+
+-v 可以挂在宿主机目录至容器目录，如-v /data:/tmp/data，左边为宿主机目录，右边为容器目录。
+
+如，一条实际运行容器的命令：
+
+```bash
+docker run -it -d --name my_ubuntu -p 8088:22 -v /root/ubuntu_data:/data ubuntu:latest /bin/bash
+```
+
+
+##### 进入容器后提示IPv4 forwarding is disabled. Networking will not work.
+
+是没有开启转发,网桥配置完后，需要开启转发，不然容器启动后，就会没有网络，配置`/etc/sysctl.conf`,添加`net.ipv4.ip_forward=1`
+
+```
+修改配置文件：
+vim /usr/lib/sysctl.d/00-system.conf
+追加
+net.ipv4.ip_forward=1
+接着重启网络
+[root@localhost mytomcat]# systemctl restart network
+#进入容器，获取百度信息验证
+curl baidu.com
+```
+
+
 
 #### 4.后台模式
 

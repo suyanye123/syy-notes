@@ -1,14 +1,31 @@
 ---
 sidebarDepth: 2
 ---
-### 个人工具
+### 我的工具
 
 
 ------
 
 ### 
 
-**##  前端相关**
+**## 常用api**
+
+\- [git-api](../demo/git)
+<br>
+
+\- [Docker-api](../demo/docker)
+<br>  Docker常用基本命令
+
+\- [Linux-api](./linux)
+<br>  Linux常用基本命令
+
+\- [Lodash](https://www.lodashjs.com/docs/lodash.after)
+<br>
+JavaScript 函数库
+
+
+
+**##  项目相关**
 
 \- [ husky ](https://typicode.github.io/husky/#/)
 <br>Git hooks 钩子工具，在commit或push之前进行指定操作，比如 eslint 检查
@@ -21,16 +38,14 @@ sidebarDepth: 2
 
 <br>
 
-**## 其他工具**
 
-\- [Docker-api](../demo/docker)
-<br>  Docker常用基本命令
 
-\- [Linux-api](./linux)
-<br>  Linux常用基本命令
+**##  其他相关**
+
+\- [Vercel](https://vercel.com/new)
+<br> 托管服务网站，[介绍](https://zhuanlan.zhihu.com/p/347990778)
+
+
 
 \- [Fiddler、Stream](./fiddler)
 <br> windows及ios抓包
-
-\- [Vercel](https://vercel.com/)
-<br> 托管服务网站，[介绍](https://zhuanlan.zhihu.com/p/347990778)

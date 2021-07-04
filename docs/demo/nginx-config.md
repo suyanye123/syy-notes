@@ -25,12 +25,6 @@
 - 反向代理服务，包括缓存、负载均衡等
 - API 服务，OpenResty
 
-所以，今天民工哥就给大家整理一份 [Nginx](http://mp.weixin.qq.com/s?__biz=MzI0MDQ4MTM5NQ==&mid=2247502884&idx=1&sn=fd270a85e3e4613052eefb82144209ac&chksm=e918a938de6f202ee96a7b950bbcdcca6a66d0fd8229af8a72cdef2ddecb265816c930d3d31a&scene=21#wechat_redirect)的常用配置清单，供大家学习与生产配置参考使用。主要包括以下三个方面：
-
-- 基础配置
-- 高级配置
-- 安全配置
-
 ## 基础配置
 
 #### 去掉不用的 Nginx 模块
