@@ -13,13 +13,13 @@ sidebarDepth: 2
 \- [git-api](../demo/git)
 <br>
 
-\- [Docker-api](../demo/docker)
+\- [Docker-api](./docker)
 <br>  Docker常用基本命令
 
 \- [Linux-api](./linux)
 <br>  Linux常用基本命令
 
-\- [Lodash](https://www.lodashjs.com/docs/lodash.after)
+\- [Lodash-api](https://www.lodashjs.com/docs/lodash.after)
 <br>
 JavaScript 函数库
 
@@ -45,7 +45,8 @@ JavaScript 函数库
 \- [Vercel](https://vercel.com/new)
 <br> 托管服务网站，[介绍](https://zhuanlan.zhihu.com/p/347990778)
 
-
+\- [cdn](./cdn)
+<br>
 
 \- [Fiddler、Stream](./fiddler)
 <br> windows及ios抓包
