@@ -18,8 +18,6 @@ join(',') - 数组转成字符串拼接，默认符号为，返回新字符串�
 
  tostring-转字符串； unshift-开头添加，返回新长度；
 
- valveof
-
 forEach (item,index,items)遍历;
 
 
@@ -27,3 +25,25 @@ forEach (item,index,items)遍历;
 3.对象有哪些方法
 
 map foreach
+
+
+
+4.讲解一下vue中的computed和watch，他们有什么区别
+
+- computed-计算属性，是通过已有属性计算新值，然后挂载到vm实例上
+
+底层还是借助object.defineProperty的get、set实现的
+
+结算属性得到的值可以缓存，不会每次使用时都调用getter，
+只有第一次初始化时，或者依赖的数据发生变化时才调用getter
+
+并且vue中调用computed的是vm实例，取data里的数据要使用this，在computed中注意不要使用箭头函数
+
+- watch
+
+
+
+5.v-for中为什么要绑定key，有什么用，写了和没写会怎么样
+
+虚拟dom，diff算法
+
