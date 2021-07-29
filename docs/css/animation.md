@@ -6,7 +6,7 @@ CSS 中跟动画相关的属性有两个：`animation` `transition` 和 `transfo
 
 ## animation 属性
 
-```
+```css
 @keyframes mykf {
   from {background: red;}
   to {background: yellow;}
@@ -65,7 +65,7 @@ div {
 
 keyframes 的主体结构是一个名称和花括号中的定义，它按照百分比来规定数值，例如：
 
-```
+```css
 @keyframes mykf {
   0% { top: 0; }
   50% { top: 30px; }
@@ -97,7 +97,7 @@ keyframes 的主体结构是一个名称和花括号中的定义，它按照百�
 
 2）paused 动画暂停
 
-```
+```css
 div {
     animation: spin 1s linear infinite;
     animation-play-state: paused;
@@ -150,7 +150,7 @@ div:hover {
 
 实际上，有时候我们会把 transition 和 animation 组合，抛弃 animation 的 timing-function，以编排不同段用不同的曲线。
 
-```
+```css
 @keyframes mykf {
   0% { top: 0; transition: top ease }
   50% { top: 30px; transition: top ease-in }
@@ -177,7 +177,7 @@ div:hover {
 
 所以经常使用该方法设置定位居中，如下：
 
-```
+```css
 .demo {
   position: absolute;
   top: 50%; /* 父元素高度的一半位置 */
@@ -190,7 +190,7 @@ div:hover {
 
 其语法为：`transform: scale(sx[, sy])`。其中 sx 表示 x 方向的缩放比例，sy 表示 y 方向的缩放比例，如果 sy 没有指定值则与 sx 相等。
 
-```
+```css
 .box {
   transform: scale(1.2);
 }
@@ -200,7 +200,7 @@ div:hover {
 
 其语法为：`transform: rotate(angle)`。angle 表示顺时针角度。
 
-```
+```css
 .box {
   transform: rotate(15deg);
 }
@@ -210,7 +210,7 @@ div:hover {
 
 其语法为：`transform: skew(ax[, ay])`。其中 ax 表示 x 方向的顺时针角度，ay 表示 y 方向的顺时针角度，如果 ay 没有指定值则 y 方向没有倾斜。
 
-```
+```css
 .box {
     transform: skew(30deg);
 }
@@ -220,7 +220,7 @@ div:hover {
 
 上面几个变换，都可以自由组合形成更复杂的复合变换。
 
-```
+```css
 .box {
   transform: translate(30px);
   rotate(10deg) skew(0, 5deg);
@@ -233,7 +233,7 @@ div:hover {
 
 其语法为：transform-origin: ox oy。其中 ox 表示 x 方向的位置，可使用 left、right、center、、，oy 表示 y 方向的位置，可使用top、bottom、center、、。如果只传入一个值，则另一个值默认为 50%
 
-```
+```css
 .box {
     transform: rotate(15deg);
 }
@@ -247,3 +247,4 @@ div:hover {
     transform-origin: 200px 80%;
 }
 ```
+

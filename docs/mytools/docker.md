@@ -23,6 +23,8 @@ docker rmi ubuntu 		   //删除镜像
 docker run -it --name myubuntu -p 80:8080 -p 22:22 ubuntu /bin/bash  //创建并使用镜像
 
 docker exec -it a62 /bin/bash   //进入container_id为a62的容器
+
+/var/lib/docker/volumes/(容器名字)/_data/data  //默认docker容器数据
 ```
 
 Docker 的tag更加灵活，

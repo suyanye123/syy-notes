@@ -4,7 +4,83 @@ sidebarDepth: 2
 
 # Vue3
 
-## 一、composition API
+## 一、基础
+
+```js
+import {creatApp} from 'vue' 		//引入的不再是Vue构造函数，引入的是一个名为creatApp的工厂函数
+creatApp(App).mount('#app')			//挂载
+```
+
+
+
+### 2.composition API
+
+
+
+### 3.setup
+
+```html
+<script>
+export default{
+  props:['msg','school']	//声明接受的props
+  setup(props,context){
+	//setup接受第一个参数props
+  //第二个参数context，执行上下文对象
+	}
+}  
+
+</script>
+```
+
+
+
+### 5.watch
+
+```js
+//watch 既要指明监听的属性，也要指明监听的回调
+watch(()=>person.job,(newValue,oldValue)=>{
+  console.log(newValue,oldValue)
+},{deep:true})	 //由于监视的是reactive定义的对象，deep配置有效
+```
+
+```js
+//watchEffect 不用指明监视哪个属性，监视的回调中用到哪个属性六监视那个属性
+//有点像computed，但是computed更注重计算出来的值(回调函数的返回值)
+//而watchEffect更注重过程(回调函数的函数体)，不用写返回值
+watchEffect(()=>{
+  const x1 = sum.value
+  const x2 = person.age
+  console.log('执行了')
+})
+```
+
+### 6.自定义hook
+
+```
+//函数复用
+```
+
+### 7.toRef
+
+```js
+//创建一个ref对象，其value指向另一个对象的某个属性，可以将响应式对象中的某个属性单独提供给外部使用
+const name = toRef(person,'name')
+//**为什么不直接 ref(person.name)? 因为这样会新建一个ref数据，跟之前的对象无关联
+//toRefs 批量创建多个ref对象
+return{
+  ...toRefs(person)
+}
+```
+
+### 8.shallowReactive/shallowRef
+
+```
+
+```
+
+
+
+## 二、composition API
 
 想在你的Vue组件之间共享代码？如果你熟悉**Vue 2** 则可能知道使用mixin，但是新的**Composition API** 提供了更好的解决方案。
 
@@ -211,7 +287,7 @@ Composition API最聪明的部分是，它允许Vue依靠原生JavaScript中内�
 
 ---
 
-## 二、setup 的使用
+## 三、setup 的使用
 
 #### 1.通过 ref 新建响应式数据
 
@@ -251,7 +327,7 @@ ref 底层其实还是 reactive,所以当运行时系统会自动根据传入的
 
 ---
 
-## 三、深入 vue3 响应式原理
+## 四、深入 vue3 响应式原理
 
 
 

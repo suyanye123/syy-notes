@@ -203,3 +203,9 @@ function mapsLoaded() {   var map = new google.maps.Map2(document.getElementById
 这个网站有多个子域名，其中被广泛应用的有ajax，fonts，maps，translate。
 
 由于google已经完全被墙了，所以`一些像ajax.googleapis.com`等前端公共库无法加载。
+
+
+
+## 公共接口
+
+https://api.github.com/search/users?q=xxx

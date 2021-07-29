@@ -1,6 +1,4 @@
----
 sidebarDepth: 2
----
 
 # Vue2
 
@@ -86,31 +84,11 @@ class Box{
     }
 ```
 
-### 组件之间传值
-
-#### 1.父传子
-
-props
-
-#### 2.子传父
-
-$emit
-
-#### 3.兄弟组件
-
-##### 通过eventBus
-
-#### 4.祖先组件
-
-##### inject\provide
-
-###### 缺点：传递给后代的数据不是响应式的，除非祖先组件在注入时以响应式的方式注入数据
-
 
 
 ------
 
-## 二、
+## 二、常用API
 
 ### 1.object.defineProperty
 
@@ -242,20 +220,255 @@ vm.$watch("isHot", function(new,old){ console.log(new,old) })
 
 
 
+### 8.vue监测数据改变
+
+- 对象中
+
+```js
+//通过observer实例对象，用于监视data中属性的改变
+const obs = new Observer(data)
+function Observer(obj){
+	//汇总对象中的属性形成一个数组
+	const keys = Object.keys(obj)
+	//遍历
+	keys.forEach((item)=>{
+	//此处的this是observer实例对象,还是通过get和set来进行数据代理
+	Object.defineproperty(this,item,{
+		set(){}
+		get(){}
+	})
+	})
+}
+//最后赋值给 vm._data = obs
+```
+
+- 数组中
+
+```
+//vue2无法检测数组中元素的变更，除非更改整个原数组,或使用指定的 数组方法
+```
+
+- Vue.set()
+
+```js
+//添加响应式的数据 Vue.set(target,key,val)
+//在组件实例上的写法 vm.$set(target,key,val)
+this.$set(this.xxx,'xxx',xxx)
+```
+
+
+
+### 9. $nextTick
+
+在下一次DOM更新结束后，执行指定的回调
+
+什么时候用：当改变数据后，要基于更新后的新DOM进行某些操作时，要在nextTick所指定的回调函数中执行
+
+```js
+this.$nextTick(function(){
+	this.$refs.inputTiltle.focus()
+})
+```
+
+
+
+### 10.vue动画过渡
+
+vue封装的过渡与动画，在插入、更新或移除DOM元素时，会在合适的时候给元素添加样式类名
+
+```vue
+//1.动画实现，用transition包裹
+<transition>
+	<h1> XXXXX </h1>
+</transition>
+...
+<style>
+    //自定义动画
+    .v-enter-active{..}
+    .v-leave-active{..}
+</style>
+```
+
+```html
+//2.过渡实现
+<transition>
+	<h1> XXXXX </h1>
+</transition>
+...
+<style>
+ //进入的起点，离开的终点
+    .v-enter，.v-leave-to{transform:translateX(-100%)}
+ //进入过程
+    .v-enter-active,.v-leave-active{transition:0.5s linear}
+ //离开的起点，进入的终点
+    .v-enter-to，.v-leave{transform:translateX(0)}
+</style>
+```
+
+```html
+//3.多个元素使用同一个动画
+<transition-group>
+	<h1 key=1>xxx</h1>
+	<h1 key=2>xxx</h1>
+</transition-group>
+```
+
+```
+//4.集成第三方动画 Animate.css
+```
+
+### 11.代理解决跨域
+
+```
+1.jsonp
+2.CORS
+3.反向代理：nginx、webpack
+```
+
+```js
+//vue.config.js
+//方式一，仅能代理一个端口，且如果本地有则先取本地文件
+module.exports = {
+  pages:{
+    index:{
+      //入口
+      entry:'src/main.js'
+    }
+  }
+    lintOnSave:false,
+    devServer:{
+    proxy:'http://localhost:xxxx' //xxxx为目标端口
+ 	  }
+}
+```
+
+```js
+//vue.config.js
+//方式二，仅
+module.exports = {
+  pages:{
+    index:{
+      //入口
+      entry:'src/main.js'
+    }
+  }
+  lintOnSave:false,
+  devServer:{
+  proxy: {
+  	'/api':{
+        target:'<url>',	//http://localhost:xxxx 目标端口
+  			pathRewrite:{'^/api':''}
+  			ws:true,	//用于支持websocket
+  			changeOrigin：true	//是否改变请求头中的host值(影响refer)
+     	 },
+  	'/foo':{
+      	target:'<other_url>'
+    	}
+		}
+ 	}
+}
+```
+
 
 
 ------
 
-## 三、VueX
+## 三、传值
+
+### 1.父传子
+
+props
+
+### 2.子传父
+
+$emit
+
+### 3.兄弟组件,通过eventBus
+
+##### 全局事件总线，是一种组件通信的方式，适用于 任意组件间通信。
+
+```js
+//安装全局事件总线
+new Vue({
+    ...
+    beforeCreate(){
+    	Vue.prototype.$bus = this  //$bus就是当前应用的vm
+}
+})
+```
+
+```js
+//使用事件总线
+methods(){
+    demo(data){...}
+}
+...
+mounted(){
+    this.$bus.$on('xxx',this.demo)
+    //提供数据 this.$bus.$emit('xxx',this.demo)
+}
+//最好记得解绑对应事件
+beforeDestroy(){
+    this.$bus.$off('xxx')
+}
+```
+
+### 4.消息订阅与发布
+
+借助第三方库 `pubsub-js`，也可以实现任意组件通信
+
+```js
+npm i pubsub-js
+//1.在需要使用的组件内，订阅消息
+import pubsub from 'pubsub-js'
+mounted(){
+    //回调函数记得用箭头函数，不然里面的this是undefined，或者把回调函数写在methods里
+  const this.id = pubsub.subscribe('hello',(a,b)=>{
+        console.log('hello事件的回调函数')
+        //回调函数接受两个参数，a--消息名，b--传递数据
+    })
+}
+//最好记得解绑对应事件
+beforeDestroy(){
+     pubsub.unsubscribe(this.id)
+}
+//2.在发布消息的组件
+import pubsub from 'pubsub-js'
+methods:{
+    sendMessage(){
+        pubsub.publish('hello',666)
+    }
+}
+```
+
+
+
+### 5.祖先组件
+
+##### inject\provide
+
+###### 缺点：传递给后代的数据不是响应式的，除非祖先组件在注入时以响应式的方式注入数据
+
+
+
+### 6.vueX
+
+
 
 ## 四、vue-router
 
-component: resolve => require(['@/view/index.vue'], resolve)：懒加载
-component: index：非懒加载
+
+### 4.懒加载
 
 vue的路由配置文件(routers.js)一般使用import引入的写法，当项目打包时路由里的所有component都会打包在一个js中，在项目刚进入首页的时候，就会加载所有的组件，所以导致首页加载较慢。
 
 而用require这种方式引入的时候，会将你的component分别打包成不同的js，加载的时候也是按需加载，只用访问这个路由网址时才会加载这个js，就避免进入首页时加载内容过多。
+
+```js
+component: resolve => require(['@/view/index.vue'],)
+```
+
+
 
 ------
 

@@ -147,7 +147,7 @@ TypeError: this.getOptions is not a function
 sass-loader 4.1.1，node-sass 4.3.0
 sass-loader 7.0.3，node-sass 4.7.2
 sass-loader 7.3.1，node-sass 4.7.2
-sass-loader 7.3.1，node-sass 4.14.1
+sass-loader 7.3.1，node-sass 4.14.1	//主要用这个我
 ```
 
 所以
