@@ -567,9 +567,9 @@ ES的几个重要版本
 - ES6(ES2015)：15年发布
 - ES7(ES2016)：16年发布(变化不大)
 
-### 一、ES5
+###  ES5
 
-### 1.1 严格模式
+#### 1.1 严格模式
 
 除了正常运行模式，ES5 添加了第二种模式“严格模式”，使得 JS 在更严格的语法条件下运行。
 
@@ -603,7 +603,7 @@ new Person('kb', 39) // 加上new
 - 创建 eval 作用域(目前不推荐使用)
 - 对象不能有重名的属性
 
-### 1.2 JSON 对象
+#### 1.2 JSON 对象
 
 1. JSON.stringify(obj/arr)
 
@@ -625,11 +625,11 @@ console.log(obj) // {username: "kb"}
 console.log(typeof obj) // object
 ```
 
-### 1.3 Object 对象方法扩展
+#### 1.3 Object 对象方法扩展
 
 ES5 给 Object 扩展了一些静态方法，常用的2个：
 
-#### object.create(prototype, [descriptors])
+##### object.create(prototype, [descriptors])
 
 作用：以指定对象为原型创建新的对象
 
@@ -733,7 +733,7 @@ console.log(obj.fullName);
 
 **这两种写法不同但是结果是完全相同的。**
 
-### 1.4 Array 扩展
+#### 1.4 Array 扩展
 
 Array.prototype.indexOf(value)：得到值在数组中的第一个下标
 
@@ -767,7 +767,7 @@ var arr2 = arr.filter(item => {
 console.log(arr2)
 ```
 
-### 1.5 Function 扩展——call、apply、bind用法详解
+#### 1.5 Function 扩展——call、apply、bind用法详解
 
 Function.prototype.bind(obj)：将函数内的 this 绑定为 obj，并将函数返回
 
@@ -826,9 +826,7 @@ setTimeout(function() {
 }.bind(obj), 1000)
 ```
 
-### 二、ES6
-
-### 2.1 常用
+###  ES6常用
 
 #### 2.1.1 let、const 关键字
 
@@ -1722,7 +1720,11 @@ import {name, age} from 'test.js';
 也就是说，通过 `import xxx from "..."` 引入的，xxx 已经是默认导出项的别名（自己取的其他名字）了。
 而 `import { xxx } from "..."` 引入的，{ xxx } 只是导出项的名字（跟原名一致），而并非导入时的名字。
 
-### 2.2 其他
+#### 2.1.14  Proxy
+
+[详见proxy页](./proxy)
+
+###  其他
 
 #### 2.2.1 字符串、数组的扩展
 
@@ -2156,7 +2158,7 @@ for(let i of set) {
 console.log(arr) // [1, 2, 4, 5, 6, 8]
 ```
 
-### 三、ES7
+### ES7
 
 1. 指数运算符`**`（幂）
 
@@ -2173,7 +2175,7 @@ let arr = [1, 4, 5, 6, 'abc']
 console.log(arr.includes('a')) // false
 ```
 
-### 参考
+#### 参考
 
 [尚硅谷ECMAScript教程(ecmascript详解含es5、es6)](https://www.bilibili.com/video/BV18s411E7Nd?p=1)
 

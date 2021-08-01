@@ -325,9 +325,16 @@ ref 底层其实还是 reactive,所以当运行时系统会自动根据传入的
 
 #### 2.通过 props 接收传递的数据
 
----
 
-## 四、深入 vue3 响应式原理
+
+## 四、深入Vue3源码
+
+#### 前置知识
+
+- [Proxy](../js/proxy)
+- [函数式编程]()
+- Set、Map、WeakSet、WeakMap
+- Typescript
 
 
 
