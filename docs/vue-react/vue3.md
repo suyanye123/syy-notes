@@ -4,12 +4,16 @@ sidebarDepth: 2
 
 # Vue3
 
+前置知识： [Proxy](../js/proxy)
+
 ## 一、基础
 
 ```js
 import {creatApp} from 'vue' 		//引入的不再是Vue构造函数，引入的是一个名为creatApp的工厂函数
 creatApp(App).mount('#app')			//挂载
 ```
+
+### 1.ref、reactive
 
 
 
@@ -28,7 +32,6 @@ export default{
   //第二个参数context，执行上下文对象
 	}
 }  
-
 </script>
 ```
 

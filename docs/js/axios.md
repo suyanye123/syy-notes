@@ -10,7 +10,7 @@ AJAX 就是异步的 JS 和 XML。它不是新的编程语言，而是一种将�
 
 XML 是可扩展标记语言。XML 和 HTML 类似，不同的是 HTML 中都是预定义标签，用来**呈现数据**；而 XML 中没有预定义标签，全是自定义标签，用来**传输和存储数据**。比如有一个学生数据：name = 'wy';age = 18;gender = '男'，用 XML 表示：
 
-```
+```xml
 <student>
   <name>wy</name>
     <age>18</age>
@@ -22,7 +22,7 @@ XML 是可扩展标记语言。XML 和 HTML 类似，不同的是 HTML 中都是
 
 然而，现在 XML 已经被 JSON 取代了。JSON 更加简洁灵活，而且在数据转换上更加容易，可以借助 JSON 的 一些 API 方法快速将 JSON 格式的字符串转换成 JS 对象。用 JSON 表示：
 
-```
+```json
 {
   "name": "wy",
   "age": 18,
@@ -77,7 +77,7 @@ XML 是可扩展标记语言。XML 和 HTML 类似，不同的是 HTML 中都是
 15. getAllResponseHeaders()：获取所有响应头组成的字符串
 16. setRequestHeader(name, value)：设置请求头
 
-```
+```js
 node.addEventListener('mouseover', () => {
   // 1.创建对象
   const xhr = new XMLHttpRequest()
@@ -118,7 +118,7 @@ btns[1].onclick = function () {
 
 ## 二、JQuery AJAX
 
-```
+```js
 // jQuery发送AJAX GET请求
 $('button')
   .eq(0)
@@ -212,7 +212,7 @@ $('button')
 3. fetch 默认不支持 abort，不支持超时控制，使用 setTimeout 及 Promise.reject 实现的超时控制并不能阻止请求过程继续在后台运行，造成了流量的浪费
 4. fetch 没有办法原生监测请求的进度，而 XHR 可以
 
-```
+```js
 btn.onclick = function () {
   /*
     第一个参数：url
@@ -243,7 +243,7 @@ btn.onclick = function () {
 
 ### XHR 的 ajax 封装（简单版 axios）
 
-```
+```js
 function axios({ url, method = 'GET', params = {}, data = {} }) {
   // 返回一个promise对象
   return new Promise((resolve, reject) => {

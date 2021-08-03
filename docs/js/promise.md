@@ -1,6 +1,105 @@
----
-sidebarDepth: 2
----
+### Promise 对象
+
+1. Promise 对象：代表了未来某个将要发生的事件（通常是一个异步操作）
+
+   有了 promise 对象，可以将异步操作以同步的流程表达出来，避免了层层嵌套的回调函数（回调地狱）
+
+   ES6的 Promise 是一个构造函数，用来生成 Promise 实例
+
+2. 使用 promise 基本步骤（2步）：
+
+   - 创建 promise 对象
+   - 调用 promise 的 then()
+
+3. promise 对象的3个状态
+
+   - pending ：初始化状态
+   - fullfilled（resolved）：成功状态
+   - rejected：失败状态
+
+4. 应用
+
+   - 使用 promise 实现超时处理
+   - 使用 promise 封装处理 ajax 请求
+
+```
+const p = new Promise((resolve, reject) => { // 同步执行
+  // 初始化promise状态：pending
+  console.log(111)
+  // 执行异步操作，通常是发送ajax请求 或 开启定时器
+  setTimeout(() => {
+    console.log(333)
+    // 根据异步任务的返回结果来去修改promise的状态
+    // 异步任务成功
+    resolve('xixi'); // 修改promise的状态为fullfilled（成功的状态）
+    // 异步任务失败
+    //reject('555') // 修改promise的状态为rejected（失败的状态）
+  }, 1000)
+})
+console.log(222)
+p.then(
+  value => { // 成功的回调
+      console.log('成功了',value)
+  },
+  reason => { // 失败的回调
+      console.log('失败了',reason)
+  }
+)
+```
+
+下面是一个案例练习
+
+需求：
+
+1. 发送 ajax 请求获取新闻内容
+2. 新闻内容获取成功后再次发送请求，获取对应的新闻评论内容
+3. 新闻内容获取失败则不需要再次发送请求
+
+```
+// 定义获取新闻的功能函数
+function getData(url) {
+  let promise = new Promise((resolve, reject) => {
+    // 状态：初始化
+    // 执行异步任务
+    // 创建 xmlHttp 实例对象
+    let xmlHttp = new XMLHttpRequest();
+    console.log(xmlHttp.readyState);
+    // 绑定监听 readyState
+    xmlHttp.onreadystatechange = function() {
+      if(xmlHttp.readyState === 4) {
+        if(xmlHttp.status === 200) {
+          // 修改状态
+          resolve(xmlHttp.responseText); // 修改promise的状态为成功的状态
+        } else {
+          reject('暂时没有新闻内容')
+        }
+      }
+    }
+
+    //open 设置请求的方式以及url
+    xmlHttp.open('GET', url);
+    // 发送
+    xmlHttp.send();
+  })
+  return promise;
+}
+
+getData('http://localhost:3000/news?if=2').then(
+  (value) => {
+    console.log(value);
+    // 发送请求获取评论内容准备url
+    let commentsUrl = JSON.parse(value).commentsUrl;
+    let url = 'https://localhost:3000' + commentsUrl;
+    // 发送请求
+    return getData(url);
+  }),
+  (reason) => {
+    console.log(reason);
+  }
+```
+
+### 
+
 前言
 ---
 

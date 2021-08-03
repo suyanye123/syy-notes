@@ -2,6 +2,8 @@ sidebarDepth: 2
 
 # Vue2
 
+前置知识： [Object](../js/object)
+
 ## 一、响应式原理
 
 当你把一个普通的 JavaScript 对象传入 Vue 实例作为 data 选项，Vue 将遍历此对象所有的 property，
@@ -15,7 +17,7 @@ Object.defineProperty 是 ES5 中一个无法 shim 的特性，
 但是由于javascript的限制，vue不能检测数组和对象的变化，
 因为vue无法检测属性的添加或移除，所以property必须在data对象中保存，vue才能转化为响应式
 
-```
+```js
 var vm = new Vue({
   data:{
     a:1
@@ -476,7 +478,7 @@ component: resolve => require(['@/view/index.vue'],)
 
 #### 1.用${}时要注意不能用''或""而要用``
 
-```
+```js
 getApply() {  
  this.$http.get(`/usage?type=all&page=${this.currentPage}`).then(response => {    
  ...  
@@ -486,7 +488,7 @@ getApply() {
 
 #### 2.axios的delete方法传参时要用data:{}包裹住
 
-```
+```js
 deleteDb(index, row) {  
  this.$http.delete("/usage", {
      data:{
@@ -519,7 +521,7 @@ v-html： vue 中用来将 string 形式的 html 内容按普通 HTML 插入的�
 
 把一个元素响应事件（click、keydown…）的函数委托到跟 v-html 同级的元素中，然后通过事件冒泡判断标签是不是想要的那个，从而进行操作。
 
-```
+```js
 <ul @click='eventTemp' v-html="toc">  /* 设置的代理事件 */
     /*这里是v-html插入的内容*/
 </ul>
@@ -551,7 +553,7 @@ const vm = new Vue({
 
 组件中：
 
-```
+```html
 <div id="app">
     我是父组件
     <div id="parent">
@@ -585,7 +587,7 @@ export default {
 
 假如 v-html 里面有一个 class="a" 的节点，要在这个 DOM 上绑定事件。然后调用 nextTick 中的回调函数进行操作。（因为 v-html 渲染视图是异步的，只能在下一个事件循环中处理）
 
-```
+```js
 this.$nextTick().then(() => {
       $('.a').on('click',function(){
         // 在这里操作

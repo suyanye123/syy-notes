@@ -1,5 +1,109 @@
 # 跨域
 
+# 不要再问我跨域的问题啦！
+
+
+
+首先，我们需要明白什么是跨域，跨域源自于[浏览器的同源策略](https://developer.mozilla.org/zh-CN/docs/Web/Security/Same-origin_policy)
+协议、域名、端口，只要有一个不同，即为跨域。
+跨域请求可以正常发起，但是**返回的结果会被浏览器拦截**
+他的作用是为了预防[CSRF攻击](https://www.cnblogs.com/hyddd/archive/2009/04/09/1432744.html)
+
+------
+
+
+
+## **解决方案**
+
+
+
+### 1. JSONP
+
+在HTML标签里，一些标签比如script、img这样的获取资源的标签是没有跨域限制的（比如我们使用src引入外链、引入cdn）
+向服务端发送请求，返回的数据作为一个指定的回调函数的参数，在另一个script中指定这个回调函数，这样就可以获取到服务端数据了
+缺点：只支持GET请求，目前已经很少使用
+
+
+
+### 2. CORS
+
+"跨域资源共享"（Cross-origin resource sharing）即，后端在服务器端的 HTTP 响应中添加响应头字段
+Access-Control-Allow-Origin：* 前端Web发出跨域请求后，浏览器会自动向我们的HTTP
+header添加一个额外的请求头字段：Origin，标记了请求的来源，所以前端不需要做任何事，即可跨域请求。
+CORS分成两类：简单请求和非简单请求
+
+简单请求：请求为 GET、HEAD 或 POST，且请求头只有以下几种，此时请求无其他变化
+Accept、Accept-Language、Content-Language、Last-Event-ID、
+Content-Type：只限于三个值application/x-www-form-urlencoded、multipart/form-data、text/plain
+
+非简单请求：除简单请求之外皆为非简单请求 此时发送请求时，会先执行一次 OPTIONS
+查询请求（预检请求），以获知服务器是否允许该实际请求，然后再发送请求 不支持IE10以下，目前用的人不多
+
+
+
+### 3. Webpack反向代理（主流方法）
+
+使用我们的node后端，去反向代理目标地址服务器，只在我们开发时有效（因为开发时我们才会启动node后端服务）
+具体方法为：在webpack.config.js中添加开发环境的配置
+
+```
+devServer: {
+  host: 'localhost', // 域名
+  port: 8080, // 端口号
+  // 服务器代理，--> 解决开发环境的跨域问题
+  proxy: {
+    // 一旦 8080服务器接收到/api/xxx的请求，就会把请求转发到另外一个服务器3000
+    '/api': {
+      target: 'http://localhost:3000', // 表示目标资源的地址
+      //secure: false, // 设置支持https协议的代理
+      //changeOrigin: true, // target是域名的话，需要这个参数
+      // 发送请求时，请求路径重写：将/api/xxx --> /xxx （去掉/api）
+      pathRewrite: {
+        '^/api': '' //如果本身的接口地址没有 '/api' 这种通用前缀，则需要rewrite
+      }
+    }
+  }
+}
+```
+
+
+
+### 4. Nginx反向代理 （主流方法）
+
+Nginx是一种高性能的请求分发和反向代理web轻量服务器，类似于起到中转请求到真正数据存储服务器的中转站的作用
+原理同webpack反向代理，不过此时为后端配置
+
+```
+server{
+    # 监听9099端口
+    listen 9099;
+    # 域名是localhost
+    server_name localhost;
+    #凡是localhost:9099/api这个样子的，都转发到真正的服务端地址http://localhost:9871 
+    location ^~ /api {
+        proxy_pass http://localhost:9871;
+    }     }
+```
+
+前端啥也不用干
+
+
+
+### 5. webSocket（高级小众方法）
+
+是一种HTML5中新增的通信协议，比起http协议更加安全，为不受限的双向通信，不会产生跨域问题
+
+
+
+- 解决方案
+  - [1. JSONP](https://106.54.190.214/index.php/archives/14/#menu_index_2)
+  - [2. CORS](https://106.54.190.214/index.php/archives/14/#menu_index_3)
+  - [3. Webpack反向代理（主流方法）](https://106.54.190.214/index.php/archives/14/#menu_index_4)
+  - [4. Nginx反向代理 （主流方法）](https://106.54.190.214/index.php/archives/14/#menu_index_5)
+  - [5. webSocket（高级小众方法）](https://106.54.190.214/index.php/archives/14/#menu_index_6)
+
+
+
 ## 什么是跨域
 
 浏览器的**同源策略**限制我们只能在**协议、IP 地址、端口号**相同的情况下相互的获取数据。如果有任何一个不通，这就算是跨域 HTTP 请求，可以正常发起，但是返回的结果会被浏览器拦截。
