@@ -341,3 +341,15 @@ ref 底层其实还是 reactive,所以当运行时系统会自动根据传入的
 
 
 
+#### Proxy和defineProperty对比
+
+一个优秀的开源框架本身就是一个不断打碎重朔的过程，上面做了些许铺垫，现在我们简要总结一下
+
+- `Proxy` 作为新标准将受到浏览器厂商重点持续的性能优化
+- `Proxy` 能观察的类型比 `defineProperty` 更丰富
+- `Proxy` 不兼容IE，也没有 `polyfill`, `defineProperty` 能支持到IE9
+- **`Object.definedProperty` 是劫持对象的属性，新增元素需要再次 `definedProperty`**。而 `Proxy` 劫持的是整个对象，不需要做特殊处理
+- 使用 `defineProperty` 时，我们修改原来的 `obj` 对象就可以触发拦截，而使用 `proxy`，就必须修改代理对象，即 `Proxy` 的实例才可以触发拦截
+
+## 
+

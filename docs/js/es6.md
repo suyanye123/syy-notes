@@ -42,6 +42,8 @@ new Person('kb', 39) // 加上new
 - 创建 eval 作用域(目前不推荐使用)
 - 对象不能有重名的属性
 
+
+
 ### 1.2 JSON 对象
 
 1. JSON.stringify(obj/arr)
@@ -64,6 +66,8 @@ console.log(obj) // {username: "kb"}
 console.log(typeof obj) // object
 ```
 
+
+
 ### 1.3 Object 对象方法扩展
 
 ES5 给 Object 扩展了一些静态方法，常用的2个：
@@ -72,22 +76,16 @@ ES5 给 Object 扩展了一些静态方法，常用的2个：
 
 作用：以指定对象为原型创建新的对象
 
-为新的对象指定新的属性，并对实行进行描述
-
-- value：指定值
-- writable：标识当前属性值是否可修改，默认为false
-- configurable：标识当前属性是否可以被删除，默认为false
-- enumerable：标识当前属性是否能用for in 枚举，默认为false
-
 ```js
 var obj = {username: 'dm', age: 30};
 var obj1 = {};
 obj1 = Object.create(obj, {
-  sex: { // 扩展的新属性
-    value: 'male',
-    writable: true, // 只有指定writable为true才能修改sex的值
-    configurable: true, // 只有指定configurable为true才能删除sex的值
-    enumerable: true // 只有指定enumerable为true才能枚举sex的值
+    // 扩展的新属性，为新的对象指定新的属性，并对属性进行描述
+  sex: { 
+    value: 'male',	//value：指定值
+    writable: true, // 标识当前属性值是否可修改，默认为false，只有指定writable为true才能修改sex的值
+    configurable: true, // 标识当前属性是否可以被删除，默认为false，只有指定configurable为true才能删除sex的值
+    enumerable: true // enumerable：标识当前属性是否能用for in 枚举，默认为false，只有指定enumerable为true才能枚举sex的值
   },
 
 });
@@ -139,11 +137,6 @@ Object.defineProperties(obj2, {
 console.log(obj2.fullName)
 obj2.fullName = 'tim dc' // 修改fullName属性的值
 console.log(obj2.fullName)
-// get()
-// kb ret
-// set(), tim dc
-// get()
-// tim dc
 ```
 
 #### 对象本身的两个方法
@@ -171,6 +164,8 @@ console.log(obj.fullName);
 ```
 
 **这两种写法不同但是结果是完全相同的。**
+
+
 
 ### 1.4 Array 扩展
 
@@ -206,64 +201,19 @@ var arr2 = arr.filter(item => {
 console.log(arr2)
 ```
 
-### 1.5 Function 扩展——call、apply、bind用法详解
 
-Function.prototype.bind(obj)：将函数内的 this 绑定为 obj，并将函数返回
 
-区别 bind()、call() 和 apply()：
+### 1.5 Function 扩展
 
- 都能指定函数中的 this
+新增`bind()`方法， [详见aply、call、bind详解](./this)
 
- call()/apply() 是立即调用函数，bind() 是将函数返回
+`Function.prototype.bind(obj)`：将函数内的 `this` 绑定为 `obj`，并将函数返回
 
-```
-var obj = {username: 'wy'};
-function foo() {
-    console.log(this)
-}
-foo() // window
-foo.call(obj) // {username: "wy"}
-foo.apply(obj) // {username: "wy"}
-```
 
-> 不传参时，call 和 apply 的用法相同。
 
-传入参数的形式不同：
+------
 
-```
-var obj = {username: 'wy'};
-function foo(data) {
-    console.log(this, data)
-}
-foo.call(obj, 33) // {username: "wy"} 33
-foo.apply(obj, [33]) // {username: "wy"} 33
-```
 
-> call：直接从第二个参数开始，依次传入
->
-> apply：第二参数必须是数组，传入值放在数组里
-
-```
-var obj = {username: 'wy'}
-function foo(data) {
-    console.log(this, data)
-}
-foo.bind(obj, 33) // 没有输出
-foo.bind(obj, 33)() // {username: "wy"} 33
-```
-
-> bind 的特点：绑定完 this 不会立即调用当前的函数，而是将函数返回。
->
-> 传参的方式和 call 一样
-
-什么时候用 bind：
-
-```
-var obj = {username: 'wy'}
-setTimeout(function() {
-  console.log(this)
-}.bind(obj), 1000)
-```
 
 ##  ES6
 
@@ -285,6 +235,8 @@ const：定义一个常量
 1. var 定义的变量，没有块的概念，可以跨块访问, 不能跨函数访问。
 2. let 定义的变量，只能在块作用域里访问，不能跨块访问，也不能跨函数访问。
 3. const 用来定义常量，使用时必须初始化(即必须赋值)，只能在块作用域里访问，而且不能修改。
+
+
 
 ### 2.2 变量的解构赋值
 
@@ -333,6 +285,8 @@ console.log(age); // 18
 console.log(city); // 'Shanghai'
 ```
 
+
+
 ### 2.3 模板字符串
 
 简化字符串的拼接
@@ -346,20 +300,20 @@ var name = 'Your name is ' + first + ' ' + last + '.'
 var name = `Your name is ${first} ${last}.`
 ```
 
+
+
 ### 2.4 对象的简写方式
 
-省略同名的属性值
+省略同名的属性值，省略方法的function
 
-省略方法的function
-
-```
+```js
 const name='Ming', age='18', city='Shanghai';
 //ES5
 const student = {
     name: name,
     age: age,
     city: city,
-      getName: function() {
+    getName: function() {
       return this.name;
     }
 };
@@ -369,13 +323,15 @@ const student = {
     name, // 同名的属性可以省略不写
     age,
     city,
-      getName() { // 可以省略函数的function
+    getName() { // 可以省略函数的function
       return this.name;
     }
 };
 console.log(student);//{name: "Ming", age: "18", city: "Shanghai"}
 console.log(student.getName()); // Ming
 ```
+
+
 
 ### 2.5 箭头函数
 
@@ -480,6 +436,8 @@ a.c() // ss
 
 由于箭头函数外没有函数，所以this指向window
 
+
+
 ### 2.6 三点运算符
 
 用途
@@ -508,6 +466,8 @@ console.log(...arr) //[1, 2, 3, 4, 5, 6]
 
 相当于会自动遍历这个数组，拿到每一项值
 
+
+
 ### 2.7 形参默认值
 
 当不传入参数的时候默认使用形参里的默认值
@@ -523,9 +483,13 @@ let point2 = new Point() // 不传参数
 console.log(point) // {x:0, y:0}
 ```
 
+
+
 ### 2.8 Promise
 
-[详见promise页](./promise)
+[详见promise专栏](./promise)
+
+
 
 ### 2.9 Symbol 属性
 
@@ -570,6 +534,8 @@ console.log(Person_key) // Symbol(Person_key)
 除了定义自己使用的 Symbol 值以外，ES6 还提供了11个内置 Symbol 值，指向语言内部使用的方法：
 
 Symbol.iterator：对象的 Symbol.iterator 属性，指向该对象的默认遍历方法
+
+
 
 ### 2.10 iterator 接口机制
 
@@ -693,6 +659,8 @@ for(let i of obj) {
 
 其实，使用三点运算符、解构赋值时，也默认会调用iterator接口
 
+
+
 ### 2.11 Generator 函数
 
 概念：
@@ -713,7 +681,7 @@ for(let i of obj) {
 
 简单使用：
 
-```
+```js
 function* myGenerator() {
   console.log('开始执行console.log语句不会阻断')
   let result = yield 'hi'; //result的值是从这里启动的next()的参数
@@ -749,7 +717,7 @@ next() 会一直执行直到遇到一个 yield，就会执行其后表达式然�
 
 对象的 symbol.iterator 属性，指向遍历器对象，结合 generator 的用法：
 
-```
+```js
 let obj = {username: 'wy', age: 18}
 obj[Symbol.iterator] = function* myTest() {
   yield 1
@@ -763,7 +731,7 @@ for(let i of obj) {
 
 下面是 Promise 中的案例用 Generator 写的练习（用 setTimeout 来模拟 ajax 请求）
 
-```
+```js
 function getData(url) {
   setTimeout(() => { // 模拟一个get请求
     var news = {id: 1, content: 'lalala', commentsUrl: '/comments?newsId=1'} // 模拟news数据
@@ -791,6 +759,8 @@ SX.next()
 // 根据http://localhost:3000/news?id=1/comments?newsId=1获取data内容： 
 // [{comments: "aaa", newsId: "1"}, {comments: "bbb", newsId: "1"}]
 ```
+
+
 
 ### 2.12 async 函数
 
@@ -878,6 +848,8 @@ async function sendXml() {
 }
 sendXml();
 ```
+
+
 
 ### 2.13 class 类
 
@@ -1030,6 +1002,8 @@ console.log(b.__proto__.__proto__ === A.prototype) // true
 >
 > 当 `super` 作为对象，用在静态方法之中时， 将指向父类，而不是父类的原型对象。并且其 this 指向子类而不是子类实例。
 
+
+
 ### 2.14 Module 模块化
 
 ES6 将一个文件视为一个模块，一个模块中用 export 来导出多个变量或函数。
@@ -1063,17 +1037,17 @@ import {name, age} from 'test.js';
 也就是说，通过 `import xxx from "..."` 引入的，xxx 已经是默认导出项的别名（自己取的其他名字）了。
 而 `import { xxx } from "..."` 引入的，{ xxx } 只是导出项的名字（跟原名一致），而并非导入时的名字。
 
+
+
 ### 2.15  Proxy
 
-[详见proxy页](./proxy)
+[proxy详解](./proxy)
 
 
-
-##  其他
 
 ### 2.2.1 字符串、数组的扩展
 
-##### 字符串
+#### 字符串
 
 1. includes(str)：判断是否包含指定的字符串
 2. startsWith(str)：判断是否以指定字符串开头
@@ -1091,7 +1065,7 @@ console.log(str.endsWith('l')) // true
 console.log(str.repeat(3)) // asdfghjklasdfghjklasdfghjkl
 ```
 
-##### 数值
+#### 数值
 
 1. 二进制与八进制数值表示法：二进制用0b，八进制用0o
 2. Number.isFinite(i)：判断是否是有限大的数
@@ -1115,14 +1089,16 @@ console.log(Number.parseInt('a123abc123')) // NaN
 console.log(Math.trunc(123.123)) // 123
 ```
 
+
+
 ### 2.2.2 数组方法的扩展
 
-1. Array.from(v)：将伪数组对象或可遍历对象转换为真数组
-2. Array.of(v1, v2, v3)：将一系列值转换成数组
-3. find(function(value, index, arr) {return true})：找出第一个满足条件返回 true 的元素
-4. findIndex(function(value,index,arr) {return true})：找出第一个满足条件返回 true 的元素下标
+1. `Array.from(v)`：将伪数组对象或可遍历对象转换为真数组
+2. `Array.of(v1, v2, v3)`：将一系列值转换成数组
+3. `find(function(value, index, arr) {return true})`：找出第一个满足条件返回 true 的元素
+4. `findIndex(function(value,index,arr) {return true})`：找出第一个满足条件返回 true 的元素下标
 
-```
+```js
 <button>测试1</button>
 <br>
 <button>测试2</button>
@@ -1149,13 +1125,15 @@ let result2 = arr2.findIndex((item, index) => {
 console.log(result2) // 3
 ```
 
+
+
 ### 2.2.3 对象方法的扩展
 
-1. Object.is(v1,v2)：判断2个数据是否完全相等
-2. Object.assign(target,source1,source2..)：将源对象的属性复制到目标对象上
+1. `Object.is(v1,v2)`：判断2个数据是否完全相等
+2. `Object.assign(target,source1,source2..)`：将源对象的属性复制到目标对象上
 3. 直接操作`__proto__`属性：`let obj2 = {};obj2.__proto__ = obj1;`
 
-```
+```js
 console.log(0 == -0) // true
 console.log(NaN == NaN) // false(NaN和任何值都不相等)
 
@@ -1176,314 +1154,17 @@ console.log(obj3) // {}>__proto__:money: 5000
 console.log(obj3.money) // 5000
 ```
 
-### 2.2.4 深度克隆
 
-浅拷贝和深拷贝针对的是`对象/数组`，因为基本`数据类型`没有浅/深一说，它复制都会生成新数据，原数据永远不会被影响。
 
-> 深拷贝和浅拷贝最根本的区别在于是否是真正获取了一个对象的复制实体，而不是引用。深拷贝在计算机中开辟了一块内存地址用于存放复制的对象，而浅拷贝仅仅是指向被拷贝的内存地址，如果原地址中对象被改变了，那么浅拷贝出来的对象也会相应改变。
+### 2.2.4 Set 和 Map 数据结构
 
-也就是说：
+[详见set-map数据结构页](./set-map)
 
- **浅拷贝**：拷贝的引用，修改拷贝后**会影响**原数据，使得原数据不安全
 
- **深拷贝(深度克隆)**：拷贝后生成新数据，修改拷贝后**不会影响**原数据
 
-拷贝数据的方法有下面几种：
+### 2.2.5 for of 用法
 
-#### 2.2.4.1 直接赋值给一个变量：浅拷贝
-
-基本数据类型：拷贝后会生成一份新的数据，修改拷贝以后的数据**不会影响**原数据
-
-对象/数组：拷贝后不会生成新的数据，而是复制的引用。修改拷贝后的数据**会影响**原来的数据
-
-```
-// 不会影响原数据 生成新数据
-let str = 'abc'
-let str2 = str
-console.log(str2) // abc
-str2 = ''
-console.log(str) // abc
-
-let bool1 = true
-let bool2 = bool1
-bool2 = false
-console.log(bool1) // true
-
-// 拷贝数组/对象，没有生成新的数据而是复制了一份引用，改变会影响原数据
-let obj = {username: 'wy', age: 18}
-let obj1 = obj
-console.log(obj1) // {username: 'wy', age: 18}
-obj1.username = 'wd'
-console.log(obj.username) // wd
-
-let arr = [1, 4, {username: 'wy', age: 18}]
-let arr2 = arr
-arr2[0] = 'abc'
-console.log(arr) // ['abc', 4, {username: 'wy', age: 18}]
-```
-
-#### 2.2.4.2 Object.assign()：浅拷贝
-
-Object.assign(target,source1,source2..)：将源对象的属性复制到目标对象上，并返回目标对象。
-
-**注意： 当对象只有一级属性为深拷贝；当对象中有多级属性时，二级属性后就是浅拷贝**
-
-```
-let obj = {username: 'wy', info: {num: 101}}
-let obj2 = Object.assign({}, obj)
-console.log(obj2) // {username: 'wy', info: {num: 101}}
-// 修改obj2中的一级属性，不会影响原数组
-obj2.username = 'wd'
-console.log(obj) // {username: 'wy', info: {num: 101}}
-// 修改obj2中的二级属性，会影响原数组
-obj2.info.num = 102
-console.log(obj) // {username: 'wy', info: {num: 102}}
-```
-
-上面代码将原始对象拷贝到一个空对象，就得到了原始对象的克隆，这时候 obj 与 obj2 指向的是不同的栈对象，所以对 obj.username 重新复制也不会影响到 obj.username。**但是 obj.info 是一个栈对象的引用，而不是一个字符串，那么赋值给 obj2 时，obj2.info 也同样是这个栈对象的引用**。
-
-#### 2.2.4.3 Array.prototype.concat()：浅拷贝
-
-与 Object.assign() 相似，**当数组中的元素均为一维是深拷贝，数组中元素一维以上是值的引用**
-
-```
-let arr = [1, 3, {username: 'wy'}, [4]]
-
-// 如果不传参,相当于拷贝了一份
-let arr3 = arr.concat() // 还可以写为 let arr3 = [].concat(arr)
-console.log(arr3) // [1, 3, {username: 'wy'}, [4]]
-
-// 修改arr3中的一维，不会影响原数组
-arr3[1] = 'abc'
-arr3.push('test')
-console.log(arr) // [1, 3, {username: 'wy'}, [4]]
-
-// 修改arr3中的二维，会影响原数组
-arr3[2].username = 'wd'
-console.log(arr) // [1, 3, {username: 'wd'}, [4]]
-arr3[3].push('test')
-console.log(arr) // [1, 3, {username: 'wd'}, [4, "test"]]
-```
-
-#### 2.2.4.4 Array.prototype.slice()：浅拷贝
-
-slice(idx1, idx2)
-
-1）没有参数是拷贝数组
-
-2）只有一个参数是从该位置起到结束拷贝数组元素
-
-3）两个参数，拷贝从起始位置到结束位置的元素（不包含结束位置的元素：含头不含尾）
-
-同样，**当数组中的元素均为一维是深拷贝，数组中元素一维以上是值的引用**
-
-```
-let arr = [1, 3, {username: 'wy'}, [4]]
-// 返回截取的数组片段
-let arr2 = arr.slice(0, 2)
-console.log(arr2) // [1, 3]
-// 如果不传参,相当于拷贝了一份
-let arr3 = arr.slice()
-console.log(arr3)// [1, 3, {username: 'wy'}, [4]]
-
-// 修改arr3中的一维，不会影响原数组
-arr3[1] = 'abc'
-arr3.push('test')
-console.log(arr) // [1, 3, {username: 'wy'}, [4]]
-
-// 修改arr3中的二维，会影响原数组
-arr3[2].username = 'wd'
-console.log(arr) // [1, 3, {username: 'wd'}, [4]]
-arr3[3].push('test')
-console.log(arr) // [1, 3, {username: 'wd'}, [4, "test"]]
-```
-
-#### 2.2.4.5 JSON.parse(JSON.stringify())：深拷贝
-
-```
-let arr = [1, 3, {username: 'wy'}]
-// 相当于拷贝了一份
-let arr2 = JSON.parse(JSON.stringify(arr))
-console.log(arr2) // [1, 3, {username: 'wy'}]
-
-// 修改arr2中的基本数据类型number，不会影响原数组
-arr2[1] = 'abc'
-console.log(arr) // [1, 3, {username: 'wy'}]
-
-// 修改arr2中的Object类型，不会影响原数组
-arr2[2].username = 'wd'
-console.log(arr, arr2) // [1, 3, {username: 'wy'}] [1, 3, {username: 'wd'}]
-```
-
-> 需要注意的是：这种拷贝方法不可以拷贝一些特殊的属性（例如正则表达式，undefined，function函数）
-
-更重要的是，这种方法只能克隆原始对象自身的值，不能克隆它继承的值，参考如下代码：
-
-```
-var clone = function (obj) {
-  return JSON.parse(JSON.stringify(obj));
-}
-function Person (name) {
-  this.name = name
-}
-Person.prototype = {
-  age: 18,
-}
-var wanger = new Person('王二')
-var newwanger = clone(wanger)
-console.log(wanger) // Person {name: "王二", __proto__: {age: 18}}
-console.log(newwanger) // {name: "王二"}
-wanger instanceof Person // true
-newwanger instanceof Person // false
-newwanger instanceof Object // true
-```
-
-克隆的对象的构造函数已经变成了 Object，而原来的对象的构造是 Person。
-
-### 2.2.5 如何实现深度拷贝（克隆）
-
-拷贝的数据都是基本数据时，确保都是深度克隆，不会影响到原数据。
-
-如果有对象/数组，可以遍历它们，拿到里面的每一项值，直到拿到的是基本数据类型，然后再去复制，可以实现对象/数组的深度拷贝。
-
-##### 知识点储备
-
-如何判断数据类型：arr ---> Array，null ---> Null
-
-1. **typeOf 返回的数据类型：**String，Number，Boolean，Undefined，Object（null也会返回一个Object，因为null默认是一个空对象），Function
-2. Object.prototype.toString()
-
-```
-let result = 'abc'
-console.log(Object.prototype.toString.call(result)) // [object String]
-result = null
-console.log(Object.prototype.toString.call(result)) // [object Null]
-result = [1, 2, 3]
-console.log(Object.prototype.toString.call(result)) // [object Array]
-console.log(Object.prototype.toString.call(result).slice(8, -1)) // Array
-```
-
-1. for in 循环 对象(属性名) 数组(下标)
-
-```
-let obj = {username: 'wy', age: 18}
-for(let i in obj) {
-  console.log(i) // username age
-}
-let arr = [1, 3, 'abc']
-for(let i in arr) {
-  console.log(i) // 0 1 2
-}
-```
-
-完整实现深度克隆：
-
-```
-// 定义检测数据类型的功能函数
-function checkedType(target) {
-  return Object.prototype.toString.call(target).slice(8, -1)
-}
-// 实现深度克隆 ---> 对象/数组
-function clone(target) {
-  // 判断拷贝的数据类型
-  // 初始化变量result成为最终克隆的数据
-  let result, targetType = checkedType(target);
-  if(targetType === 'Object') {
-    result = {};
-  } else if(targetType === 'Array') {
-    result = [];
-  } else {
-    return target;
-  }
-  // 遍历目标数据
-  for(let i in target) {
-    // 获取遍历数据结构的每一项值
-    let value = target[i];
-    // 判断目标结构里的每一项值是否存在对象/数组
-    if(checkedType(value) === 'Object' || checkedType(value) === 'Array') { // 对象/数组中又嵌套着对象/数组
-      // 继续遍历获取到的value
-      result[i] = clone(value);
-    } else { //　获取到的value是基本的数据类型或函数
-      result[i] = value;
-    }
-  }
-  return result;
-}
-let arr = [1, 3, [5, 7, {username: 'wy', age: 18}, 15], 9]
-let arr2 = clone(arr)
-console.log(arr2) // [1, 3, [5, 7, {username: 'wy', age: 18}, 15], 9]
-arr2[2][2].username = 'wd'
-console.log(arr, arr2) // [1, 3, [5, 7, {username: 'wy', age: 18}, 15], 9] [1, 3, [5, 7, {username: 'wd', age: 18}, 15], 9]
-
-let obj = {username: 'wy', age: 18}
-let obj2 = clone(obj)
-console.log(obj2) // {username: "wy", age: 18}
-obj2.username = 'wd'
-console.log(obj, obj2) //{username: "wy", age: 18} {username: "wd", age: 18}
-```
-
-### 2.2.6 Set 和 Map 数据结构
-
-##### Set 容器
-
-无序不可重复的多个 value 的集合体
-
-- Set()
-- Set(array)
-- add(value)：添加
-- delete(value)：删除
-- has(value)：判断有没有
-- clear()：清空
-- size：有几个（相当于length）
-
-```
-let set = new Set([1, 2, 4, 5, 2, 3, 6])
-console.log(set) // Set(6) {1, 2, 4, 5, 3, 6}
-// 重复的2被删去了
-set.add(7)
-console.log(set.size, set) // 7 Set(7) {1, 2, 4, 5, 3, 6, 7}
-
-console.log(set.has(8)) // false
-console.log(set.has(7)) // true
-
-set.clear()
-console.log(set) // Set(0) {}
-```
-
-用 Set 去重：
-
-```
-let arr1 = [1, 2, 4, 5, 5, 6, 8, 2]
-let arr = [... new Set(arr1)]
-console.log(arr) // [1, 2, 4, 5, 6, 8]
-```
-
-##### Map 容器
-
-无序的 key 不重复的多个 key-value 的集合体
-
-- Map()
-- Map(array)
-- set(key,value)：添加
-- get(key)
-- delete(key)：删除
-- has(key)
-- clear()
-- size
-
-```
-let map = new Map([ ['aaa', 'username'], [36, 'age'] ])
-// 添加
-map.set(78, 'hh')
-console.log(map) // Map(3) {"aaa" => "username", 36 => "age", 78 => "hh"}
-// 删除
-map.delete(36)
-console.log(map) // Map(2) {"aaa" => "username", 78 => "hh"}
-```
-
-### 2.2.7 for of 用法
-
-for(let value of target) {} 循环遍历（必须部署 iterator）
+`for(let value of target) {}` 循环遍历（必须部署 iterator）
 
 1. 遍历数组
 2. 遍历 Set
@@ -1493,7 +1174,7 @@ for(let value of target) {} 循环遍历（必须部署 iterator）
 
 前面 Set 去重的方法用 for of 可以这样写：
 
-```
+```js
 let arr1 = [1, 2, 4, 5, 5, 6, 8, 2]
 let arr = []
 let set = new Set(arr1)

@@ -12,29 +12,29 @@ JavaScript 中对象的属性分为：数据属性和访问器属性
 
 是否可以被 delete 删除或者改变特征值
 
-```markdown
-configurable(可配置性）返回一个布尔值，决定了是否可以修改属性描述对象。
-也就是说，configurable为false时，value、writable、enumerable和configurable都不能被修改了， configurable修改成false是单向操作，无法撤销！以及无法被删除
-注意，writable只有在false改为true会报错，true改为false是允许的。
-至于value，只要writable和configurable有一个为true，就允许改动。
-另外，configurable为false时，直接目标属性赋值，不报错，但不会成功。
+```js
+//configurable(可配置性）返回一个布尔值，决定了是否可以修改属性描述对象。
+//也就是说，configurable为false时，value、writable、enumerable和configurable都不能被修改了， configurable修改成false是单向操作，无法撤销！以及无法被删除
+//注意，writable只有在false改为true会报错，true改为false是允许的。
+//至于value，只要writable和configurable有一个为true，就允许改动。
+//另外，configurable为false时，直接目标属性赋值，不报错，但不会成功。
 ```
 
 ####  enumerable：
 
 是否能通过 for-in 循环遍历返回属性
 
-```markdown
-enumerable（可遍历性）返回一个布尔值，表示目标属性在 for…in、Object.keys、JSON.stringify 中是否可遍历。但是可以直接获取它的值。
-注意，for…in循环包括继承的属性，Object.keys方法不包括继承的属性。如果需要获取对象自身的所有属性，不管是否可枚举，可以使用Object.getOwnPropertyNames方法。
+```js
+//enumerable（可遍历性）返回一个布尔值，表示目标属性在 for…in、Object.keys、JSON.stringify 中是否可遍历。但是可以直接获取它的值。
+//注意，for…in循环包括继承的属性，Object.keys方法不包括继承的属性。如果需要获取对象自身的所有属性，不管是否可枚举，可以使用Object.getOwnPropertyNames方法。
 ```
 
 ####  writabe：
 
 是否可以修改属性的值
 
-```markdown
-writable属性是一个布尔值，决定了目标属性的值（value）是否可以被改变。如果原型对象的某个属性的writable为false，那么子对象将无法自定义这个属性。
+```js
+//writable属性是一个布尔值，决定了目标属性的值（value）是否可以被改变。如果原型对象的某个属性的writable为false，那么子对象将无法自定义这个属性。
 ```
 
 ####  value：
@@ -393,15 +393,9 @@ for in 循环以原始插入顺序记录 **myArray 对象的可枚举属性**，
 
 ## 三、Object 的方法
 
-#### 1.`Object.getOwnPropertyDescriptor` 和 `Object.defineProperty`
+### defineProperty
 
 ```js
-Object.getOwnPropertyDescriptor(obj, prop)
-//返回指定对象上一个自有属性对应的属性描述符。（自有属性指的是直接赋予该对象的属性，不需要从原型链上进行查找的属性）
-
-Object.getOwnPropertyDescriptors(obj)
-//获取一个对象的所有自身属性的描述符
-
 Object.defineProperty(obj, prop, descriptor)
 //会直接在一个对象上定义一个新属性，或者修改一个对象的现有属性，并返回此对象。
 
@@ -411,62 +405,7 @@ Object.defineProperties(obj, {prop1 : descriptor1, prop2 : descriptor2, ...})
 
 
 
-#### 2.`Object.getOwnPropertyNames`
-
-```js
-Object.getOwnPropertyNames(obj)
-//返回一个由指定对象的所有自身属性的属性名（包括不可枚举属性）组成的数组，但不会获取原型链上的属性
-```
-
-
-
-#### 3.`propertyIsEnumerable` 和 `hasOwnProperty`
-
-```js
-propertyIsEnumerable(prop)
-//返回一个布尔值，可以确定对象中指定的属性(非原型链继承的)是否可以被 for...in 循环枚举。如果对象没有这个属性，则此方法返回 false。
-
-hasOwnProperty(prop)
-//返回一个布尔值，指示对象自身属性中是否具有指定的属性
-```
-
-
-
-#### 4.`Object.keys` 和 `Object.values`
-
-```js
-Object.keys(obj)
-//会返回一个由给定对象的所有可枚举自身属性的属性名组成的数组，数组中属性名的排列顺序和正常循环遍历该对象时返回的顺序一致 。
-
-Object.values(obj)
-//返回一个给定对象自身的所有可枚举属性值的数组，值的顺序与使用 for...in 循环的顺序相同 ( 区别在于 for-in 循环枚举原型链中的属性 )。
-```
-
-
-
-#### 5.`Object.getPrototypeOf`、`Object.setPrototypeOf` 和 `isPrototypeOf`
-
-```js
-Object.getPrototypeOf(obj)
-//方法返回指定对象的原型（内部[[Prototype]]属性的值）
-
-Object.setPrototypeOf(obj, prototype)
-//设置一个指定的对象的原型 ( 即内部[[Prototype]]属性）为另一个对象或 null
-
-obj1.prototype.isPrototypeOf(obj2)
-//用于测试一个对象 obj2 是否存在于另一个对象 obj1 的原型链上
-```
-
-
-
-```js
-if (Foo.prototype.isPrototypeOf(baz)) {
-  // do something safe
-}
-// 和instanceof功能一样，判断对象是否继承自一个特定的原型链
-```
-
-#### 6.`Object.create`、`Object.assign` 和 `Object.is`
+### Object.create
 
 ```js
 Object.create(proto,[propertiesObject])
@@ -496,7 +435,7 @@ obj2.p = 3;
 console.log(obj2.p)     // 3
 ```
 
-
+### Object.assign
 
 ```js
 Object.assign(target, ...sources)//用于将所有可枚举属性的值从一个或多个源对象复制到目标对象。它将返回目标对象
@@ -512,7 +451,69 @@ console.log(returnedTarget);
 // expected output: Object { a: 1, b: 4, c: 5 }
 ```
 
+### getOwnPropertyDescriptor
 
+```js
+Object.getOwnPropertyDescriptor(obj, prop)
+//返回指定对象上一个自有属性对应的属性描述符。（自有属性指的是直接赋予该对象的属性，不需要从原型链上进行查找的属性）
+
+Object.getOwnPropertyDescriptors(obj)
+//获取一个对象的所有自身属性的描述符
+```
+
+### getOwnPropertyNames
+
+```js
+Object.getOwnPropertyNames(obj)
+//返回一个由指定对象的所有自身属性的属性名（包括不可枚举属性）组成的数组，但不会获取原型链上的属性
+```
+
+### propertyIsEnumerable 
+
+```js
+propertyIsEnumerable(prop)
+//返回一个布尔值，可以确定对象中指定的属性(非原型链继承的)是否可以被 for...in 循环枚举。如果对象没有这个属性，则此方法返回 false。
+```
+
+### hasOwnProperty
+
+```js
+hasOwnProperty(prop)
+//返回一个布尔值，指示对象自身属性中是否具有指定的属性
+```
+
+### Object.keys 和 Object.values
+
+```js
+Object.keys(obj)
+//会返回一个由给定对象的所有可枚举自身属性的属性名组成的数组，数组中属性名的排列顺序和正常循环遍历该对象时返回的顺序一致 。
+
+Object.values(obj)
+//返回一个给定对象自身的所有可枚举属性值的数组，值的顺序与使用 for...in 循环的顺序相同 ( 区别在于 for-in 循环枚举原型链中的属性 )。
+```
+
+
+
+### getPrototypeOf、setPrototypeOf和 isPrototypeOf
+
+```js
+Object.getPrototypeOf(obj)
+//方法返回指定对象的原型（内部[[Prototype]]属性的值）
+
+Object.setPrototypeOf(obj, prototype)
+//设置一个指定的对象的原型 ( 即内部[[Prototype]]属性）为另一个对象或 null
+
+obj1.prototype.isPrototypeOf(obj2)
+//用于测试一个对象 obj2 是否存在于另一个对象 obj1 的原型链上
+if (Foo.prototype.isPrototypeOf(baz)) {
+  // do something safe
+}
+// 和instanceof功能一样，判断对象是否继承自一个特定的原型链
+```
+
+
+
+###  Object.is
 
 ```js
 Object.is(value1, value2)

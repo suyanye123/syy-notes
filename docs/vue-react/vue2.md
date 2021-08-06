@@ -1,5 +1,3 @@
-sidebarDepth: 2
-
 # Vue2
 
 前置知识： [Object](../js/object)

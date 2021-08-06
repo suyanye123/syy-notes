@@ -14,7 +14,7 @@
 
 精通Windows,Linux,Mac开关机
 
-擅长PR,PS等软件的安装和卸载
+擅长PR,PS,AI,AE等软件的安装和卸载
 
 熟悉C，C++，PHP，Python，JAVA，Golang等编程语言的单词拼写
 
