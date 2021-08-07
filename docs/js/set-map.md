@@ -187,8 +187,8 @@ console.log(map) // Map(2) {"aaa" => "username", 78 => "hh"}
 
 - 语法
 
-```
-new Map([iterable])` `Iterable` 可以是一个数组或者其他 `iterable` 对象，其元素为键值对(两个元素的数组，例如: [[ 1, 'one' ],[ 2, 'two' ]])。 每个键值对都会添加到新的 `Map
+```js
+new Map([iterable])	    //Iterable 可以是一个数组或者其他 iterable 对象，其元素为键值对(两个元素的数组，例如: [[ 1, 'one' ],[ 2, 'two' ]])。 每个键值对都会添加到新的 Map
 let map = new Map()
 map.set('name', 'vuejs.cn');
 console.log(map.get('name'))

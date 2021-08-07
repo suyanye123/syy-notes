@@ -14,7 +14,11 @@
 
 
 
+`vnode` 
 
+`diff` 
+
+`patch`
 
 
 

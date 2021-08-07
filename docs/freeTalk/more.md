@@ -287,7 +287,21 @@ https://www.jianshu.com/p/f97c029b1725
 
 ## CSS篇
 
-### 一、flex布局题目
+### 一、flex布局
+
+**就比如面试官问让我讲一下flex**
+
+我的回答：flex弹性盒是CSS3中引入的新型布局方案，这里分两个概念，一个为弹性容器，就是开启了display：flex的元素，还有一个概念为弹性元素，是弹性容器的直接子元素。
+
+弹性元素中分主轴和副轴，我们可以使用flex-dire ction来改变主轴的方向，默认为水平，自左向右。而副轴就是主轴的垂直方向，默认为垂直方向。
+
+有一个flex-wrap控制弹性元素是否可以换行，默认为不换行nowrap。弹性元元素中有一个justify-content可以改变主轴上弹性元素的对齐方式或者空白空间的分布，我们常用justify-content：center来实现弹性元素的水平居中。
+
+弹性容器中还有一个align-items来控制弹性元素在副轴上的位置，我们常用align-items：center来实现弹性元素的垂直居中。
+
+接下来到弹性元素的属性，有一个 flex-grow来控元素生长系数，通过flex-shrink来控制收缩系数，还有一个flex-basis控制元素的大小，如果主轴为水平方向，则basis相当于width，如果主轴方向为垂直，basis相当于height。
+
+我们可以使用flex:对以上三个属性进行简写，一般为flex:1 1 auto，然后可以通过order来控制弹性元素的显示顺序。
 
 ```html
 <div class='box'>
