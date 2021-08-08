@@ -179,7 +179,7 @@ Array.prototype.map(function(item, index) {})：遍历数组返回一个新的�
 
 Array.prototype.filter(function(item, index) {})：遍历过滤出一个新的子数组，返回条件为true的值
 
-```
+```js
 // 输出第一个6的下标
 // 输出最后一个6的下标
 // 输出所有元素的值和下标
