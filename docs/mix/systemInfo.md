@@ -44,9 +44,7 @@ let X_height = res.screenHeight - res.safeArea.bottom;
 
 ## 3.动态计算显示高度
 
-
-
-##### 获取节点高度
+#### 获取节点高度
 
 ```js
 //获取节点信息
@@ -60,5 +58,23 @@ uni.createSelectorQuery()
             scrollTop: that.scrollTop + data.top-44
         });   
 }).exec(
+```
+
+#### 计算安全区域
+
+[参考](https://blog.csdn.net/laishaojiang/article/details/103742078)
+
+```js
+ /**screenHeight是手机屏幕的总高度（状态栏+导航栏+webview+tabBar），windowHeight是可使用窗口高度webview（不包含状态栏、导航栏和tabBar）的高度；
+如果在pages.json中页面设置了"navigationStyle":"custom",(页面全屏)那么windowHeight的值是状态栏+导航栏+webview的和（不包含tabBar的高度） */
+let res = uni.getSystemInfoSync();
+const RATE = (res.screenWidth / 750).toFixed(2); // 用宽度计算rpx与真机像素比例
+let menuButton = uni.getMenuButtonBoundingClientRect({}); //胶囊信息
+let titleBarHeight =(menuButton.top - res.statusBarHeight) * 2 + menuButton.height; //根据胶囊信息计算标题栏高度
+//可用高度= windowHeight -标题栏（导航栏） - 状态栏
+ let usefulHeight = res.windowHeight - res.statusBarHeight - titleBarHeight;
+//转换成rpx
+usefulHeight = Math.floor(usefulHeight / (RATE * 1));
+//最后储存起来
 ```
 

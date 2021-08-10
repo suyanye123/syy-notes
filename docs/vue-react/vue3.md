@@ -19,6 +19,20 @@ creatApp(App).mount('#app')			//挂载
 
 ### 3.setup
 
+执行时间：在`beforeCreate`之前执行一次，this是undefined
+
+接受两个参数， props，context
+
+props值为对象，包含组件外部传递过来，且组件内部声明接收的属性
+
+context是一个上下文对象，有 `attrs` 、 `emit` 、`slots` 属性
+
+attrs：值为对象，包含组件外部传递过来，但未在props配置中声明的属性，相当于this.$attrs
+
+emit：为分发自定义事件的函数，相当于 this.$emit
+
+slots：为收到的插槽内容，相当于this.$slots
+
 ```html
 <script>
 export default{
@@ -33,7 +47,81 @@ export default{
 
 
 
+### 4.computed
+
+与vue2差不多一致，两种写法(一种简写仅读，一种传入配置对象声明get和set）
+
+唯一区别，需要引入，以函数形式使用
+
+
+
 ### 5.watch
+
+与vue2中watch配置功能基本一致
+
+情况一：监视ref所定义的一个响应式数据
+
+```js
+watch(sum,(newValue,oldValue)=>{
+	console.log('sum变了',newValue,oldValue)
+},{imediate:true})
+//watch函数第一个参数，监视目标，第二个参数 回调函数，第三个参数 是否立即调用等
+```
+
+情况二：监视ref所定义的多个响应式数据
+
+```js
+watch([sum,msg],(newValue,oldValue)=>{
+	console.log('sum或msg变了',newValue,oldValue)
+},{imediate:true})
+//以数组的形式传入，同时回调函数返回的新值旧值也是 数组形式
+```
+
+情况三：监视reactive所定义的一个响应式对象数据的全部属性
+
+存在问题1：此处无法正确获取oldValue
+
+存在问题2：强制开启深度监视（deep配置无效）
+
+（个人理解：因为引用的是proxy代理的源对象，所以deep配置无效）
+
+```js
+watch(person,(newValue,oldValue)=>{
+	console.log('person变了',newValue,oldValue)
+},{imediate:true})
+```
+
+情况四：监视reactive所定义的一个响应式对象数据的一个属性
+
+此时可以正确获得oldValue
+
+```js
+//A watch source can only be a getter/effect function,a ref,a reactive object,or an array of these types.
+//此时第一个参数，必须要以函数返回值的形式返回
+watch(()=>person.age,(newValue,oldValue)=>{
+  console.log('person的age变化了',newValue,oldValue)
+})
+```
+
+情况五：监视reactive所定义的一个响应式对象数据的多个属性
+
+```js
+watch([()=>person.name,()=>person.age],(newValue,oldValue)=>{
+  console.log('person的age变化了',newValue,oldValue)
+})
+```
+
+特殊情况：当监视的是 reactive定义的一个响应式对象 中的一个属性，同时这个属性是一个有多层嵌套的对象
+
+此时必须开启deep：true，才能监视到
+
+```js
+watch(()=>person.job,(newValue,oldValue)=>{
+  console.log('person的age变化了',newValue,oldValue)
+},{deep:true})//监视的是 reactive定义的一个响应式对象中的某个属性，所以deep配置有效
+```
+
+（个人理解：因为这个对象不是被proxy代理的源对象，而是引用的另一个普通对象，所以需要开启深度监听。proxy代理的源对象不需要开启深度监听）
 
 ```js
 //watch 既要指明监听的属性，也要指明监听的回调
@@ -43,7 +131,7 @@ watch(()=>person.job,(newValue,oldValue)=>{
 ```
 
 ```js
-//watchEffect 不用指明监视哪个属性，监视的回调中用到哪个属性六监视那个属性
+//watchEffect 不用指明监视哪个属性，监视的回调中用到哪个属性就监视那个属性
 //有点像computed，但是computed更注重计算出来的值(回调函数的返回值)
 //而watchEffect更注重过程(回调函数的函数体)，不用写返回值
 watchEffect(()=>{
@@ -53,11 +141,15 @@ watchEffect(()=>{
 })
 ```
 
+
+
 ### 6.自定义hook
 
 ```
 //函数复用
 ```
+
+
 
 ### 7.toRef
 
@@ -70,6 +162,8 @@ return{
   ...toRefs(person)
 }
 ```
+
+
 
 ### 8.shallowReactive/shallowRef
 
