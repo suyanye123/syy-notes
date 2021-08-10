@@ -657,6 +657,12 @@ newDom.style.background = 'red';
 <div class='basic' :style="[obj1,obj2]" />
 ```
 
+也可以使用三元表达式
+
+```html
+<span v-bind:style="{'display':config.isHaveSearch ? 'block':'none'}" >动态绑定样式</span>
+```
+
 
 
 #### 6.v-if
