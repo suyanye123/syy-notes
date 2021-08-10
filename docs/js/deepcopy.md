@@ -1,4 +1,4 @@
-# 2.2.4 深度克隆
+# 2.2.4 拷贝
 
 浅拷贝和深拷贝针对的是`对象/数组`，因为基本`数据类型`没有浅/深一说，它复制都会生成新数据，原数据永远不会被影响。
 
@@ -10,15 +10,15 @@
 
  **深拷贝(深度克隆)**：拷贝后生成新数据，修改拷贝后**不会影响**原数据
 
-拷贝数据的方法有下面几种：
+## 浅拷贝数据的几种方法：
 
-#### 2.2.4.1 直接赋值给一个变量：浅拷贝
+### 1. 直接赋值给一个变量
 
 基本数据类型：拷贝后会生成一份新的数据，修改拷贝以后的数据**不会影响**原数据
 
 对象/数组：拷贝后不会生成新的数据，而是复制的引用。修改拷贝后的数据**会影响**原来的数据
 
-```
+```js
 // 不会影响原数据 生成新数据
 let str = 'abc'
 let str2 = str
@@ -44,13 +44,15 @@ arr2[0] = 'abc'
 console.log(arr) // ['abc', 4, {username: 'wy', age: 18}]
 ```
 
-#### 2.2.4.2 Object.assign()：浅拷贝
+
+
+### 2. Object.assign()
 
 Object.assign(target,source1,source2..)：将源对象的属性复制到目标对象上，并返回目标对象。
 
 **注意： 当对象只有一级属性为深拷贝；当对象中有多级属性时，二级属性后就是浅拷贝**
 
-```
+```js
 let obj = {username: 'wy', info: {num: 101}}
 let obj2 = Object.assign({}, obj)
 console.log(obj2) // {username: 'wy', info: {num: 101}}
@@ -62,9 +64,13 @@ obj2.info.num = 102
 console.log(obj) // {username: 'wy', info: {num: 102}}
 ```
 
-上面代码将原始对象拷贝到一个空对象，就得到了原始对象的克隆，这时候 obj 与 obj2 指向的是不同的栈对象，所以对 obj.username 重新复制也不会影响到 obj.username。**但是 obj.info 是一个栈对象的引用，而不是一个字符串，那么赋值给 obj2 时，obj2.info 也同样是这个栈对象的引用**。
+上面代码将原始对象拷贝到一个空对象，就得到了原始对象的克隆，这时候 obj 与 obj2 指向的是不同的栈对象，所以对 obj.username 重新复制也不会影响到 obj.username。
 
-#### 2.2.4.3 Array.prototype.concat()：浅拷贝
+**但是 obj.info 是一个栈对象的引用，而不是一个字符串，那么赋值给 obj2 时，obj2.info 也同样是这个栈对象的引用**。
+
+
+
+### 3. Array.prototype.concat()
 
 与 Object.assign() 相似，**当数组中的元素均为一维是深拷贝，数组中元素一维以上是值的引用**
 
@@ -87,7 +93,9 @@ arr3[3].push('test')
 console.log(arr) // [1, 3, {username: 'wd'}, [4, "test"]]
 ```
 
-#### 2.2.4.4 Array.prototype.slice()：浅拷贝
+
+
+### 4. Array.prototype.slice()
 
 slice(idx1, idx2)
 
@@ -120,49 +128,11 @@ arr3[3].push('test')
 console.log(arr) // [1, 3, {username: 'wd'}, [4, "test"]]
 ```
 
-#### 2.2.4.5 JSON.parse(JSON.stringify())：深拷贝
 
-```
-let arr = [1, 3, {username: 'wy'}]
-// 相当于拷贝了一份
-let arr2 = JSON.parse(JSON.stringify(arr))
-console.log(arr2) // [1, 3, {username: 'wy'}]
 
-// 修改arr2中的基本数据类型number，不会影响原数组
-arr2[1] = 'abc'
-console.log(arr) // [1, 3, {username: 'wy'}]
+## 2. 如何实现深度拷贝（克隆）
 
-// 修改arr2中的Object类型，不会影响原数组
-arr2[2].username = 'wd'
-console.log(arr, arr2) // [1, 3, {username: 'wy'}] [1, 3, {username: 'wd'}]
-```
-
-> 需要注意的是：这种拷贝方法不可以拷贝一些特殊的属性（例如正则表达式，undefined，function函数）
-
-更重要的是，这种方法只能克隆原始对象自身的值，不能克隆它继承的值，参考如下代码：
-
-```
-var clone = function (obj) {
-  return JSON.parse(JSON.stringify(obj));
-}
-function Person (name) {
-  this.name = name
-}
-Person.prototype = {
-  age: 18,
-}
-var wanger = new Person('王二')
-var newwanger = clone(wanger)
-console.log(wanger) // Person {name: "王二", __proto__: {age: 18}}
-console.log(newwanger) // {name: "王二"}
-wanger instanceof Person // true
-newwanger instanceof Person // false
-newwanger instanceof Object // true
-```
-
-克隆的对象的构造函数已经变成了 Object，而原来的对象的构造是 Person。
-
-### 2.2.5 如何实现深度拷贝（克隆）
+### 1.for in 循环 对象(属性名) 数组(下标)
 
 拷贝的数据都是基本数据时，确保都是深度克隆，不会影响到原数据。
 
@@ -184,8 +154,6 @@ result = [1, 2, 3]
 console.log(Object.prototype.toString.call(result)) // [object Array]
 console.log(Object.prototype.toString.call(result).slice(8, -1)) // Array
 ```
-
-1. for in 循环 对象(属性名) 数组(下标)
 
 ```
 let obj = {username: 'wy', age: 18}
@@ -246,4 +214,45 @@ console.log(obj, obj2) //{username: "wy", age: 18} {username: "wd", age: 18}
 
 
 
-### 
+### 2. JSON.parse(JSON.stringify())
+
+```
+let arr = [1, 3, {username: 'wy'}]
+// 相当于拷贝了一份
+let arr2 = JSON.parse(JSON.stringify(arr))
+console.log(arr2) // [1, 3, {username: 'wy'}]
+
+// 修改arr2中的基本数据类型number，不会影响原数组
+arr2[1] = 'abc'
+console.log(arr) // [1, 3, {username: 'wy'}]
+
+// 修改arr2中的Object类型，不会影响原数组
+arr2[2].username = 'wd'
+console.log(arr, arr2) // [1, 3, {username: 'wy'}] [1, 3, {username: 'wd'}]
+```
+
+> 需要注意的是：这种拷贝方法不可以拷贝一些特殊的属性（例如正则表达式，undefined，function函数）
+
+更重要的是，这种方法只能克隆原始对象自身的值，不能克隆它继承的值，参考如下代码：
+
+```
+var clone = function (obj) {
+  return JSON.parse(JSON.stringify(obj));
+}
+function Person (name) {
+  this.name = name
+}
+Person.prototype = {
+  age: 18,
+}
+var wanger = new Person('王二')
+var newwanger = clone(wanger)
+console.log(wanger) // Person {name: "王二", __proto__: {age: 18}}
+console.log(newwanger) // {name: "王二"}
+wanger instanceof Person // true
+newwanger instanceof Person // false
+newwanger instanceof Object // true
+```
+
+克隆的对象的构造函数已经变成了 Object，而原来的对象的构造是 Person。
+
