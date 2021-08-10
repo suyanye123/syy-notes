@@ -1164,7 +1164,7 @@ console.log(obj3.money) // 5000
 
 ### 2.2.5 for of 用法
 
-`for(let value of target) {}` 循环遍历（必须部署 iterator）
+#### `for(let value of target) {}` 循环遍历（必须部署 iterator）
 
 1. 遍历数组
 2. 遍历 Set
@@ -1183,6 +1183,41 @@ for(let i of set) {
 }
 console.log(arr) // [1, 2, 4, 5, 6, 8]
 ```
+
+####  对比 `for in`
+
+```js
+//for-in遍历数组的坑
+for (var index in myArray) { // 千万别这样做
+  console.log(myArray[index]);
+}
+//在这段代码中，赋给index的值不是实际的数字，而是字符串“0”、“1”、“2”，此时很可能在无意之间进行字符串算数计算，例如：“2” + 1 == “21”，这给编码过程带来极大的不便。
+//作用于数组的for-in循环体除了遍历数组元素外，还会遍历自定义属性。举个例子，如果你的数组中有一个可枚举属性myArray.name，循环将额外执行一次，遍历到名为“name”的索引。就连数组原型链上的属性都能被访问到。
+//最让人震惊的是，在某些情况下，这段代码可能按照随机顺序遍历数组元素。
+//简而言之，for-in是为普通对象设计的，你可以遍历得到字符串类型的键，因此不适用于数组遍历。
+```
+
+#### for of 的优点
+
+- 这是最简洁、最直接的遍历数组元素的语法
+- 这个方法避开了for-in循环的所有缺陷
+- 与forEach()不同的是，它可以正确响应break、continue和return语句
+
+for-in循环用来遍历对象属性。
+
+for-of循环用来遍历数据—例如数组中的值。
+
+or-of循环不仅支持数组，还支持大多数类数组对象，例如DOM [NodeList对象](https://developer.mozilla.org/en-US/docs/Web/API/NodeList)。
+
+for-of循环也支持字符串遍历，它将字符串视为一系列的Unicode字符来进行遍历
+
+```js
+for (var chr of "") {
+  alert(chr);
+}
+```
+
+
 
 ## ES7
 
