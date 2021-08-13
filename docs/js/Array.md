@@ -21,12 +21,6 @@ var shallowCopy = fruits.slice(); // this is how to make a copy
 
 
 
-### 数组原型方法
-
-push pop shift unshift slice indexof reverse …
-
-
-
 ### [Array.from()](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Array/from)
 
 从一个类数组对象或可迭代对象创建一个新的，浅拷贝的数组实例。
@@ -119,3 +113,144 @@ console.log(Array.from(str)) // ["h", "e", "l", "l", "o", " ", "w", "o", "r", "l
 
 通过数组的原型对象可以为所有数组对象添加属性。
 
+------
+
+
+
+# 数组原型方法
+
+push pop shift unshift slice indexof reverse …
+
+在任意位置添加删除元素 splice（index,deletNumber） 、delete number[0] 将数组该位置的值变成undefined
+
+splice（index，0，add1，add2，add3...）在指定位置添加哪些元素
+
+## reduce()
+
+> `reduce()` 方法对数组中的每个元素执行一个由您提供的reducer函数(升序执行)，将其结果汇总为单个返回值。
+
+### **reducer** 函数接收4个参数:
+
+1. Accumulator (acc) (累计器)
+2. Current Value (cur) (当前值)
+3. Current Index (idx) (当前索引)
+4. Source Array (src) (源数组)
+
+```js
+//一段代码总结 Array.prototype.reduce() 正确使用姿势
+const array1 = [1, 2, 3, 4];
+const reducer = (accumulator, currentValue) => accumulator + currentValue;
+
+// 1 + 2 + 3 + 4
+console.log(array1.reduce(reducer));
+// expected output: 10
+
+// 5 + 1 + 2 + 3 + 4
+console.log(array1.reduce(reducer, 5));
+// expected output: 15
+
+```
+
+### reduce如何运行的呢
+
+```js
+[0, 1, 2, 3, 4].reduce(function(accumulator, currentValue, currentIndex, array){
+  return accumulator + currentValue;
+});
+```
+
+| callback    | accumulator | currentValue | currentIndex | array             | return value |
+| ----------- | ----------- | ------------ | ------------ | ----------------- | ------------ |
+| first call  | `0`         | `1`          | `1`          | `[0, 1, 2, 3, 4]` | `1`          |
+| second call | `1`         | `2`          | `2`          | `[0, 1, 2, 3, 4]` | `3`          |
+| third call  | `3`         | `3`          | `3`          | `[0, 1, 2, 3, 4]` | `6`          |
+| fourth call | `6`         | `4`          | `4`          | `[0, 1, 2, 3, 4]` |              |
+
+### reduce的使用场景
+
+场景一：求数组里的所有值的和
+
+```js
+var total = [ 0, 1, 2, 3 ].reduce(
+  ( acc, cur ) => acc + cur,
+  0
+);
+```
+
+场景二：累加对象数组里的值
+
+```js
+var initialValue = 0;
+var sum = [{x: 1}, {x:2}, {x:3}].reduce(
+    (accumulator, currentValue) => accumulator + currentValue.x
+    ,initialValue
+);
+console.log(sum) // logs 6
+```
+
+场景三：数组扁平化
+
+```js
+var flattened = [[0, 1], [2, 3], [4, 5]].reduce(
+ ( acc, cur ) => acc.concat(cur),
+ []
+);
+```
+
+场景四：计算数组中每个元素出现的次数
+
+```js
+var names = ['Alice', 'Bob', 'Tiff', 'Bruce', 'Alice'];
+var countedNames = names.reduce(function (allNames, name) {
+  if (name in allNames) {
+    allNames[name]++;
+  }
+  else {
+    allNames[name] = 1;
+  }
+  return allNames;
+}, {});
+// countedNames is:
+// { 'Alice': 2, 'Bob': 1, 'Tiff': 1, 'Bruce': 1 }
+```
+
+场景五：数组去重
+
+```js
+let myArray = ['a', 'b', 'a', 'b', 'c', 'e', 'e', 'c', 'd', 'd', 'd', 'd']
+let myOrderedArray = myArray.reduce(function (accumulator, currentValue) {
+  if (accumulator.indexOf(currentValue) === -1) {
+    accumulator.push(currentValue)
+  }
+  return accumulator
+}, [])
+
+console.log(myOrderedArray)
+```
+
+
+
+
+
+------
+
+
+
+# 迭代
+
+### 1.使用every方法迭代
+
+```js
+const isEven=x => x%2 === 0 ;
+number.every(isEven) //every方法会迭代数组中的每个元素，直到返回false,every执行结束;
+```
+
+
+
+### 2.some方法
+
+
+
+### 3.reduce方法
+
+reduce() 给数组中每个元素执行一次回调

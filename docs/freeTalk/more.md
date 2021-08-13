@@ -376,5 +376,19 @@ BFC （块级格式化上下文），是一个独立的渲染区域，让处于 
 
 
 
+## HTTP篇
+
+大概了解 有几种HTTP请求方式？每种方式的显著特点？ 
+
+
+
+缓存策略 http2做了哪些优化 ？可能会出现的性能问题点 ？
+
+
+
+https的工作原理？ssl在哪些层生效？
+
+
+
 <a href="javascript:void(function(){document.scrollingElement.scrollIntoView({behavior:'smooth'})})()">回到顶部</a>
 

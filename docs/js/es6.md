@@ -6,6 +6,8 @@ ES的几个重要版本
 - ES6(ES2015)：15年发布
 - ES7(ES2016)：16年发布(变化不大)
 
+[ 别人总结的ES6-12 ](https://juejin.cn/post/6995334897065787422?utm_source=gold_browser_extension#heading-33)
+
 ##  ES5
 
 ### 1.1 严格模式
