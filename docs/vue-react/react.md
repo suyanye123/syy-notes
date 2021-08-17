@@ -1,5 +1,433 @@
 # React
 
+## JSX
+
+```jsx
+//jsx的条件渲染
+
+
+//js的列表渲染  使用数组的map方法，并记得添加唯一值 key属性
+const songs = [{id:1,name:'xxx'},{id:2,name:'xxx'}]
+const list = (<ul>
+             		{songs.map(item=><li key={item.id}>{item.name}</li>)}
+             </ul>)
+
+//js的样式处理
+
+```
+
+
+
+## 组件
+
+> 组件的两种创建方式：函数组件和类组件
+>
+> 函数组件：无状态组件，负责静态结构展示
+>
+> 类组件：有状态组件，负责更新UI界面 
+
+### 组件三大属性
+
+### 1.props
+
+>props的三大特性：
+>
+>1.可以给组件传递任意类型的数据
+>
+>2.props是只读的对象，只能读取属性的值，无法修改对象
+>
+>3.注意：！使用类组件时，如果写了构造函数，应将props传递给super()，否则无法在构造函数中获取到props
+
+```jsx
+class Hello extends React.Component{
+  constructor(props){
+    super(props)
+  }
+  render(){
+    return <div>接收到的数据：{this.props.age}</div>
+  }
+}
+```
+
+组件是封闭的，要接受外部数据应该通过props来实现
+
+props的作用：接收传递给组件的数据
+
+```jsx 
+//通过给组件标签添加属性的方式来传递属性，例如下面传递了name和age
+<Hello name='jack' age={19} />
+//接收数据：函数组件通过参数props接收数据，类组件通过this.props接收数据
+function Hello(props){
+  return (
+  	<div>接收到数据：{props.name}</div>
+  )
+}
+class Hello extends React.Component{
+  render(){
+    return (
+    	<div>接收到数据：{this.props.age}</div>
+    )
+  }
+}
+```
+
+
+
+#### props深入
+
+```jsx
+//children属性：表示组件标签的子节点。当组件标签有子节点时，props就会有该属性
+//children属性与普通的props一样，可以为任意值（文本、元素、组件、函数）
+const App = props =>{
+   return (
+   	 <div>
+     	 <h1>组件标签的子节点</h1>
+       {props.children}
+     </div>
+   )
+}
+ReactDOM.render(<App>我是子节点</App>，document.getElementById('root'))
+```
+
+```jsx
+//props校验
+//作用：捕获使用组件时因为props导致的错误，给出明确的错误提示，增强组件的健壮性
+//安装 prop-types 
+//使用 组件名.propTypes = {} 来给组件的props添加校验规则
+function App(props){
+  return(
+  	<h1>Hi,{props.colors}</h1>
+  )
+}
+App.propTypes = {
+  //约定colors属性为array类型
+  colors：PropsTypes.array
+}
+
+//常见的约束规则
+//1.常见类型：array\bool\func\number\object\string
+PropTypes.func
+//2.React元素类型：element
+PropTypes.element
+//3.必填项：isRequired
+PropTypes.func.isRequired
+//4.特定结构的对象：shape({})
+PropTypes.shape({
+  color:PropTypes.string,
+  fontSize:PropTypes.number
+})
+```
+
+```jsx
+//props的默认值
+function App(props){
+  return (
+  	<div>
+    	此处展示props的默认值：{props.pageSize}
+    </div>
+  )
+}
+App.defaultProps = {
+  pageSize: 10
+}
+ReactDOM.render(<App />，document.getElementById('root'))
+```
+
+
+
+### 2.state
+
+> 
+
+
+
+### 3.refs
+
+
+
+### 事件绑定
+
+注意this指向问题
+
+
+
+### 受控组件
+
+```jsx
+//多表单元素优化
+//1.给表单元素添加name属性，名称与state相同
+<input type='text' value={this.state.txt} name='txt' onChange={this.handleForm} />
+//2.根据表单类型获取对应的值（有的表单元素获取的是value，有的获取的是checked）
+const value = target.type==='checkbox'?target.checked:target.value
+//3.根据name设置对应的state
+this.setState({
+  [name]:value
+})
+```
+
+
+
+### 非受控组件
+
+表单处理
+
+```js
+//1.调用React.createRef()方法创建一个ref对象
+constructor(){
+  super()
+  this.txtRef = React.createRef()
+}
+//2.将创建好的ref对象添加到文本框中
+<input type='text' ref={this.txtRef} />
+//3.通过ref对象获取到DOM元素，文本框的值
+console.log(this.txtRef.current.value)
+```
+
+
+
+### 项目实战
+
+```js
+//脚手架初始化项目
+npx create-react-app xxxx
+yarn start
+```
+
+```js
+//写一个评论案例
+import React from "react";
+import ReactDOM from "react-dom";
+import "./index.css";
+// 根组件
+class App extends React.Component {
+  // 初始化state
+  state = {
+    comments: [
+      { id: 1, name: "jack", content: "沙发！！！" },
+      { id: 2, name: "rose", content: "板凳~" },
+      { id: 3, name: "tom", content: "楼主好人" },
+    ],
+    user: "",
+    content: "",
+    isShow: false,
+  };
+  // 受控组件
+  changeAll = (e) => {
+    const target = e.target;
+    const value = target.type === "checkbox" ? target.checked : target.value;
+    const name = target.name;
+    this.setState({
+      [name]: value,
+    });
+  };
+  //提交表单
+  commit = () => {
+    const { user, content, comments } = this.state;
+    if (user.trim() === "" || content.trim() === "") {
+      alert("请不要输入空内容");
+    } else {
+      let newComments = [
+        {
+          id: Math.random(),
+          name: user,
+          content,
+        },
+        ...comments,
+      ];
+      this.setState({
+        comments: newComments,
+        user: "",
+        content: "",
+      });
+    }
+  };
+  //渲染评论列表
+  renderList() {
+    return this.state.comments.lenght === 0 ? (
+      <div className="no-comment">暂无评论,快去评论吧~</div>
+    ) : (
+      <ul>
+        {this.state.comments.map((item) => (
+          <li key={item.id}>
+            <h3>评论人：{item.name}</h3>
+            <p>评论内容：{item.content}</p>
+          </li>
+        ))}
+      </ul>
+    );
+  }
+  render() {
+    const { user, content } = this.state;
+    return (
+      <div className="app">
+        {/* 上部分 */}
+        <div>
+          <input
+            className="user"
+            type="text"
+            name="user"
+            placeholder="请输入评论人"
+            value={user}
+            onChange={this.changeAll}
+          />
+          <br />
+          <textarea
+            className="content"
+            name="content"
+            cols="30"
+            rows="10"
+            placeholder="请输入评论内容"
+            value={content}
+            onChange={this.changeAll}
+          />
+          <br />
+          <button onClick={this.commit}>发表评论</button>
+        </div>
+        {/* 下部分,条件渲染 */}
+        {this.renderList()}
+      </div>
+    );
+  }
+}
+
+// 渲染组件
+ReactDOM.render(<App />, document.getElementById("root"));
+
+```
+
+
+
+### 组件通讯的方式
+
+父传子
+
+```jsx
+class Parent extends React.Component{
+  state={lastName:'王'}
+	render(){
+    return(
+    	<div>
+      	传递数据给子组件：<Child name={this.state.lastName} />
+      </div>
+    )
+  }
+}
+function Child(props){
+  return <div>子组件接收到数据：{props.name}</div>
+}
+```
+
+子传父 
+
+```jsx
+//思路：利用回调函数，父组件提供回调传入子组件，子组件调用，将要传递的数据作为回调函数的参数
+//1.父组件提供回调函数，用于接收数据
+class Parent extends React.Component{
+  //注意回调函数的this问题
+  getChildMsg = (msg)=> {
+    console.log('接收到子组件数据：',msg)
+  }
+//2.将该函数作为属性的值，传递给子组件
+  render(){
+    return (
+    	<div>
+      	子组件<Child getMsg={this.getChildMsg} />
+      </div>
+    )
+  }
+}
+//3.子组件通过props调用回调函数
+class Child extends React.Component{
+  state = { childMsg:'子组件数据' }
+	handleClick = () => {
+    this.props.getMsg(this.state.childMsg)
+  }
+	render(){
+    return(
+    	<button onClick={this.handleClick}>点我，传数据给父组件</button>
+    )
+  }
+}
+```
+
+兄弟组件通信
+
+```jsx
+//将共享状态提升到最近的公共父组件中，由公共父组件管理这个状态。称为：状态提升
+//公共父组件职责：1.提供共享状态 2.提供操作共享状态的方法
+//要通信的子组件只需通过props接收状态或操作状态的方法
+class Father extends React.Component{
+//提供状态
+  state={
+    count:0
+  }
+//提供修改方法
+	onIncrement = () =>{
+    this.setState({
+      count:this.state.count + 1
+    })
+  }
+  render(){
+    return(
+    	<div>
+      	<Child1 count={this.state.count} />
+        <Child2 onIncrement={this.onIncrement}/>
+      </div>
+    )
+  }
+}
+
+const Child1 = () =>{
+  return <h1>计数器：{props.count}</h1>
+}
+
+const Child2 = () =>{
+  return <button onClick={()=>props.onIncrement()}>+1</button>
+}
+```
+
+Context 跨组件传递数据
+
+```jsx
+//使用步骤1.调用React.creatContext()创建Provider（提供数据）和Consumer（消费数据）两个组件
+const {Provider,Consumer} = React.createContext()
+
+//2.使用Provider组件作为父节点，包裹应用
+render(){
+  return(
+  	<Provider>
+      <div className='app'>
+      	<Child1 />
+      </div>
+		</Provider>
+  )
+}
+
+//3.设置value属性，表示要传递的数据
+<Provider value='pink'></Provider>
+
+//4.调用Consumer组件接收数据
+<Consumer>
+	{
+    data => <span>data参数为接收到的数据： {data}</span>
+  }
+</Consumer>
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ## 一、React 入门
 
 ### 1.1 React 基本认识
@@ -39,13 +467,13 @@ React_DeveloperTools 浏览器插件
 
 a. React 提供的 API 来创建（纯 JS，一般不用）
 
-```
+```js
 var vDom = React.createElement('h1', {id: myId}, msg)
 ```
 
  b. JSX 语法（需要 babel 转换为 js）
 
-```
+```jsx
 var vDom = <h1 id={myId}>{msg}</h1>
 ```
 
@@ -93,15 +521,17 @@ var vDom = <h1 id={myId}>{msg}</h1>
 
 #### 1.3.3 渲染虚拟 DOM(元素)
 
-1.语法：`ReactDOM.render(virtualDOM, containerDOM)`
+语法：`ReactDOM.render(virtualDOM, containerDOM)`
 
-2.作用：将虚拟 DOM 元素渲染到页面中的真实容器 DOM 中显示
+>  a. 参数一：纯 js 或 jsx 创建的虚拟 dom 对象
+>
+>  b. 参数二：用来包含虚拟 DOM 元素的真实 dom 元素对象(一般是一个 div)
 
-3.参数说明
+作用：将虚拟 DOM 元素渲染到页面中的真实容器 DOM 中显示
 
- a. 参数一：纯 js 或 jsx 创建的虚拟 dom 对象
 
- b. 参数二：用来包含虚拟 DOM 元素的真实 dom 元素对象(一般是一个 div)
+
+
 
 ### 1.4 模块与组件、模块化与组件化的理解
 

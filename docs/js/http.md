@@ -1,5 +1,7 @@
 # http协议概括
 
+![image-20210817120711057](C:\Users\喻楠\AppData\Roaming\Typora\typora-user-images\image-20210817120711057.png)
+
 一个浏览器到底是如何工作的？
 
 实际上，对浏览器的实现者来说，他们做的事情，就是把一个 URL 变成一个屏幕上显示的网页。
