@@ -433,12 +433,6 @@ ReactDOM.render(<App/>,document.getElementById('root'))
 ### 项目实战
 
 ```js
-//脚手架初始化项目
-npx create-react-app xxxx
-yarn start
-```
-
-```js
 //写一个评论案例
 import React from "react";
 import ReactDOM from "react-dom";
@@ -1150,6 +1144,115 @@ render() 方法调用并不意味着浏览器中的重新渲染！！仅仅说�
 >
 > 使用React路由简单来说，就是配置 **路径** 和 **组件** （配对）
 
+### 理解
+
+####  react-router
+
+1.react 的一个插件库
+
+2.专门用来实现一个 SPA 应用
+
+3.基于 react 的项目基本都会用到此库
+
+#### SPA
+
+1.单页 Web 应用（single page web application，SPA）
+
+2.整个应用只有一个完整的页面
+
+3.点击页面中的链接**不会刷新页面，也不会向服务器发请求**（会更新不同的组件）
+
+4.当点击路由链接时，只会做页面的局部更新
+
+5.数据都需要通过 ajax 请求获取，并在前端异步展现
+
+###  路由
+
+1.**什么是路由?**
+
+ a. 一个路由就是一个映射关系（key:value）
+
+ b. key 为路由路径，value 可能是 function/component
+
+2.**路由分类**
+
+ a. 后台路由：node 服务器端路由，value 是 function，用来处理客户端提交的请求并返回一个响应数据
+
+ b. 前台路由：浏览器端路由，value 是 component，当请求的是路由 path 时，浏览器端没有发送 http 请求，但界面会更新显示对应的组件
+
+3.**后台路由**
+
+ a. 注册路由：router.get(path, function(req, res))，即路由器
+
+ b. 当 node 接收到一个请求时，根据请求路径找到匹配的路由，调用路由中的函数来处理请求，返回响应数据
+
+4.**前端路由**
+
+ a. 注册路由：`<Route path="/about" component={About}>`
+
+ b. 当浏览器的 hash 变为 #about 时，当前路由组件就会变为 About 组件
+
+#### 前端路由的实现
+
+1.history 库
+
+ a. 管理浏览器会话历史（history）的工具库
+
+ b. 包装的是原生 BOM 中的 window.history 和 window.location.hash
+
+2.history API
+
+- History.createBrowserHistory()：得到封装 window.history 的管理对象
+- History.createHashHistory()：得到封装 window.location.hash 的管理对象
+- history.push()：添加一个新的历史记录
+- history.replace()：用一个新的历史记录替换当前的记录
+- history.goBack()：回退到上一个历史记录
+- history.goForword()：前进到下一个历史记录
+- history.listen(function(location){})：监视历史记录的变化
+
+### react-router 相关 API
+
+**组件**
+
+路由器标签：
+
+- `<BrowserRouter>`
+- `<HashRouter>`：带#号
+
+路由标签：
+
+- `<Switch>`：包裹住`<Route>`，用来切换多个路由
+- `<Route>`
+- `<Redirect>`：自动跳转重定向，用来直接选中某个路由
+
+路由链接：
+
+- `<Link>`
+- `<NavLink>`：比`<Link>`多了一个 class，选中有 active 效果
+
+**其他**
+
+1.this.props 中的
+
+- match 对象：.match.params，通过路由参数向路由组件传递数据
+- history 对象：.history，push()/replace()/goBack()/goForward()
+
+2.withRouter 函数：用 this.props.history.push('/detail') 去跳转页面，但是报 this.props.history 错误 undefined，请在此组件中使用 withRouter 将 history 传入到 props 上。
+
+### 路由使用
+
+1.下载适用于 web 的 react-router：:`npm install --save react-router-dom`
+
+2.流程
+
+1. 编写**路由组件**
+2. 在父路由组件中指定：
+   - **路由链接**：`<NavLink>`
+   - **路由**：`<Route>`
+3. 嵌套路由：`path='/home/news'`
+
+
+
 ```jsx
 //基本使用步骤,1.导入路由的核心三个组件
 import {BrowerRouter as Router,Route,Link } from 'react-router-dom';
@@ -1179,6 +1282,25 @@ const First = () => <P>页面一的页面内容</P>
 	</div>
 </Router>
 ```
+
+#### 
+
+### 向路由组件传递参数数据
+
+不能用 props 传递数据，因为加载组件用的不是标签的形式，而是：
+
+```jsx
+<Route path='/home/message' component={Message}/>
+// message.jsx
+// 路由链接
+<Link to={`/home/message/messagedetail/${m.id}`}>{m.title}</Link>
+// 路由
+<Route path={`/home/message/messagedetail/:id`} component={MessageDetail}/>
+// message-detail.jsx
+const {id} = this.props.match.params
+```
+
+这样就通过路由参数传递了数据，可以在 `this.props.match.params` 中获取
 
 #### HashRouter/BrowserRouter
 
@@ -1229,6 +1351,26 @@ const App = () => (
 ```
 
 
+
+
+
+# Redux
+
+
+
+
+
+# Umi/Dva
+
+### 1.用脚手架创建项目
+
+```js
+//脚手架初始化项目
+//react 提供了一个用于创建 react 项目的脚手架库：`create-react-app`
+//项目的整体技术架构为：react + webpack + es6 + eslint
+npx create-react-app xxxx
+yarn start
+```
 
 
 
@@ -1445,22 +1587,11 @@ b. **非受控组件**：需要时才手动读取表单输入框中的数据（r
 
  c. 可以直接安装/编译/运行一个简单效果
 
-2.react 提供了一个用于创建 react 项目的脚手架库：`create-react-app`
-
-3.项目的整体技术架构为：react + webpack + es6 + eslint
+2.
 
 4.使用脚手架开发的项目的特点：模块化，组件化，工程化
 
-#### 3.1.2 创建项目并启动
-
-```
-npm i -g create-react-app // 全局安装create-react-app脚手架
-create-react-app hello-react // 创建一个react项目，项目名称是hello-react
-cd hello-react
-npm start // 启动项目
-```
-
-## 四、react ajax
+#### 3.1.2 创建项目并启动四、react ajax
 
 ### 4.1 理解
 
@@ -1628,129 +1759,7 @@ PubSub.publish('delete', data) //发布消息，触发事件
 
 ## 六、react-router4
 
-### 6.1 理解
 
-#### 6.1.1 react-router
-
-1.react 的一个插件库
-
-2.专门用来实现一个 SPA 应用
-
-3.基于 react 的项目基本都会用到此库
-
-#### 6.1.2 SPA
-
-1.单页 Web 应用（single page web application，SPA）
-
-2.整个应用只有一个完整的页面
-
-3.点击页面中的链接**不会刷新页面，也不会向服务器发请求**（会更新不同的组件）
-
-4.当点击路由链接时，只会做页面的局部更新
-
-5.数据都需要通过 ajax 请求获取，并在前端异步展现
-
-### 6.1.3 路由
-
-1.**什么是路由?**
-
- a. 一个路由就是一个映射关系（key:value）
-
- b. key 为路由路径，value 可能是 function/component
-
-2.**路由分类**
-
- a. 后台路由：node 服务器端路由，value 是 function，用来处理客户端提交的请求并返回一个响应数据
-
- b. 前台路由：浏览器端路由，value 是 component，当请求的是路由 path 时，浏览器端没有发送 http 请求，但界面会更新显示对应的组件
-
-3.**后台路由**
-
- a. 注册路由：router.get(path, function(req, res))，即路由器
-
- b. 当 node 接收到一个请求时，根据请求路径找到匹配的路由，调用路由中的函数来处理请求，返回响应数据
-
-4.**前端路由**
-
- a. 注册路由：`<Route path="/about" component={About}>`
-
- b. 当浏览器的 hash 变为 #about 时，当前路由组件就会变为 About 组件
-
-#### 6.1.4 前端路由的实现
-
-1.history 库
-
- a. 管理浏览器会话历史（history）的工具库
-
- b. 包装的是原生 BOM 中的 window.history 和 window.location.hash
-
-2.history API
-
-- History.createBrowserHistory()：得到封装 window.history 的管理对象
-- History.createHashHistory()：得到封装 window.location.hash 的管理对象
-- history.push()：添加一个新的历史记录
-- history.replace()：用一个新的历史记录替换当前的记录
-- history.goBack()：回退到上一个历史记录
-- history.goForword()：前进到下一个历史记录
-- history.listen(function(location){})：监视历史记录的变化
-
-### 6.2 react-router 相关 API
-
-**组件**
-
-路由器标签：
-
-- `<BrowserRouter>`
-- `<HashRouter>`：带#号
-
-路由标签：
-
-- `<Switch>`：包裹住`<Route>`，用来切换多个路由
-- `<Route>`
-- `<Redirect>`：自动跳转重定向，用来直接选中某个路由
-
-路由链接：
-
-- `<Link>`
-- `<NavLink>`：比`<Link>`多了一个 class，选中有 active 效果
-
-**其他**
-
-1.this.props 中的
-
-- match 对象：.match.params，通过路由参数向路由组件传递数据
-- history 对象：.history，push()/replace()/goBack()/goForward()
-
-2.withRouter 函数：用 this.props.history.push('/detail') 去跳转页面，但是报 this.props.history 错误 undefined，请在此组件中使用 withRouter 将 history 传入到 props 上。
-
-### 6.3 路由使用
-
-1.下载适用于 web 的 react-router：:`npm install --save react-router-dom`
-
-2.流程
-
-1. 编写**路由组件**
-2. 在父路由组件中指定：
-   - **路由链接**：`<NavLink>`
-   - **路由**：`<Route>`
-3. 嵌套路由：`path='/home/news'`
-
-### 6.4 向路由组件传递参数数据
-
-不能用 props 传递数据，因为加载组件用的不是标签的形式，而是：
-
-```
-<Route path='/home/message' component={Message}/>
-// message.jsx
-// 路由链接
-<Link to={`/home/message/messagedetail/${m.id}`}>{m.title}</Link>
-// 路由
-<Route path={`/home/message/messagedetail/:id`} component={MessageDetail}/>
-// message-detail.jsx
-const {id} = this.props.match.params
-```
-
-这样就通过路由参数传递了数据，可以在 this.props.match.params 中获取
 
 ## 七、react-ui
 
