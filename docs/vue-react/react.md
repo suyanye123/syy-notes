@@ -57,6 +57,44 @@ var vDom = <h1 id={myId}>{msg}</h1>
 >
 > 这样，在保证性能的同时，开发者将不再需要关注某个数据的变化如何更新到一个或多个具体的 DOM 元素，而只需要关心在任意一个数据状态下，整个界面是如何 Render 的。
 
+### 组件的组合
+
+#### 功能界面的组件化编码流程（无比重要）
+
+1.拆分组件：拆分界面，抽取组件（有几个组件）
+
+2.实现静态组件：使用组件实现静态页面效果（写 render）只有静态界面，没有动态数据和交互
+
+3.实现动态组件
+
+ a. 动态显示初始化数据（数据定义在哪一个组件中）
+
+ b. 交互功能（从绑定事件监听开始）
+
+###  收集表单数据
+
+**理解**
+
+1.问题：在 react 应用中，如何收集表单输入数据
+
+2.包含表单的组件分类
+
+a. **受控组件**：表单项输入数据能自动收集成状态（onChange）
+
+更贴近 react 思想，尽量少操作 DOM（一般更推荐这种写法）
+
+```
+密码：<input type="password" value={this.state.pwd} onChange={this.handleChange} />
+```
+
+b. **非受控组件**：需要时才手动读取表单输入框中的数据（ref）
+
+写起来轻松，但是操作了原生 DOM（this.nameInput.value）
+
+```
+用户名：<input type="text" ref={input => this.nameInput = input} />
+```
+
 
 
 ## JSX
@@ -134,9 +172,88 @@ const list = (<ul>
 >
 > 类组件：有状态组件，负责更新UI界面 
 
+1.定义组件的两种方式
+
+```jsx
+// 方式1：工厂函数组件（是简单组件，没有state状态）
+function MyComponent() {
+  return <h2>工厂函数组件（简单组件）</h2>
+}
+// 方式2：ES6类组件（是复杂组件，可以有state）
+class MyComponent2 extends React.Component {
+  render() {
+    console.log(this) // MyComponent2的实例对象
+    return <h2>ES6类组件（复杂组件）</h2>
+  }
+}
+```
+
+2.渲染组件标签
+
+```jsx
+ReactDOM.render(<MyComponent />, document.getElementById('example1'))
+```
+
+3.注意：
+
+- 组件名必须首字母大写
+- 虚拟 DOM 元素只能有一个根元素
+- 虚拟 DOM 元素必须有结束标签
+
+4.render() 渲染组件标签的基本流程：
+
+1. React 内部会创建组件实例对象
+2. 得到包含的虚拟 DOM 并解析为真实 DOM
+3. 插入到指定的页面元素内部
+
 ### 组件三大属性
 
 #### 1.props
+
+**理解**
+
+1.每个组件对象都会有 props（properties）属性
+
+2.组件标签的所有属性都保存在 props 中
+
+**作用**
+
+1.通过标签属性从组件外向组件内传递变化的数据
+
+2.注意：组件内部不要修改 props 数据
+
+**编码**
+
+```jsx
+// 1.内部读取某个属性值
+this.props.propertyName
+// 2.对 props 中的属性值进行类型限制和必要性限制
+Person.propTypes = { // 使用 prop-types 库
+  name: PropTypes.string.isRequired,
+  age: PropTypes.number
+}
+// 3.扩展属性：将对象的所有属性通过 props 传递
+<Person {...person} />
+// 4.默认属性
+Person.defaultProps = {
+  name: 'Mary'
+}
+// 5.组件类的构造函数
+constructor(props) {
+  super(props)
+  console.log(props) // 查看所有属性
+}
+```
+
+**问题**
+
+请区别一下组件的 props 和 state 属性
+
+1.state：组件自身内部可变化的数据
+
+2.props：从组件外部向组件内部传递数据，组件内部只读不修改
+
+
 
 >props的三大特性：
 >
@@ -245,7 +362,35 @@ ReactDOM.render(<App />，document.getElementById('root'))
 
 > 组件内私有属性，用来渲染UI
 
-- setState()是异步更新数据的，不会立即更新状态
+**理解**
+
+1.state 是组件对象最重要的属性，值是对象（可以包含多个数据）
+
+2.组件被称为"状态机"，通过更新组件的 state 来更新对应的页面显示（重新渲染组件）
+
+**编码**
+
+```
+1.初始化状态
+constructor (props) {
+  super(props)
+  this.state = {
+    stateProp1 : value1,
+    stateProp2 : value2
+  }
+  // 将新增的方法中this强制绑定为组件对象（新添加的方法：内部this默认不是组件对象，而是undefined）
+  this.handleClick = this.handleClick.bind(this) // bind返回一个新的处理过的函数
+}
+// 2.读取某个状态值
+this.state.statePropertyName
+// 3.更新状态 --> 组件界面更新
+this.setState({
+  stateProp1 : value1,
+  stateProp2 : value2
+})
+```
+
+**setState()是异步更新数据的，不会立即更新状态**
 
 ```js
 //注意：使用该语法时，后面的setState() 不要依赖于前面的 setState()
@@ -272,83 +417,15 @@ this.setState(
 
 #### 3.refs
 
+1.组件内的标签都可以定义 ref 属性来标识自己
 
+ a. `<input type="text" ref={input => this.msgInput = input} />`
 
-### 事件绑定
+ b. ref 中的回调函数在组件初始化渲染完或卸载时自动调用（将 input 这个元素赋给组件实例对象的 this.msgInput）
 
-> 采用小驼峰命名法
+2.在组件中可以通过 this.msgInput.value 来得到对应的真实 DOM 元素的值
 
-注意this指向问题
-
-```jsx
-class App extends React.Component{
-  state={
-    count:0
-  }
-//事件处理程序
-	onIncrement(){				//注意！！！！！此处的this是undefined
-    this.setState({
-      count:this.state.count+1
-    })
-  }
-	render(){
-    return (
-    	<div>
-      	<h1>计数器</h1>
-        <button onClick={this.onIncrement}>+1</button>
-      </div>
-    )
-  }
-}
-//结果会报错，this.setState是undefined，并未指向组件实例
-```
-
-解决this问题的三种方法
-
-```jsx
-//1.使用箭头函数
-render(){
-    return (
-    	<div>
-      	<h1>计数器</h1>
-        //谁调用的this就是谁，同时箭头函数的this指向外部环境，所以此处是render()方法
-        <button onClick={()=>this.onIncrement()}>+1</button>
-      </div>
-    )
-  }
-
-
-//2.Function.prototype.bind() 利用ES5的bind()方法
-class Hello extends React.Component{
-  constructor(){
-    super()
-    this.onIncrement = this.onIncrement.bind(this)
-  }
-	render(){
-    return (
-    	<div>
-      	<h1>计数器</h1>
-        <button onClick={this.onIncrement}>+1</button>
-      </div>
-    )
-  }
-}
-
-//3.class的实例方法 利用箭头函数的class实例方法，该语法是实验性语法，但是在babel中可以直接使用
-class Hello extends React.Component{
- 	onIncrement = () => {				
-    this.setState({
-      count:this.state.count+1
-    })
-  }
-	render(){
-    return (
-      <button onClick={this.onIncrement}>+1</button>
-    )
-  }
-}
-
-```
+3.作用：通过 ref 获取组件内容特定标签对象，进行读取其相关数据
 
 
 
@@ -532,125 +609,6 @@ class App extends React.Component {
 // 渲染组件
 ReactDOM.render(<App />, document.getElementById("root"));
 
-```
-
-
-
-### 组件通讯的方式
-
-#### 父传子
-
-```jsx
-class Parent extends React.Component{
-  state={lastName:'王'}
-	render(){
-    return(
-    	<div>
-      	传递数据给子组件：<Child name={this.state.lastName} />
-      </div>
-    )
-  }
-}
-function Child(props){
-  return <div>子组件接收到数据：{props.name}</div>
-}
-```
-
-#### 子传父 
-
-```jsx
-//思路：利用回调函数，父组件提供回调传入子组件，子组件调用，将要传递的数据作为回调函数的参数
-//1.父组件提供回调函数，用于接收数据
-class Parent extends React.Component{
-  //注意回调函数的this问题
-  getChildMsg = (msg)=> {
-    console.log('接收到子组件数据：',msg)
-  }
-//2.将该函数作为属性的值，传递给子组件
-  render(){
-    return (
-    	<div>
-      	子组件<Child getMsg={this.getChildMsg} />
-      </div>
-    )
-  }
-}
-//3.子组件通过props调用回调函数
-class Child extends React.Component{
-  state = { childMsg:'子组件数据' }
-	handleClick = () => {
-    this.props.getMsg(this.state.childMsg)
-  }
-	render(){
-    return(
-    	<button onClick={this.handleClick}>点我，传数据给父组件</button>
-    )
-  }
-}
-```
-
-#### 兄弟组件通信
-
-```jsx
-//将共享状态提升到最近的公共父组件中，由公共父组件管理这个状态。称为：状态提升
-//公共父组件职责：1.提供共享状态 2.提供操作共享状态的方法
-//要通信的子组件只需通过props接收状态或操作状态的方法
-class Father extends React.Component{
-//提供状态
-  state={
-    count:0
-  }
-//提供修改方法
-	onIncrement = () =>{
-    this.setState({
-      count:this.state.count + 1
-    })
-  }
-  render(){
-    return(
-    	<div>
-      	<Child1 count={this.state.count} />
-        <Child2 onIncrement={this.onIncrement}/>
-      </div>
-    )
-  }
-}
-
-const Child1 = () =>{
-  return <h1>计数器：{props.count}</h1>
-}
-
-const Child2 = () =>{
-  return <button onClick={()=>props.onIncrement()}>+1</button>
-}
-```
-
-#### Context 跨组件传递数据
-
-```jsx
-//使用步骤1.调用React.creatContext()创建Provider（提供数据）和Consumer（消费数据）两个组件
-const {Provider,Consumer} = React.createContext()
-
-//2.使用Provider组件作为父节点，包裹应用
-render(){
-  return(
-  	<Provider>
-      <div className='app'>
-      	<Child1 />
-      </div>
-		</Provider>
-  )
-}
-
-//3.设置value属性，表示要传递的数据
-<Provider value='pink'></Provider>
-
-//4.调用Consumer组件接收数据
-<Consumer>
-	{
-    data => <span>data参数为接收到的数据： {data}</span>
-  }
-</Consumer>
 ```
 
 
@@ -983,6 +941,144 @@ setState({ obj:newObj })
 this.setState({
 	list: [...this.state.list, {新数据}]
 })
+```
+
+## 事件
+
+### 事件处理
+
+1.通过 onXxx 属性指定组件的事件处理函数（如：onClick、onBlur，注意需要大写）
+
+ a. React 使用的是自定义（合成）事件，而不是使用的原生 DOM 事件
+
+ b. React 中的事件是通过事件委托方式处理的（委托给组件最外层的元素）
+
+2.通过 event.target 得到发生事件的 DOM 元素对象
+
+```
+<input onFocus={this.handleFocus}/>
+
+handleFocus(event) {
+  event.target  //返回事件发生的input元素对象
+}
+```
+
+**注意**
+
+1.组件内置的方法中的 this 为组件对象
+
+2.在组件类中自定义的方法中 this 为 null
+
+ a. 强制绑定 this：通过函数对象的 bind()
+
+ b. 箭头函数（ES6模块化编码时才能使用）
+
+### 事件监听理解
+
+#### 5.2.1 原生 DOM 事件
+
+1.绑定事件监听
+
+ a. 事件名(类型)：只有有限的几个，不能随便写
+
+ b. 回调函数
+
+2.触发事件
+
+ a. 用户操作界面
+
+ b. 事件名(类型)
+
+ c. 数据()
+
+#### 5.2.2 自定义事件(消息机制)
+
+1.绑定事件监听
+
+ a. 事件名(类型)：任意
+
+ b. 回调函数：通过形参接收数据，在函数体处理事件
+
+2.触发事件(编码)
+
+ a. 事件名(类型)：与绑定的事件监听的事件名一致
+
+ b. 数据：会自动传递给回调函数
+
+### 事件绑定
+
+> 采用小驼峰命名法
+
+注意this指向问题
+
+```jsx
+class App extends React.Component{
+  state={
+    count:0
+  }
+//事件处理程序
+	onIncrement(){				//注意！！！！！此处的this是undefined
+    this.setState({
+      count:this.state.count+1
+    })
+  }
+	render(){
+    return (
+    	<div>
+      	<h1>计数器</h1>
+        <button onClick={this.onIncrement}>+1</button>
+      </div>
+    )
+  }
+}
+//结果会报错，this.setState是undefined，并未指向组件实例
+```
+
+解决this问题的三种方法
+
+```jsx
+//1.使用箭头函数
+render(){
+    return (
+    	<div>
+      	<h1>计数器</h1>
+        //谁调用的this就是谁，同时箭头函数的this指向外部环境，所以此处是render()方法
+        <button onClick={()=>this.onIncrement()}>+1</button>
+      </div>
+    )
+  }
+
+
+//2.Function.prototype.bind() 利用ES5的bind()方法
+class Hello extends React.Component{
+  constructor(){
+    super()
+    this.onIncrement = this.onIncrement.bind(this)
+  }
+	render(){
+    return (
+    	<div>
+      	<h1>计数器</h1>
+        <button onClick={this.onIncrement}>+1</button>
+      </div>
+    )
+  }
+}
+
+//3.class的实例方法 利用箭头函数的class实例方法，该语法是实验性语法，但是在babel中可以直接使用
+class Hello extends React.Component{
+ 	onIncrement = () => {				
+    this.setState({
+      count:this.state.count+1
+    })
+  }
+	render(){
+    return (
+      <button onClick={this.onIncrement}>+1</button>
+    )
+  }
+}
+
 ```
 
 
@@ -1352,349 +1448,9 @@ const App = () => (
 
 
 
+## 组件间通信
 
-
-# Redux
-
-
-
-
-
-# Umi/Dva
-
-### 1.用脚手架创建项目
-
-```js
-//脚手架初始化项目
-//react 提供了一个用于创建 react 项目的脚手架库：`create-react-app`
-//项目的整体技术架构为：react + webpack + es6 + eslint
-npx create-react-app xxxx
-yarn start
-```
-
-
-
-
-
-## 二、React 面向组件编程
-
-### 2.1 自定义组件
-
-1.定义组件的两种方式
-
-```
-// 方式1：工厂函数组件（是简单组件，没有state状态）
-function MyComponent() {
-  return <h2>工厂函数组件（简单组件）</h2>
-}
-// 方式2：ES6类组件（是复杂组件，可以有state）
-class MyComponent2 extends React.Component {
-  render() {
-    console.log(this) // MyComponent2的实例对象
-    return <h2>ES6类组件（复杂组件）</h2>
-  }
-}
-```
-
-2.渲染组件标签
-
-```
-ReactDOM.render(<MyComponent />, document.getElementById('example1'))
-```
-
-3.注意：
-
-- 组件名必须首字母大写
-- 虚拟 DOM 元素只能有一个根元素
-- 虚拟 DOM 元素必须有结束标签
-
-4.render() 渲染组件标签的基本流程：
-
-1. React 内部会创建组件实例对象
-2. 得到包含的虚拟 DOM 并解析为真实 DOM
-3. 插入到指定的页面元素内部
-
-### 2.2 组件三大属性
-
-#### 2.2.1 state
-
-**理解**
-
-1.state 是组件对象最重要的属性，值是对象（可以包含多个数据）
-
-2.组件被称为"状态机"，通过更新组件的 state 来更新对应的页面显示（重新渲染组件）
-
-**编码**
-
-```
-1.初始化状态
-constructor (props) {
-  super(props)
-  this.state = {
-    stateProp1 : value1,
-    stateProp2 : value2
-  }
-  // 将新增的方法中this强制绑定为组件对象（新添加的方法：内部this默认不是组件对象，而是undefined）
-  this.handleClick = this.handleClick.bind(this) // bind返回一个新的处理过的函数
-}
-// 2.读取某个状态值
-this.state.statePropertyName
-// 3.更新状态 --> 组件界面更新
-this.setState({
-  stateProp1 : value1,
-  stateProp2 : value2
-})
-```
-
-#### 2.2.2 props
-
-**理解**
-
-1.每个组件对象都会有 props（properties）属性
-
-2.组件标签的所有属性都保存在 props 中
-
-**作用**
-
-1.通过标签属性从组件外向组件内传递变化的数据
-
-2.注意：组件内部不要修改 props 数据
-
-**编码**
-
-```
-// 1.内部读取某个属性值
-this.props.propertyName
-// 2.对 props 中的属性值进行类型限制和必要性限制
-Person.propTypes = { // 使用 prop-types 库
-  name: PropTypes.string.isRequired,
-  age: PropTypes.number
-}
-// 3.扩展属性：将对象的所有属性通过 props 传递
-<Person {...person} />
-// 4.默认属性
-Person.defaultProps = {
-  name: 'Mary'
-}
-// 5.组件类的构造函数
-constructor(props) {
-  super(props)
-  console.log(props) // 查看所有属性
-}
-```
-
-**问题**
-
-请区别一下组件的 props 和 state 属性
-
-1.state：组件自身内部可变化的数据
-
-2.props：从组件外部向组件内部传递数据，组件内部只读不修改
-
-#### 2.2.3 refs
-
-1.组件内的标签都可以定义 ref 属性来标识自己
-
- a. `<input type="text" ref={input => this.msgInput = input} />`
-
- b. ref 中的回调函数在组件初始化渲染完或卸载时自动调用（将 input 这个元素赋给组件实例对象的 this.msgInput）
-
-2.在组件中可以通过 this.msgInput.value 来得到对应的真实 DOM 元素的值
-
-3.作用：通过 ref 获取组件内容特定标签对象，进行读取其相关数据
-
-#### 2.2.4 事件处理
-
-1.通过 onXxx 属性指定组件的事件处理函数（如：onClick、onBlur，注意需要大写）
-
- a. React 使用的是自定义（合成）事件，而不是使用的原生 DOM 事件
-
- b. React 中的事件是通过事件委托方式处理的（委托给组件最外层的元素）
-
-2.通过 event.target 得到发生事件的 DOM 元素对象
-
-```
-<input onFocus={this.handleFocus}/>
-
-handleFocus(event) {
-  event.target  //返回事件发生的input元素对象
-}
-```
-
-**注意**
-
-1.组件内置的方法中的 this 为组件对象
-
-2.在组件类中自定义的方法中 this 为 null
-
- a. 强制绑定 this：通过函数对象的 bind()
-
- b. 箭头函数（ES6模块化编码时才能使用）
-
-### 2.3 组件的组合
-
-#### 2.3.1 功能界面的组件化编码流程（无比重要）
-
-1.拆分组件：拆分界面，抽取组件（有几个组件）
-
-2.实现静态组件：使用组件实现静态页面效果（写 render）只有静态界面，没有动态数据和交互
-
-3.实现动态组件
-
- a. 动态显示初始化数据（数据定义在哪一个组件中）
-
- b. 交互功能（从绑定事件监听开始）
-
-### 2.4 收集表单数据
-
-**理解**
-
-1.问题：在 react 应用中，如何收集表单输入数据
-
-2.包含表单的组件分类
-
-a. **受控组件**：表单项输入数据能自动收集成状态（onChange）
-
-更贴近 react 思想，尽量少操作 DOM（一般更推荐这种写法）
-
-```
-密码：<input type="password" value={this.state.pwd} onChange={this.handleChange} />
-```
-
-b. **非受控组件**：需要时才手动读取表单输入框中的数据（ref）
-
-写起来轻松，但是操作了原生 DOM（this.nameInput.value）
-
-```
-用户名：<input type="text" ref={input => this.nameInput = input} />
-```
-
-
-
-
-
-## 三、react 应用（基于 react 脚手架）
-
-### 3.1 使用 create-react-app 创建 react 应用
-
-#### 3.1.1. react 脚手架
-
-1.xxx 脚手架：用来帮助程序员快速创建一个基于 xxx 库的模板项目
-
- a. 包含了所有需要的配置
-
- b. 指定好了所有的依赖
-
- c. 可以直接安装/编译/运行一个简单效果
-
-2.
-
-4.使用脚手架开发的项目的特点：模块化，组件化，工程化
-
-#### 3.1.2 创建项目并启动四、react ajax
-
-### 4.1 理解
-
-**前置说明**
-
-- React 本身只关注于界面，并不包含发送 ajax 请求的代码
-
-- 前端应用需要通过 ajax 请求与后台进行交互（json数据）
-
-- react 应用中需要集成第三方 ajax 库（或自己封装）
-
-**常用的 ajax 请求库**
-
-1.jQuery：比较重，如果需要另外引入不建议使用
-
-2.axios：轻量级，建议使用
-
-- 封装了 XmlHttpRequest 对象的 ajax
-
-- 是 promise 风格
-
--  既可以用在浏览器端又可以用在 node 服务器端
-
-3.fetch：原生函数，但老版本浏览器不支持
-
-- 不再使用 XmlHttpRequest 对象提交 ajax 请求
-
-- 为了兼容低版本的浏览器，可以引入兼容库 fetch.js
-
-### 4.2 axios
-
-**GET 请求**
-
-```
-axios.get('/user?ID=12345')
-  .then(response => {
-  console.log(response)
-})
-  .catch(error => {
-  console.log(error)
-})
-
-axios.get('/user', {
-  prams: {
-    ID: 12345
-  }
-})
-  .then(response => {
-  console.log(response)
-})
-  .catch(error => {
-  console.log(error)
-}))
-```
-
-**POST 请求**
-
-```
-axios.post('/user', {
-  firstName: 'Fred',
-  lastName: 'Flintstone'
-})
-  .then(response => {
-  console.log(response)
-})
-  .catch(error => {
-  console.log(error)
-})))
-```
-
-### 4.3 Fetch
-
-**GET 请求**
-
-```
-fetch(url)
-  .then(response => {
-    return response.json()
-}).then(data => {
-    console.log(data)
-}).catch(error => {
-    console.log(error)
-})
-```
-
-**POST 请求**
-
-```
-fetch(url, {
-  method: 'POST',
-  body: JSON.stringify(data)
-}).then(data => {
-    console.log(data)
-}).catch(error => {
-    console.log(error)
-})
-```
-
-## 五、几个重要技术总结
-
-### 5.1 组件间通信
-
-#### 5.1.1 方式一：通过 props 传递
+### 方式一：通过 props 传递
 
 1.共同的数据放在父组件上，特有的数据放在自己组件内部（state）
 
@@ -1704,7 +1460,122 @@ fetch(url, {
 
 4.函数数据 --> 子组件传递数据给父组件 --> 子组件调用函数
 
-#### 5.1.2 方式二：使用消息订阅-发布机制（subscribe-publish）
+#### 父传子
+
+```jsx
+class Parent extends React.Component{
+  state={lastName:'王'}
+	render(){
+    return(
+    	<div>
+      	传递数据给子组件：<Child name={this.state.lastName} />
+      </div>
+    )
+  }
+}
+function Child(props){
+  return <div>子组件接收到数据：{props.name}</div>
+}
+```
+
+#### 子传父 
+
+```jsx
+//思路：利用回调函数，父组件提供回调传入子组件，子组件调用，将要传递的数据作为回调函数的参数
+//1.父组件提供回调函数，用于接收数据
+class Parent extends React.Component{
+  //注意回调函数的this问题
+  getChildMsg = (msg)=> {
+    console.log('接收到子组件数据：',msg)
+  }
+//2.将该函数作为属性的值，传递给子组件
+  render(){
+    return (
+    	<div>
+      	子组件<Child getMsg={this.getChildMsg} />
+      </div>
+    )
+  }
+}
+//3.子组件通过props调用回调函数
+class Child extends React.Component{
+  state = { childMsg:'子组件数据' }
+	handleClick = () => {
+    this.props.getMsg(this.state.childMsg)
+  }
+	render(){
+    return(
+    	<button onClick={this.handleClick}>点我，传数据给父组件</button>
+    )
+  }
+}
+```
+
+#### 兄弟组件通信
+
+```jsx
+//将共享状态提升到最近的公共父组件中，由公共父组件管理这个状态。称为：状态提升
+//公共父组件职责：1.提供共享状态 2.提供操作共享状态的方法
+//要通信的子组件只需通过props接收状态或操作状态的方法
+class Father extends React.Component{
+//提供状态
+  state={
+    count:0
+  }
+//提供修改方法
+	onIncrement = () =>{
+    this.setState({
+      count:this.state.count + 1
+    })
+  }
+  render(){
+    return(
+    	<div>
+      	<Child1 count={this.state.count} />
+        <Child2 onIncrement={this.onIncrement}/>
+      </div>
+    )
+  }
+}
+
+const Child1 = () =>{
+  return <h1>计数器：{props.count}</h1>
+}
+
+const Child2 = () =>{
+  return <button onClick={()=>props.onIncrement()}>+1</button>
+}
+```
+
+#### Context 跨组件传递数据
+
+```jsx
+//使用步骤1.调用React.creatContext()创建Provider（提供数据）和Consumer（消费数据）两个组件
+const {Provider,Consumer} = React.createContext()
+
+//2.使用Provider组件作为父节点，包裹应用
+render(){
+  return(
+  	<Provider>
+      <div className='app'>
+      	<Child1 />
+      </div>
+		</Provider>
+  )
+}
+
+//3.设置value属性，表示要传递的数据
+<Provider value='pink'></Provider>
+
+//4.调用Consumer组件接收数据
+<Consumer>
+	{
+    data => <span>data参数为接收到的数据： {data}</span>
+  }
+</Consumer>
+```
+
+### 方式二：使用消息订阅-发布机制（subscribe-publish）
 
 1.工具库：PubSubJS
 
@@ -1719,158 +1590,61 @@ PubSub.subscribe('delete', function(data){ }); //订阅消息，绑定监听
 PubSub.publish('delete', data) //发布消息，触发事件
 ```
 
-#### 5.1.3 方式三：redux
+例子：
 
-在八、redux中
-
-
-
-### 5.2 事件监听理解
-
-#### 5.2.1 原生 DOM 事件
-
-1.绑定事件监听
-
- a. 事件名(类型)：只有有限的几个，不能随便写
-
- b. 回调函数
-
-2.触发事件
-
- a. 用户操作界面
-
- b. 事件名(类型)
-
- c. 数据()
-
-#### 5.2.2 自定义事件(消息机制)
-
-1.绑定事件监听
-
- a. 事件名(类型)：任意
-
- b. 回调函数：通过形参接收数据，在函数体处理事件
-
-2.触发事件(编码)
-
- a. 事件名(类型)：与绑定的事件监听的事件名一致
-
- b. 数据：会自动传递给回调函数
-
-## 六、react-router4
+```js
+//发布消息
+Pubsub.pubulish('search',searchName)
+//订阅消息
+componentDidMount(){
+	Pubsub.subscribe('search',function(msg,searchName){
+	//指定了新的search，回调函数发起请求
+	......
+	})
+}
+```
 
 
 
-## 七、react-ui
+### 方式三：redux
 
-### 7.1 最流行的开源 React UI 组件库
+见下面详解
 
-#### 7.1.1 material-ui(国外)
+------
 
-1.官网：http://www.material-ui.com/#/
 
-2.github：https://github.com/callemall/material-ui
 
-#### 7.1.2 ant-design(国内蚂蚁金服)
+# Redux
 
-1.PC官网：https://ant.design/index-cn
-
-2.移动官网：https://mobile.ant.design/index-cn
-
-3.Github：https://github.com/ant-design/ant-design/
-
-4.Github：https://github.com/ant-design/ant-design-mobile/
-
-### 7.2 ant-design-mobile 使用入门
-
-**搭建 antd-mobile 的基本开发环境**
-
-[基本使用](https://mobile.ant.design/docs/react/introduce-cn#1.-创建一个项目)
-
-**实现按需打包(组件js/css)**
-
-[按需加载](https://mobile.ant.design/docs/react/use-with-create-react-app-cn#按需加载)
-
-## 八、redux
-
-### 8.1 理解
-
-#### 8.1.1 redux 是什么？
-
-1. redux 是一个独立专门用于做状态管理的 JS 库（不是 react 插件库）
-2. 它可以用在 react，angular，vue 等项目中，但基本与 react 配合使用
-3. 作用：集中式管理 react 应用中多个组件共享的状态
-
-#### 8.1.2 redux 工作流程
+##  redux 工作流程
 
 ![image-20200826085826481](https://img-blog.csdnimg.cn/20200830142119865.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQwNTA4ODMy,size_16,color_FFFFFF,t_70#pic_center)
 
-#### 8.1.3 什么情况下需要使用 redux
+## redux 的三个核心概念
 
-1. 总体原则：能不用就不用，如果不用比较吃力才考虑使用
-2. 某个组件的状态，需要共享
-3. 某个状态需要在任何地方都可以拿到
-4. 一个组件需要改变全局状态
-5. 一个组件需要改变另一个组件的状态
-
-### 8.2 redux 的核心 API
-
-#### 8.2.1 createStore
-
-1. 作用：创建包含指定 reducer 的 store 对象
-2. 编码 store.js：
-
-```
-import {createStore} from 'redux'
-import counter from './reducers/counter'
-
-const store = createStore(counter)
-```
-
-#### 8.2.2 store 对象
-
-1. 作用：redux 库最核心的管理对象
-2. 它内部维护着：state、reducer
-3. 核心方法：getState()，dispatch()，subscribe(listener)
-4. 编码 jsx：
-
-```
-store.getState() // 得到store中存储的state数据
-store.dispatch({type: 'INCREMENT', data: number}) // 分发action对象，通知reducer更新state数据
-store.subscribe(render) // 订阅监听，store中的状态变化就会调用进行重绘
-```
-
-#### 8.2.3 applyMiddleware()
-
-1.作用：应用上基于 redux 的中间件（插件库）
-
-2.编码 store.js：
-
-```
-import {createStore, applyMiddleware} from 'redux'
-import thunk from 'redux-thunk'  // redux异步中间件
-
-const store = createStore(
-  counter,
-  applyMiddleware(thunk) // 应用上异步中间件
-)
-```
-
-#### 8.2.4 combineReducers()
-
-1.作用：合并多个 reducer 函数
-
-2.编码 reduces.js：
-
-```
-export default combineReducers({
-  user,
-  chatUser,
-  chat
-})
-```
-
-### 8.3 redux 的三个核心概念
+> redux三大核心  
+>
+> 1.单一数据源store
+>
+> 整个应用的state被存储在一棵object tree中，并且这个object  tree只存在于唯一一个store中
+>
+> 通过creatStore 来构建 store
+>
+> 通过 subscribe来注册监听
+>
+> 2.state是只读的，唯一改变state的方法就是触发action
+>
+> ```
+> store.dispatch({type:'COMPLETE_TODO',index:1})
+> ```
+>
+> 3.使用纯函数reducer来执行修改 
+>
+> 为了描述action如何改变state tree，你需要去编写reducers
+>
+> reducers只是一些纯函数，接受先前的state和action，并返回新的state
+>
+> 响应发送过来的action，函数接受两个参数，一个是初始化state，一个是发送过来的action，必须有return返回值
 
 #### 8.3.1 action
 
@@ -1938,14 +1712,14 @@ const store = createStore(reducer)
 
 2.编码不够简洁（经常重复写 this.props.store）
 
-### 8.4 react-redux
+## react-redux
 
-#### 8.4.1 理解
+####  理解
 
 1. 一个 react 插件库
 2. 专门用来简化 react 应用中使用的 redux
 
-#### 8.4.2 React-Redux 将所有组件分成两大类
+####  React-Redux 将所有组件分成两大类
 
 1.UI 组件
 
@@ -1960,7 +1734,7 @@ const store = createStore(reducer)
 - **使用 Redux 的 API**
 - **一般保存在 containers 文件夹下**
 
-#### 8.4.3 相关 API
+####  相关 API
 
 1.**Provider：让所有组件都可以得到 state 数据**
 
@@ -2015,7 +1789,7 @@ import * as mapDispatchToProps from '../redux/actions'
 
 2.应用中又需要在 redux 中执行异步任务（ajax，定时器）
 
-### 8.5 redux 异步编程
+##  redux 异步编程
 
 下载 redux 插件（异步中间件）：npm install --save redux-thunk
 
@@ -2047,7 +1821,70 @@ export const incrementAsync = (number) => {
 
 然后在 UI组件的 propTypes 和容器组件的 connect() 中添加对应的异步 action 即可。
 
-### 8.6 redux 调试工具
+
+
+## 核心 API
+
+###  createStore
+
+1. 作用：创建包含指定 reducer 的 store 对象
+2. 编码 store.js：
+
+```js
+import {createStore} from 'redux'
+import counter from './reducers/counter'
+
+const store = createStore(counter)
+```
+
+###  store 对象
+
+1. 作用：redux 库最核心的管理对象
+2. 它内部维护着：state、reducer
+3. 核心方法：getState()，dispatch()，subscribe(listener)
+4. 编码 jsx：
+
+```
+store.getState() // 得到store中存储的state数据
+store.dispatch({type: 'INCREMENT', data: number}) // 分发action对象，通知reducer更新state数据
+store.subscribe(render) // 订阅监听，store中的状态变化就会调用进行重绘
+```
+
+### applyMiddleware()
+
+1.作用：应用上基于 redux 的中间件（插件库）
+
+2.编码 store.js：
+
+```
+import {createStore, applyMiddleware} from 'redux'
+import thunk from 'redux-thunk'  // redux异步中间件
+
+const store = createStore(
+  counter,
+  applyMiddleware(thunk) // 应用上异步中间件
+)
+```
+
+### combineReducers()
+
+1.作用：合并多个 reducer 函数
+
+2.编码 reduces.js：
+
+```
+export default combineReducers({
+  user,
+  chatUser,
+  chat
+})
+```
+
+
+
+
+
+##  redux 调试工具
 
 安装 chrome 浏览器插件：redux-devtools
 
@@ -2066,9 +1903,11 @@ const store = createStore(
 )
 ```
 
-### 8.7 纯函数和高阶函数
 
-#### 8.8.1 纯函数
+
+## 纯函数和高阶函数
+
+#### 纯函数
 
 1.一类特别的函数：只要是同样的输入，必定得到同样的输出
 
@@ -2082,7 +1921,7 @@ const store = createStore(
 
 3.reducer 函数必须是一个纯函数
 
-#### 8.8.2 高阶函数
+#### 高阶函数
 
 1.理解：一类特别的函数
 
@@ -2106,50 +1945,177 @@ const store = createStore(
 
 
 
-## 组件间通信
 
-1.通过props传递，只能一层一层传递
 
-2.消息订阅和发布机制
+# Umi/Dva
 
-通过工具库PubSubJS来实现
+## 1.用脚手架创建项目
 
 ```js
-//发布消息
-Pubsub.pubulish('search',searchName)
-//订阅消息
-componentDidMount(){
-	Pubsub.subscribe('search',function(msg,searchName){
-	//指定了新的search，回调函数发起请求
-	......
-	})
-}
+//脚手架初始化项目
+//react 提供了一个用于创建 react 项目的脚手架库：`create-react-app`
+//项目的整体技术架构为：react + webpack + es6 + eslint
+npx create-react-app xxxx
+yarn start
 ```
 
-3.redux
+**常用的 ajax 请求库**
 
-一个存放数据的容器
+1.jQuery：比较重，如果需要另外引入不建议使用
 
-redux三大核心  
+2.axios：轻量级，建议使用
 
-1.单一数据源store
+- 封装了 XmlHttpRequest 对象的 ajax
 
-整个应用的state被存储在一棵object tree中，并且这个object  tree只存在于唯一一个store中
+- 是 promise 风格
 
-通过creatStore 来构建 store
+- 既可以用在浏览器端又可以用在 node 服务器端
 
-通过 subscribe来注册监听
+3.fetch：原生函数，但老版本浏览器不支持
 
-2.state是只读的，唯一改变state的方法就是触发action
+- 不再使用 XmlHttpRequest 对象提交 ajax 请求
+
+- 为了兼容低版本的浏览器，可以引入兼容库 fetch.js
+
+### axios
+
+**GET 请求**
 
 ```
-store.dispatch({type:'COMPLETE_TODO',index:1})
+axios.get('/user?ID=12345')
+  .then(response => {
+  console.log(response)
+})
+  .catch(error => {
+  console.log(error)
+})
+
+axios.get('/user', {
+  prams: {
+    ID: 12345
+  }
+})
+  .then(response => {
+  console.log(response)
+})
+  .catch(error => {
+  console.log(error)
+}))
 ```
 
-3.使用纯函数reducer来执行修改 
+**POST 请求**
 
-为了描述action如何改变state tree，你需要去编写reducers
+```
+axios.post('/user', {
+  firstName: 'Fred',
+  lastName: 'Flintstone'
+})
+  .then(response => {
+  console.log(response)
+})
+  .catch(error => {
+  console.log(error)
+})))
+```
 
-reducers只是一些纯函数，接受先前的state和action，并返回新的state
+### Fetch
 
-响应发送过来的action，函数接受两个参数，一个是初始化state，一个是发送过来的action，必须有return返回值
+**GET 请求**
+
+```
+fetch(url)
+  .then(response => {
+    return response.json()
+}).then(data => {
+    console.log(data)
+}).catch(error => {
+    console.log(error)
+})
+```
+
+**POST 请求**
+
+```
+fetch(url, {
+  method: 'POST',
+  body: JSON.stringify(data)
+}).then(data => {
+    console.log(data)
+}).catch(error => {
+    console.log(error)
+})
+```
+
+## 最流行的开源 React UI 组件库
+
+### material-ui(国外)
+
+1.官网：http://www.material-ui.com/#/
+
+2.github：https://github.com/callemall/material-ui
+
+### ant-design(国内蚂蚁金服)
+
+1.PC官网：https://ant.design/index-cn
+
+2.移动官网：https://mobile.ant.design/index-cn
+
+3.Github：https://github.com/ant-design/ant-design/
+
+4.Github：https://github.com/ant-design/ant-design-mobile/
+
+### ant-design-mobile 使用入门
+
+**搭建 antd-mobile 的基本开发环境**
+
+[基本使用](https://mobile.ant.design/docs/react/introduce-cn#1.-创建一个项目)
+
+**实现按需打包(组件js/css)**
+
+[按需加载](https://mobile.ant.design/docs/react/use-with-create-react-app-cn#按需加载)
+
+
+
+# React-Hook
+
+> Hook 就是 JavaScript 函数，但是使用它们会有两个额外的规则：
+>
+> - 只能在**函数最外层**调用 Hook。不要在循环、条件判断或者子函数中调用。
+> - 只能在 **React 的函数组件**中调用 Hook。不要在其他 JavaScript 函数中调用。（还有一个地方可以调用 Hook —— 就是自定义的 Hook 中，我们稍后会学习到。）
+
+## State Hook
+
+
+
+## Effect Hook
+
+
+
+
+
+## 自定义 Hook
+
+> 目前为止，在 React 中有两种流行的方式来共享组件之间的状态逻辑: [render props](https://react.docschina.org/docs/render-props.html) 和[高阶组件](https://react.docschina.org/docs/higher-order-components.html)，现在让我们来看看 Hook 是如何在让你不增加组件的情况下解决相同问题的。
+
+当我们想在两个函数之间共享逻辑时，我们会把它提取到第三个函数中。而组件和 Hook 都是函数，所以也同样适用这种方式。
+
+**自定义 Hook 是一个函数，其名称以 “`use`” 开头，函数内部可以调用其他的 Hook。**
+
+
+
+
+
+## 内置 Hook API
+
+- [基础 Hook](https://react.docschina.org/docs/hooks-reference.html#basic-hooks)
+  - [`useState`](https://react.docschina.org/docs/hooks-reference.html#usestate)
+  - [`useEffect`](https://react.docschina.org/docs/hooks-reference.html#useeffect)
+  - [`useContext`](https://react.docschina.org/docs/hooks-reference.html#usecontext)
+- [额外的 Hook](https://react.docschina.org/docs/hooks-reference.html#additional-hooks)
+  - [`useReducer`](https://react.docschina.org/docs/hooks-reference.html#usereducer)
+  - [`useCallback`](https://react.docschina.org/docs/hooks-reference.html#usecallback)
+  - [`useMemo`](https://react.docschina.org/docs/hooks-reference.html#usememo)
+  - [`useRef`](https://react.docschina.org/docs/hooks-reference.html#useref)
+  - [`useImperativeHandle`](https://react.docschina.org/docs/hooks-reference.html#useimperativehandle)
+  - [`useLayoutEffect`](https://react.docschina.org/docs/hooks-reference.html#uselayouteffect)
+  - [`useDebugValue`](https://react.docschina.org/docs/hooks-reference.html#usedebugvalue)
