@@ -1,4 +1,4 @@
-# 关于websocket和http协议
+# 关于websocket
 
 ## 背景分析:
 
@@ -70,10 +70,6 @@ Node的单线程、非阻塞I/O、事件驱动机制，使它非常适合Socket�
 - [WebSocket 协议](https://106.54.190.214/index.php/archives/21/#menu_index_3)
 - [http 长连接和 websocket 的长连接区别](https://106.54.190.214/index.php/archives/21/#menu_index_4)
 - [Socket.IO 的引入](https://106.54.190.214/index.php/archives/21/#menu_index_5)
-
-
-
-本文由 [简素言也](https://106.54.190.214/index.php/author/1/) 创作，采用 [知识共享署名4.0](https://creativecommons.org/licenses/by/4.0/) 国际许可协议进行许可
 
 
 
@@ -717,3 +713,4 @@ const socket = io() // 建立连接
 至此一个可以实时发送接收消息的聊天室就完成了，虽然简陋，但核心功能完备。
 
 瑶最终倔强地打了野，李白选择了上路，3分钟被对面捶到高地，后羿在家里等鸟，吕布和貂蝉躲在蓝buff旁边的草丛里聊天，就这样在李白和瑶互相拉票举报对方的全局消息中游戏结束
+

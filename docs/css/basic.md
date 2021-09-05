@@ -1324,3 +1324,440 @@ writing-mode: vertical-lr; 改变父元素的文档流向为垂直方向，text-
 ### 参考
 
 [CSS水平垂直居中回顾总结](https://juejin.im/post/6858826987688722446)
+
+
+
+## H5布局和传统有什么不同？
+
+所谓H5布局，说简单点，就是用H5特有的新标签（语义化）来替代传统布局方式。几点注意如下：
+
+1）css写法不变，比如你定义标签，那css里就要这样写header{}。另外，H5标签也是可以加class或id的，css写法没啥区别，比如，**.样式名{}  #样式名{}**；
+
+2）移动端网站H5标签（包括css3）是支持的，放心大胆去弄，不要去考虑狗屁的兼容。如果是单纯PC网站，建议传统div方式布局比较合适；
+
+3）响应式网站，技术强迫症，必须要用H5来做，那html5shiv.js或modernizr.js是不错的IE兼容解决方案。（比如李勇的小拼sem博客）。注意：ie8以下是没办法的，可以页面顶部弹出提醒升级你的IE，算友好体验的一部分吧。
+
+4）bootstrap
+
+**H5布局标签如何选择？**
+
+个人理解
+
+```markdown
+全局：
+<header><header>：相当于<div class="header"></div>
+
+<footer></footer>：相当于<div class="footer"></div>
+
+<section></section>：相当于<div></div>，以前习惯的div改为section，当然你继续用div也一样
+
+<aside></aside>：相当于<div class="sidebar"></div>，比如常见的侧边栏
+```
+
+```markdown
+导航或者分页：
+<nav></nav>：相当于<div class="nav"><ul></ul></div>
+```
+
+```markdown
+文章、帖子或者其它独立的页面：
+<article></article>:相当于<div class="article"></div>
+
+<time></time>：日期时间什么的放里面就好了，相当于<div class="time">2016-05-21 15:43:21</div>，支持pubdate属性，表示为发布日期
+
+<summary></summary>：标签包含 details 元素的标题，”details” 元素用于描述有关文档或文档片段的详细信息。”summary” 元素应该是 “details” 元素的第一个子元素。
+<details>
+	<summary>HTML 5</summary>
+	This document teaches you everything you have to learn about HTML 5.
+</details>
+```
+
+```markdown
+其它新标签：
+<audio></audio>：标签定义声音，比如音乐或其他音频流。
+<audio src="someaudio.wav">您的浏览器不支持 audio 标签。</audio>
+
+<video></video>：标签定义视频，比如电影片段或其他视频流。
+<video src="movie.ogg" controls="controls">您的浏览器不支持 video 标签。</video>
+
+<source>：标签为媒介元素（比如 <video> 和 <audio>）定义媒介资源。
+<audio controls>
+	<source src="horse.ogg" type="audio/ogg">
+	<source src="horse.mp3" type="audio/mpeg"> 
+	Your browser does not support the audio element.
+</audio>
+
+<datalist></datalist>：标签定义可选数据的列表。与 input 元素配合使用，就可以制作出输入值的下拉列表。
+
+<figure> 标签用于对元素进行组合。使用 <figcaption> 元素为元素组添加标题。
+<figure>
+	<figcaption>PRC</figcaption>
+	<p>The People's Republic of China was born in 1949...</p>
+</figure>（是不是类似dl dt dd）
+
+<mark></mark>：主要用来在视觉上向用户呈现那些需要突出的文字。<mark>标签的一个比较典型的应用就是在搜索结果中向用户高亮显示搜索关键词。传统如<span></span>
+
+<hgroup></hgroup>：标签用于对网页或区段（section）的标题进行组合。
+```
+
+H5还有很多新标签，一般你也用不着，H5布局只是引入了新的语义化标签，比如em、i、span、ul、li、p、pre这些常用的传统标签，一样可以在H5页面中正常使用。
+
+
+
+## css伪元素
+
+css的`伪元素`，之所以被称为伪元素，是因为他们不是真正的页面元素，html没有对应的元素，但是其所有用法和表现行为与真正的页面元素一样，可以对其使用诸如页面元素一样的css样式，表面上看上去貌似是页面的某些元素来展现，实际上是css样式展现的行为，因此被称为伪元素。如下图，是伪元素在html代码机构中的展现，可以看出无法伪元素的结构无法审查。
+
+![img](http://segmentfault.com/img/bVb9y2)
+
+css有一系列的伪元素，如:before，:after，:first-line，:first-letter等，本文就详述一下:before和:after元素的使用
+
+### 一、伪元素:before和:after用法
+
+这个两个伪元素在真正页面*元素内部*`之前`和`之后`添加新内容（当然了，可以对伪元素应用定位可以置于任何位置）。可以用以下例子来说明：
+
+```html
+<p>wonyun!</p>
+<style>
+    p:before{content: "hello "}
+    p:after{content: "you are handsome!"}
+</style>
+```
+
+上面例子从技术角度看，等价于下面的html结构：
+
+```html
+<p>
+<span>hello </span>
+wonyun!
+<span> you are handsome!</span>
+</p>
+```
+
+由此可知：**伪元素:before和:after添加的内容默认是`inline`元素**；这个两个伪元素的`content`属性，表示伪元素的内容,设置:before和:after时必须设置其`content`属性，否则伪元素就不起作用。那么问题来了，`content`属性的值可以有哪些内容呢，具体有以下几种情况：
+
+- `字符串`，字符串作为伪元素的内容添加到主元素中
+
+  > **注意**：字符串中若有html字符串，添加到主元素后不会进行html转义，也不会转化为真正的html内容显示，而是会原样输出
+
+- `attr(attr_name)`, 伪元素的内容跟主元素的某个属性值进行关联，及其内容为主元素的某指定属性的值
+
+  > **好处**：可以通过js动态改变主元素的指定属性值，这时伪元素的内容也会跟着改变，可以实现某些特殊效果，如图片加载失败用一段文字替换。
+
+- `url()/uri()`, 引用外部资源，例如图片；
+
+- `counter()`, 调用计数器，可以不使用列表元素实现序号问题。
+
+------
+
+### 二、:before和:after特点
+
+上面说了，伪元素是通过样式来达到元素效果的，也就是说伪元素不占用dom元素节点，引用[:before,:after伪元素妙用](http://www.alloyteam.com/2015/04/beforeafter伪元素妙用/)里面总结的，:before和:after伪元素的主要特点如下：
+
+- **伪元素不属于文档**，所以js无法操作它
+- 伪元素属于主元素的一部分，因此**点击伪元素触发的是主元素的click事件**
+- 原文说块级元素才能有:before, :after，其实是不妥的，大部分行级元素也可以设置伪元素，但是像img可替换元素，因为其外观和尺寸有外部资源决定，那么如果外部资源正确加载，就会替换掉其内部内容，这时伪元素也会被替换掉，但是当外部资源加载失败时，设置的伪元素是可以起作用的。
+
+基于伪元素的特点可以知道其优缺点，也引用别人文章的话：
+
+- 优点
+  - 减少dom节点数
+  - 让css帮助解决部分js问题，让问题变得简单
+- 缺点
+  - 不利于SEO
+  - 无法审查元素，不利于调试
+
+------
+
+### 三、:before和:after常见使用场景
+
+1. 清除浮动
+
+```html
+清除浮动是前端最常见的问题，有一种做法是使用一个空的页面元素如div来清除浮动，但是这种做法增加毫无语义的页面元素，而且占用dom节点。更可取的做法是利用伪元素来清除浮动：
+<div class="l-form-row">
+<div class="l-form-label"></div>
+....
+</div>
+<style>
+.l-form-row:after {
+    clear: both;
+    content: "\0020";
+    display: block;
+    height: 0;
+    overflow: hidden
+}
+</style>
+```
+
+这样，class=l-form-row的元素内部任何浮动都能清除掉，不用额外添加无意义的元素。
+
+1. 利用`attr()`来实现某些动态功能
+
+在页面中常见这种问题，页面上加载的图片在无法加载时会显示一个破损图片，直接影响页面的美观；
+![img](http://cdn2.w3cplus.com/cdn/farfuture/A2Bz5jXo1C3l2A3tc7h4QIkXhZ-eKXh8QjxO-f79fKQ/mtime:1468406046/sites/default/files/blogs/2016/1607/dirty-tricks3.png)
+
+那么可以通过伪元素配合样式能够让未加载的图片看起来真的像破裂的效果，如下图所示：
+![img](https://images2015.cnblogs.com/blog/408483/201608/408483-20160825213155866-395524514.png)
+
+<img>是一个替换元素，其外观和尺寸是由外部资源来决定的，当外部图片资源加载失败时其会显示破裂图片和alt文字，尺寸仅由其自身内容决定。这时<img>元素可以使用伪元素:before和:after，因为其元素内容没有被替换；利用attr()来获取图片alt属性值作为伪元素:after的content内容来替换img的内容，并运用适当的样式从而完成：图片加载成功时显示正常的图片，加载失败时显示图片破裂效果的样式，具体代码参考：
+
+```css
+img{
+  min-height: 50px;
+ position: relative;
+}
+img:before: {
+   content: " ";
+   display: block;
+  position: absolute;
+  top: -10px;
+  left: 0;
+  height: calc(100% + 10px);
+  width: 100%;
+  backgound-color: rgb(230, 230,230);
+  border: 2px dotted rgb(200,200,200);
+  border-radius: 5px;
+}
+img: {
+  content: '\f127" " Broken Image of " attr(alt);
+  display: block;
+  font-size: 16px;
+  font-style: normal;
+  font-family: FontAwesome;
+  color: rgb(100,100,100)
+  position: absolute;
+  top: 5px;
+  left: 0;
+  width: 100%;
+  text-align: center;
+}
+```
+
+1. 与counter()结合实现序号问题，而不用使用列表元素。具体还要结合css的 counter-increment 和 counter-reset 属性的用法 。
+
+代码如下：
+
+```html
+<h2></h2>
+<h2></h2>
+<style>
+   body {counter-reset:section;}
+   h2:before { 
+   counter-increment: section; 
+   content: "Chapter"  counter(section) ".";
+   }
+</style>
+```
+
+结果如下：
+![img](https://images2015.cnblogs.com/blog/408483/201608/408483-20160825220412882-1283938733.png)
+
+1. 特效使用
+
+利用这两个伪元素，可以实现各种效果，如放大镜、叉叉、箭头、三角符等，也可轻易实现如下效果
+![img](http://img1.dimpurr.com/dimblog/2013/10/6cc221614774e78add77d4e7a1171f591.gif)
+代码实现如下：
+
+```css
+a {
+  position: relative;
+  display: inline-block;
+  outline: none;
+  text-decoration: none;
+  color: #000;
+  font-size: 32px;
+  padding: 5px 10px;
+}
+
+a:hover::before,
+a:hover::after {
+  position: absolute;
+}
+a:hover::before {
+  content: "\5B";
+  left: -20px;
+}
+a:hover::after {
+  content: "\5D";
+  right: -20px;
+}
+```
+
+![img](http://cdn2.w3cplus.com/cdn/farfuture/1To616umvPEkmTcTiE_2FeVW3MraP89IwuzpzV1Z4E0/mtime:1468406052/sites/default/files/blogs/2016/1607/dirty-tricks7.gif)
+
+代码实现如下：
+
+```css
+table{overflow: hidden;}
+td, th{
+    padding: 10px;
+    position: relative;
+    outline: 0;
+}
+td:hover::after,
+th:hover::after { 
+      content: '';  
+      background-color: lightblue;
+      position: absolute;  
+      left: 0;
+      height: 10000px;
+      top: -5000px;
+      width: 100%;
+      z-index: -1;
+}
+
+td:hover::before {
+      background-color: lightblue;
+      content: '';  
+      height: 100%;
+      top: 0;
+      left: -5000px;
+      position: absolute;  
+      width: 10000px;
+      z-index: -1;
+}
+```
+
+具体代码：
+
+```css
+.empty__bg {
+  display: inline-block;
+  width: 95px;
+  height: 92px;
+  background: url(http://7tszky.com1.z0.glb.clouddn.com/FvD_sYY4Fmp_yKS0E07H-5jhuKTB) no-repeat;
+  background-size: 95px 92px;
+  position: relative;
+  margin-bottom: 16px;/*注意这里需要留好位置放置after元素（它是absolute进去的）*/
+}
+.empty__bg:after {
+  content: "暂无学习计划";
+  display: block;
+  font-size: 14px;
+  line-height: 24px;
+  text-align: center;
+  width: 100%;
+  color: #909090;
+  position: absolute;
+  top: 100%;
+  left: 0;
+}
+```
+
+上述可以实现`扩大可点击区域`，这对应手机用户来说更加友好一些，否则用户点击不会触发相应的事件；具体代码实现如下：
+
+```css
+.play-cover {position: relative}
+.play-cover:before{
+    content: "";
+    display: block;
+    position: absolute;
+    width: 0;
+    height: 0;
+    border-left: 8px solid white;
+    border-top: 5px solid transparent;
+    border-bottom: 5px solid transparent;
+    margin-left: 9px;
+    margin-bottom: 7px;
+    z-index: 5;
+}
+.play-cover:after{
+    content: '';
+    display: block;
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border: 2px solid white;
+    background: rgba(0, 0, 0, .6);
+    border-radius: 12px;
+    background-clip: padding-box;
+}
+```
+
+CSS美化radio和checkbox的样式[magic-check](http://forsigner.com/magic-check/)，就是利用伪元素:before和:after来实现的；
+具体是为每个真正的表单元素radio和checkbox搭配一个label，然后隐藏真正的radio和checkbox，label元素单击的时候隐藏的radio或者checkbox实际上是处于checked状态，这跟label的具体用法有关；利用label的伪元素:before和:after来实现美化radio和checkbox。
+
+
+
+下面是checkbox的美化的css代码：
+
+```css
+.magic-checkbox {
+  position: absolute;
+  display: none; //先隐藏真正的checkboxbox
+}
+.magic-checkbox + label {
+  //为与checkbox搭配的label使用样式
+  position: relative; //相对定位，方便其内容的伪元素进行定位
+  display: block; //块元素
+  padding-left: 30px;
+  cursor: pointer;
+  vertical-align: middle;
+}
+.magic-checkbox + label:before {
+  //label添加:before伪元素，用于生成一个带边界的正方形，模拟复选框的轮廓
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  content: "";
+  border: 1px solid #c0c0c0;
+  border-radius: 3px;
+}
+//为checkbox添加:after伪元素，作用是生成一个√图形，模拟checkbox选中状态，未选中状态下会被隐藏
+.magic-checkbox + label:after {
+  top: 2px;
+  left: 7px;
+  box-sizing: border-box;
+  width: 6px; //实现√图形很简单：设置一个长方形，去掉其上边界和左边界，剩下的2个边界旋转45度就得到√形状
+  height: 12px;
+  transform: rotate(45deg);
+  border-width: 2px;
+  border-style: solid;
+  border-color: #fff;
+  border-top: 0;
+  border-left: 0;
+  position: absolute;
+  display: none; //√形状先隐藏
+  content: "";
+}
+//单击label，隐藏的checkbox为checked状态，这时设置checked状态下搭配label的:before伪元素背景和边界颜色
+.magic-checkbox:checked + label:before {
+  animation-name: none;
+  border: #3e97eb;
+  background: #3e97eb;
+}
+//checked状态的checkbox搭配的label伪元素:after此时设置显示，那么√就显示出来了
+.magic-checkbox:checked + label:after {
+  display: block;
+}
+
+```
+
+利用:before和:after能轻易实现美化的radio和checkbox
+
+
+
+
+
+## box-sizing
+
+全局设置 border-box 很好，更符合我们通常对一个「盒子」尺寸的认知。，其次它可以省去一次又一次的加加减减，它还有一个关键作用——让有边框的盒子正常使用百分比宽度。但是使用了 border-box 可能会与一些依赖默认 box-sizing 的库冲突，不过这种问题大多数时候可以通过把交由这些库处理的块的 box-sizing 设置回 content-box 来解决。
+
+推荐写法是：
+
+```
+html {
+  box-sizing: border-box;
+}
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+```
+
+（出自 [Inheriting box-sizing Probably Slightly Better Best-Practice](https://link.zhihu.com/?target=http%3A//css-tricks.com/inheriting-box-sizing-probably-slightly-better-best-practice/)）
+选择器 * 无法覆盖到伪元素，所以需要给 :before 和 :after 分别设置。而通过继承的方式应用到所有元素，需要时可以方便的将某个元素及其后代元素的 box-sizing 改成 content-box。
+
