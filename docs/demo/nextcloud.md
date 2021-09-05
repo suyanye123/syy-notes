@@ -1,6 +1,6 @@
 # nextcloud性能优化
 
-### 1.更改后台执行方式
+## 1.更改后台执行方式
 
 NC的后台任务执行方式分为3中，`AJAX`、`Webcron`、`Cron`
 
@@ -18,7 +18,7 @@ NC的后台任务执行方式分为3中，`AJAX`、`Webcron`、`Cron`
 
 
 
-### 2.内存缓存
+## 2.内存缓存
 
 **给nextcloud配置redis锁（网上有很多nc性能优化都提到了这个）**
 
@@ -32,7 +32,7 @@ docker装redis，修改config.php，增加锁的引用。
 
 效果非常明显，sql语句只有insert 语句了，这个是正常的。IO也没之前高了。
 
-### 3.启用http2，提高加载速度
+## 3.启用http2，提高加载速度
 
 nginx.conf 如下
 
@@ -169,7 +169,7 @@ server
 }
 ```
 
-### 4.停用无用的apps，降低系统负载
+## 4.停用无用的apps，降低系统负载
 
 mysql 进去，看看变量，SHOW VARIABLES like '%flush%' 一看，
 
@@ -183,7 +183,7 @@ mysql binlog关闭，没什么用，还是那句话，mysql挂了都没问题，
 
 重新扫描，命令：docker exec nextcloud su www-data -s /bin/bash -c "php /var/www/html/occ files:scan —all” 【应该有点用】
 
-### 5.上传速度优化
+## 5.上传速度优化
 
 ```
 docker exec -u 1000 容器id bash    //进入容器
@@ -196,3 +196,9 @@ php occ config:app:set files max_chunk_size --value 0 //进入目录执行（解
 https://blog.csdn.net/qq_28718329/article/details/112687699
 
 https://bugxia.com/1706.html
+
+
+
+## 6.Docker 安装的 NextCloud 升级、备份及恢复
+
+http://einverne.github.io/post/2020/01/qnap-nextcloud-docker-upgrade-and-backup.html

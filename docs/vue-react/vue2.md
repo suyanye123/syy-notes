@@ -469,3 +469,94 @@ component: resolve => require(['@/view/index.vue'],)
 ```
 
 
+
+## 五、Vue扩展
+
+### 自定义函数挂载到全局方法
+
+在Vue中可以将自定的方法挂载到全局的方法中，这样在全局的页面都可以不通过引用，而直接使用自定义的方法了，在vue中使用非常广泛。
+
+**方法一：使用Vue.prorotype**
+
+　　第一中方法与定义全局变量一样，在main.js中进行引入(但因为main.js是入口文件，不推荐在其中写入其他逻辑代码)。在main.js中写入函数
+
+```js
+Vue.prototype.getPdf = function (){
+  ...
+}
+```
+
+ 　这样在所有的组件中便可以调用函数了。
+
+```js
+this.getPdf（）
+```
+
+**方法二：使用exports.install+Vue.prototype(推荐)**
+
+在htmlToPdf.js文件中创建自己的自定义的方法getPdf()。
+
+```js
+export.install = function(Vue,options){
+    vue.prototype.getPdf = function(){
+       ...         
+    }
+}
+```
+
+在main.js引入并使用
+
+```js
+import htmlToPdf from './htmlToPdf';
+Vue.use(htmlToPdf);
+```
+
+在用了`exports.install`方法时，运行报错`exports is not defined、原因是es6的语法转换问题，统一使用es6的语法来写即可。`
+
+**解决方法：**
+
+```js
+export default{
+   install(Vue){
+       Vue.prototype.getPdf ={
+         ...
+       }    
+    }    
+}　　
+```
+
+**方法三：使用全局变量模块文件**
+
+Global.vue文件：
+
+```js
+<script>
+    const token='12345678';
+
+    export default {
+        methods: {
+            getToken(){
+                ....
+            }
+        }
+    }
+</script>
+```
+
+在需要的地方引入全局变量模块文件，然后通过文件里面的变量名称获取全局变量参数值。
+
+```js
+<script>
+import global from '../../components/Global'//引用模块进来
+export default {
+    data () {
+        return {
+            token:global.token
+        }
+    },
+    created: function() {
+        global.getToken();
+    }
+}
+</script>
+```
