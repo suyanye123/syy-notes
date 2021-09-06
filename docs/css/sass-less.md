@@ -497,3 +497,76 @@ text-overflow: hidden;
 
 
 ## sass函数
+
+
+
+
+
+# Less
+
+/*1.变量命名
+
+@变量名：值；
+
+必须有@前缀，不能包含特殊字符，不能以数字开头，大小写敏感
+
+```css
+/*例如：*/
+@color: pink;  @font14： 14px;
+body {
+  background-color: @color;
+}
+```
+
+2.less编译
+
+使用Easy-Less插件
+
+ 
+
+3.less嵌套
+
+3.1 子元素的样式直接写到父元素中。
+
+```less
+.header {
+  width: 200px;
+  height: 200px;
+  background-color: red;
+  a {
+    color: red;
+  }
+```
+
+3.2 当遇到交集|伪类|伪元素选择器
+
+内层选择器的前面如果没有&符号，则认为是父选择器的后代，如果有&则解析为父元素本身或父元素的伪类。
+
+例子： 
+
+```less
+a {
+  color: red;
+  &:hover {
+    color: blue;
+  }
+}
+```
+
+3.3 less的运算
+
+运算符的左右必须用一个空格隔开
+
+两个有单位的数参与运算，结果取第一个值的单位
+
+两个值只有一个值有单位，则结果取该单位
+
+```less
+@color: pink;
+@font14: 14px;
+body {
+  background-color: @color;
+}
+
+```
+

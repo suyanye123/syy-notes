@@ -45,6 +45,34 @@ XML 是可扩展标记语言。XML 和 HTML 类似，不同的是 HTML 中都是
 
 ## 一、原生 AJAX
 
+```js
+// 第一步创建对象
+const xhr = new XMLHttpRequest();
+// xhr.baseURL = "http://127.0.0.1:8000";
+// 第二部初始化，设置请求方法和url
+xhr.open("GET", "http://127.0.0.1:8000/home");
+// xhr.setRequestHeader(
+//   "Content-Type",
+//   "application/x-www-form-urlencoded"
+// );
+// 第三部发送
+xhr.send("a=200&b=300");
+//第四部，事件绑定，处理服务端返回的结果
+xhr.onreadystatechange = function () {
+  if (xhr.readyState === 4) {
+    if (xhr.status >= 200 && xhr.status < 300) {
+      // 处理结果 行 头 空行 体
+      console.log(xhr.getAllResponseHeaders());
+      console.log(xhr.response);
+    } else {
+      console.log(xhr.status);
+    }
+  } else {
+    console.log(xhr.readyState);
+  }
+};
+```
+
 ### ajax 请求与一般 http 请求的区别
 
 1. ajax 请求是一种特别的 http 请求
