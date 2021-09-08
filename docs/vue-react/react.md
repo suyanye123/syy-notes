@@ -1943,7 +1943,7 @@ const store = createStore(
 
 [尚硅谷React实战教程(从入门到精通)](https://www.bilibili.com/video/BV1oW41157DY)
 
-
+[redux基本使用－构建Todolist](https://zhuanlan.zhihu.com/p/92625276)
 
 
 
