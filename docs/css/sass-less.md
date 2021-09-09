@@ -1,5 +1,7 @@
 # sass
 
+> 更多技巧可参考[ 大漠 ](https://www.w3cplus.com/)博客
+
 ## Sass 变量
 
 变量用于存储一些信息，它可以重复使用。
@@ -570,3 +572,338 @@ body {
 
 ```
 
+
+
+# 编写Sass的八个技巧
+
+Sass可以编译出非常优秀的CSS样式表，或者说，这就是Sass要做的事情。
+
+有效的使用Sass可以帮助你构建出干净的有效的CSS，但如果运用不好，Sass其实会让你的CSS文件变得更大，并且添加一些不必要的和重复的CSS代码。
+
+下面一些编写Sass小技巧，可以有效帮助你编写出更好的Sass。
+
+## １、你的Sass结构
+
+在你的项目中使用Sass，管理好网站的结构是对每一个项目最重要的一点。使用Partials允许你把CSS分成若干个更小更易于管理的代码块，这样更易于维护和扩展。
+
+Partial文件使用下划线来命名SCSS文件(如：`_buttons.scss`)，不引入这部分代码是不会编译出CSS代码。每个partial文件都将会在Sass根目录下的主体文件(如：`global.scss`)引入。
+
+例如，这有一个示例，来演示这部分：
+
+```
+vendor/
+base/
+|
+|-- _variables.scss
+|-- _mixins.scss
+|-- _placeholders.scss
+
+framework/
+modules/
+global.scss
+```
+
+这样的文件结构可以确保该网站是很容易工作，并且可以随时添加新的文件。例如，新的模块文件可以很容易添加到`modules`文件夹中，然使用通过`@import`添加到`global.scss`文件中。
+
+为了演示，将`global.scss`文件拿出来做演示：
+
+```
+/* VENDOR - Default fall-backs and external files.
+========================================================================== */
+
+@import 'vendor/_normalize.scss';
+
+
+/* BASE - Base Variable file along with starting point Mixins and Placeholders.
+========================================================================== */
+
+@import 'base/_variables.scss';
+@import 'base/_mixins.scss';
+@import 'base/_placeholders.scss';
+
+
+/* FRAMEWORK - Structure and layout files.
+========================================================================== */
+
+@import 'framework/_grid.scss';
+@import 'framework/_breakpoints.scss';
+@import 'framework/_layout.scss';
+
+
+/* MODULES - Re-usable site elements.
+========================================================================== */
+
+@import 'modules/_buttons.scss';
+@import 'modules/_lists.scss';
+@import 'modules/_tabs.scss';
+```
+
+作为一个知识的侧重点，你可以看看[Hugo对Sass结构方面的一些见解](http://www.sitepoint.com/architecture-sass-project/),因为他在这一个领域有非常深的经验。
+
+### 扩展阅读
+
+- [管理Sass项目文件结构](http://www.w3cplus.com/preprocessor/architecture-sass-project.html)
+- [如何组织一个Sass项目](http://www.w3cplus.com/preprocessor/beginner/how-to-structure-a-sass-project.html)
+- [css-burrito: an organizational Sass template](http://www.bignerdranch.com/blog/css-burrito-an-organizational-sass-template/)
+- [A Little Structure For Your Large Sass Project](https://medium.com/@wanderingmatt/a-little-structure-for-your-large-sass-project-7fe19ab647fa)
+- [Our CSS/Sass Project Architecture and Styleguide](http://blog.groupbuddies.com/posts/32-our-css-sass-project-architecture-and-styleguide)
+- [SCSS: How do you structure your file architecture and why?](http://branch.com/b/scss-how-do-you-structure-your-file-architecture-and-why)
+- [Our Front-end Development Practices: How I Structure my SASS Projects](http://www.infobahndesign.com/how-i-structure-my-sass-projects/)
+
+## 2、更有效的使用Sass变量
+
+变量是Sass中最简单的特性之一，但有时候也会使用不当。创建站点范围内有语义化的变量，是不可或缺的工作。如果命名不好，他会变得难以理解和重复使用。
+
+这里有一些命名变量的小技巧，提供参考：
+
+- 命名变量时不要含糊不清
+- 坚持一种命名规则（Modular, BEM等等）
+- 确定变量的使用是有道理的
+
+这有一个好的示例：
+
+```
+$orange: #ffa600; 
+$grey: #f3f3f3; 
+$blue: #82d2e5;
+
+$link-primary: $orange;
+$link-secondary: $blue;
+$link-tertiary: $grey;
+
+$radius-button: 5px;
+$radius-tab: 5px;
+```
+
+这个是不好的示例：
+
+```
+$link: #ffa600;
+$listStyle: none;
+$radius: 5px;
+```
+
+## 3、减少Mixins的使用
+
+[Mixins](http://sass-lang.com/documentation/file.SASS_REFERENCE.html#mixins)是实现代码块的一种伟大方式，可以在一个站点内多次使用。然而，`@include`定义好的Mixins和在CSS代码中复制、粘贴没什么不一样。它将会让你的CSS代码生成很多重复的代码，让你的文件变得越来越臃肿。
+
+到目前为止，Mixins只适合那种需要通过传递参数来快速创建样式的情形。
+
+例如:
+
+```
+@mixin rounded-corner($arc) {
+    -moz-border-radius: $arc;
+    -webkit-border-radius: $arc;
+    border-radius: $arc;  
+}
+```
+
+`rounded-corner`这个Mixins可以在任何情况下使用，仅仅通过改变其参数`$arc`的值，将得到不同的代码：
+
+```
+.tab-button {
+     @include rounded-corner(5px); 
+}
+
+.cta-button {
+     @include rounded-corner(8px); 
+}
+```
+
+像这样使用Mixins是不明智的：
+
+```
+@mixin cta-button {
+    padding: 10px;
+    color: #fff;
+    background-color: red;
+    font-size: 14px;
+    width: 150px;
+    margin: 5px 0;
+    text-align: center;
+    display: block;
+}
+```
+
+这个Mixins没有传递任何参数，更建议[使用`%placeholder`来创建](http://www.sitepoint.com/sass-mixin-placeholder/)，这也是接下来要说的第四点。
+
+## 4、拥抱Placeholder
+
+与Mixins不同，[%placeholder](http://sass-lang.com/documentation/file.SASS_REFERENCE.html#placeholder_selectors_)也可以多次使用，而且不会生成重复的代码。这使得输入的CSS更友好，更干净。
+
+```
+%bg-image {
+    width: 100%;
+    background-position: center center;
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+.image-one {
+    @extend %bg-image;
+    background-image:url(/img/image-one.jpg");
+}
+
+.image-two {
+    @extend %bg-image;
+    background-image:url(/img/image-two.jpg");
+}
+```
+
+编译出来的CSS：
+
+```
+.image-one, .image-two {
+    width: 100%;
+    background-position: center center;
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+.image-one {
+    background-image:url(/img/image-one.jpg") ;
+}
+
+.image-two {
+    background-image:url(/img/image-two.jpg") ;
+}
+```
+
+多个选择器运用了相同的`%placeholder`也只会输出一次代码。没有引用的`%placeholder`是不会输出任何CSS代码。
+
+和第三点的Mixins配合在一起使用，既可保持Mixins灵活性，而且还可以保持代码的简洁与干净。
+
+```
+/* PLACEHOLDER 
+============================================= */
+
+%btn {
+    padding: 10px;
+    color:#fff;
+    curser: pointer;
+    border: none;
+    shadow: none;
+    font-size: 14px;
+    width: 150px;
+    margin: 5px 0;
+    text-align: center;
+    display: block;
+}
+
+/* BUTTON MIXIN 
+============================================= */
+
+@mixin  btn-background($btn-background) {
+    @extend %btn;
+    background-color: $btn-background;
+    &:hover {
+        background-color: lighten($btn-background,10%);
+    }
+}
+
+/* BUTTONS
+============================================= */
+
+.cta-btn {
+    @include btn-background(green);
+}
+
+.main-btn {
+    @include btn-background(orange);
+}
+
+.info-btn {
+    @include btn-background(blue);
+}
+```
+
+### 扩展阅读
+
+- [理解Sass的选择占位符%placeholder](http://www.w3cplus.com/preprocessor/understanding-placeholder-selectors.html)
+- [Sass:Mixin还是Placeholder](http://www.w3cplus.com/preprocessor/sass-mixin-placeholder.html)
+- [理解SASS的嵌套，@extend，%Placeholders和Mixins](http://www.w3cplus.com/preprocessor/sass-basic-mixins-nesting-placeholders-extend.html)
+- [SASS Placeholders Versus Mixins and Extends](http://miguelcamba.com/blog/2013/07/11/sass-placeholders-versus-mixins-and-extends/)
+- [Understanding placeholder selectors](http://thesassway.com/intermediate/understanding-placeholder-selectors)
+- [Sass: Mixin or Placeholder?](http://www.sitepoint.com/sass-mixin-placeholder/)
+- [Ditto: Making good use of Sass extends and placeholder selectors](http://www.fredparke.com/blog/ditto-making-good-use-sass-extends-and-placeholder-selectors)
+- [Sass Mixin and Sass Placeholder Tutorial](http://learnwebtutorials.com/sass-mixin-placeholder-tutorial)
+
+## 5、使用Function计算
+
+使用[Functions](http://sass-lang.com/documentation/file.SASS_REFERENCE.html#functions)来进行计算。Sass的函数不会输出任何CSS代码。相反，在使用的函数的时候，他会返回一个值。在网站使用函数来计算是非常有用的。
+
+例如，函数可以计算给定元素的百分比宽度值：
+
+```
+@function calculate-width ($col-span) {
+    @return 100% / $col-span
+}
+
+.span-two {
+    width: calculate-width(2); // spans 2 columns, width = 50%
+}
+
+.span-three {
+    width: calculate-width(3); // spans 3 columns, width = 33.3%
+}
+```
+
+### 扩展阅读
+
+- [Using pure Sass functions to make reusable logic more useful](http://thesassway.com/advanced/pure-sass-functions)
+- [Sass Functions for Play + Profit](http://www.intridea.com/blog/2014/2/11/sass-functions-for-fun-profit)
+
+## 6、有顺工作
+
+将所有的Mixins、Placeholder、Functions和变量放置在一起。将他们放置一起，可以确认他们可以很快的编写以及将来重复使用。
+
+整站的元素应该放在一个`base`文件夹中。`base`文件夹应该包括全局的变量，如字体和颜色等：
+
+```
+$font-primary: 'Roboto', sans-serif; 
+$font-secondary: Arial, Helvetica, sans-serif;
+
+$color-primary: $orange;
+$color-secondary: $blue;
+$color-tertiary: $grey;
+```
+
+对于特定模块的Mixins、Functions 和变量，为了保证模块能正常运行，需要将这些集中放置在`module`文件中：
+
+```
+$tab-radius: 5px;
+$tab-color: $grey;
+```
+
+## 7、限制嵌套
+
+[Sass的嵌套规则](http://www.sitepoint.com/8-tips-help-get-best-sass/nested_rules)是，过度的嵌套会导致很多问题的发生,代码变得复杂，而且太过于依赖HTML结构。这样将导致后面的样式需要使用`!important`来覆盖，而这种方式，我们应该尽量要去避免的。
+
+这有几条是使用嵌套的黄金规则：
+
+- 嵌套永远不要超过三个层级
+- 确保输出的CSS简洁、可重用
+- 使用嵌套是很有意义的，而不是默认选项
+
+## 保持简单
+
+这篇文章的结论是保持简单。使用Sass的目的是要写出更简洁，更易于管理的CSS。在创建任何新的Mixins、变量或函数之前，你都需要确保它们的存在将会加强开发，并不会把事情整得更复杂。Sass的所有功能只要在适度的使用和正确的使用，才能发挥其最大的作用。
+
+无休止创建一个变量列表，或者创建一个复杂的函数，对于任何人来都是很难理解的，因为其他人必竟不是作者，无法理解作者的意图，或者说这样对开发并没带来好处和编译出干净的CSS。
+
+### 扩展阅读
+
+- [保持Sass的简单](http://www.w3cplus.com/preprocessor/keep-sass-simple.html)
+
+## 结论
+
+上面所说的这些小技巧，或许你并不会完全认可。Sass仍然是一门很新的技术，因此我们只有不断去学习和实践，才能得到更多的有用技巧。如果您有更好的看法，欢迎在评论中一起讨论。
+
+译者手语：整个翻译依照原文线路进行，并在翻译过程略加了个人对技术的理解。如果翻译有不对之处，还烦请同行朋友指点。谢谢！
+
+出处：
+
+英文原文：http://www.sitepoint.com/8-tips-help-get-best-sass/
+
+中文译文：http://www.w3cplus.com/preprocessor/8-tips-help-get-best-sass.html
