@@ -1654,7 +1654,7 @@ componentDidMount(){
    - data：数据属性，值类型任意，可选属性
 3. 例子：
 
-```
+```js
 const action = {
   type: 'INCREMENT',
   data: 2
@@ -1663,7 +1663,7 @@ const action = {
 
 1. **Action Creator（创建 action 的工厂函数）**
 
-```
+```js
 export const increment = (number) => ({type: 'INCREMENT', data: number})
 ```
 
@@ -1672,7 +1672,7 @@ export const increment = (number) => ({type: 'INCREMENT', data: number})
 1. **根据老的 state 和 action，产生新的 state** 的**纯函数**
 2. 例子：
 
-```
+```js
 export default function counter(state=0, action) {
   switch (action.type) {
     case 'INCREMENT':
@@ -1694,7 +1694,7 @@ export default function counter(state=0, action) {
 1. **将 state，action 与 reducer 联系在一起的对象**
 2. 如何得到此对象？
 
-```
+```js
 import {createStore} from 'redux'
 import reducer from './reducers'
 
@@ -1738,7 +1738,7 @@ const store = createStore(reducer)
 
 1.**Provider：让所有组件都可以得到 state 数据**
 
-```
+```jsx
 import {Provider} from 'react-redux'
 
 <Provider store={store}>
@@ -1943,7 +1943,7 @@ const store = createStore(
 
 [尚硅谷React实战教程(从入门到精通)](https://www.bilibili.com/video/BV1oW41157DY)
 
-
+[redux基本使用－构建Todolist](https://zhuanlan.zhihu.com/p/92625276)
 
 
 
