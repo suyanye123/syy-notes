@@ -238,3 +238,29 @@ export default connect(state=>state.info)(Index)
 以上就是无状态组件中调用dva管理的数据，原理还是依赖于react-redux 通过connect生成容器组件，获取数据。
 
 无状态组件中定义局部状态，可以选择16.8新增的hook来定义，useState定义局部状态，useEffect模拟生命周期。
+
+
+
+
+
+# dva
+
+> 对redux、reducer、saga的统一封装
+
+1.新建项目
+
+```bash
+npm install dva-cli -g
+dva new projecctname  #创建初始目录。并提供开发服务器、构建脚本、数据mock服务、代理服务器等功能
+npm start
+```
+
+ps：现在已经使用umi来创建了，dva作为其中一部分被插入
+
+
+
+2.css模块
+
+css 以module的形式引入，同时为了避免样式名的冲突，生成唯一的别名
+
+在dva项目中可以直接使用less、sass，不用安装
