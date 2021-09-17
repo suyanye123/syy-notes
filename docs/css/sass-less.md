@@ -502,6 +502,65 @@ text-overflow: hidden;
 
 
 
+## [如何在 SCSS 使用 JavaScript 变量/scss全局变量](https://www.cnblogs.com/fayin/p/10363924.html)
+
+发现一个更好的方法，[预处理器加载一个全局设置文件](https://vue-loader-v14.vuejs.org/zh-cn/configurations/pre-processors.html)
+
+[官方github](https://github.com/shakacode/sass-resources-loader)给出了详细的配置。
+
+------
+
+在 SCSS 中使用变量很方便，创建一个 variables.scss 文件，里面声明各种变量，如果你需要使用这些变量，就使用`@import variables.scss`导入这个文件即可。但这样会存在两个小问题：
+
+- 每次使用都要导入，不优雅
+- JavaScript 文件无法使用这些变量
+
+有没有两全其美并足够简单的方法呢？（：废话
+
+假设有这样一个保存 scss 变量的文件，style/scss/variables.js:
+
+```js
+module.exports = {
+  'red-color': 'red',
+  'px': `${1/20}rem`
+}
+```
+
+仅需要在 webpack.config.js 中更改下配置：
+
+```js
+let styleVariables = require('/style/scss/variables')
+
+// 其他配置
+...
+
+{
+  test: /\.scss$/,
+  use: [
+    'css-loader',
+    'postcss-loader',
+    {
+      loader: 'sass-loader',
+      options: {
+        data: Object.keys(styleVariables)
+          .map(k => `\$${k}: ${styleVariables[k]};`)
+          .join('\n')
+      }
+    }
+  ]
+},
+```
+
+那么在任意 scss 中，都可以直接使用我们在 JavaScript 文件中声明的变量，而无需额外引入：
+// page-a.scss
+
+```
+.page-a {
+  height: 20*$px;
+  color: $red-color;
+}
+```
+
 
 
 # Less
@@ -691,7 +750,7 @@ $radius: 5px;
 
 例如:
 
-```
+```scss
 @mixin rounded-corner($arc) {
     -moz-border-radius: $arc;
     -webkit-border-radius: $arc;
@@ -701,7 +760,7 @@ $radius: 5px;
 
 `rounded-corner`这个Mixins可以在任何情况下使用，仅仅通过改变其参数`$arc`的值，将得到不同的代码：
 
-```
+```scss
 .tab-button {
      @include rounded-corner(5px); 
 }
@@ -713,7 +772,7 @@ $radius: 5px;
 
 像这样使用Mixins是不明智的：
 
-```
+```scss
 @mixin cta-button {
     padding: 10px;
     color: #fff;
@@ -732,7 +791,7 @@ $radius: 5px;
 
 与Mixins不同，[%placeholder](http://sass-lang.com/documentation/file.SASS_REFERENCE.html#placeholder_selectors_)也可以多次使用，而且不会生成重复的代码。这使得输入的CSS更友好，更干净。
 
-```
+```scss
 %bg-image {
     width: 100%;
     background-position: center center;
@@ -753,7 +812,7 @@ $radius: 5px;
 
 编译出来的CSS：
 
-```
+```scss
 .image-one, .image-two {
     width: 100%;
     background-position: center center;
@@ -774,7 +833,7 @@ $radius: 5px;
 
 和第三点的Mixins配合在一起使用，既可保持Mixins灵活性，而且还可以保持代码的简洁与干净。
 
-```
+```scss
 /* PLACEHOLDER 
 ============================================= */
 

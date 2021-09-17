@@ -105,7 +105,7 @@ npx postcss src/my-ui.css -o dist/my-ui.min.css -u postcss-import autoprefixer c
 
 ## postcss+webpack解析
 
-### 如何让scss变量能够当做js变量来使用
+## 如何让scss变量能够当做js变量来使用
 
 当前我们使用scss变量有两个痛点：
 

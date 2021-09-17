@@ -446,6 +446,8 @@ shallowRef、shallowReactive
 
 
 
+
+
 ---
 
 ## 三、setup 的使用
@@ -488,7 +490,285 @@ ref 底层其实还是 reactive,所以当运行时系统会自动根据传入的
 
 
 
-## 四、深入Vue3源码
+## 四、vue3.0中的路由及路由守卫
+
+### 1、部分API进行了删除或修改
+
+- tag是我们可以改变标签的属性进行了删除，event也删除了
+
+- exact也进行了删除
+
+- 全局的404不再使用*键了，文档有可查看
+
+- 那么有的小伙伴说都删除了，我们应该使用什么呢？那肯定是有的，想了解的朋友可以去官方看看文档，我看了下，有一个新增的API就是v-slot，具体怎么使用，需要稍等会，正在努力研究中
+
+- 还有我们的组件路由守卫中的beforeRouteEnter进行了删除（我是没找到，希望看到的小伙伴可以告诉我，谢谢）
+
+- 新增的两个API是我们经常会使用到的，很有用**useRouter,useRoute**后面会介绍到，别慌
+
+### 2、简单使用
+
+> 同vue2.0
+
+```xml
+<router-link to="/">首页</router-link>
+<router-view></router-view>//要在哪里显示路由页面，就在哪里进行标签的书写
+```
+
+### 3、router.js路由文件
+
+```jsx
+import { createRouter, createWebHashHistory } from "vue-router";
+const routes = [
+          {
+              path:"/",
+              name:"home",
+              component:()=>import("../views/home.vue")
+          }
+        ]
+const router = createRouter({
+  history: createWebHashHistory(),
+  routes
+});
+export default router;
+//在main.js中进行引入，并进行挂载注册到全局上
+```
+
+### 4、query和params传参
+
+- params传参要在路由的js文件中进行配置
+
+```csharp
+    const routes = [
+        {
+            path:'/home/:id',//这个id就是我们要使用params进行动态传递的参数
+            name:home,
+            component:Home
+        }
+    ]
+    //! 在我们的页面中直接进行写就可以了
+    <router-link to="/home/111">点击跳转到home页面并传参</router-link>
+    //接受的时候
+    vue2.0中this.$route.params.id
+    vue3.0中import { useRoute } from 'vue-router'
+    const route = useRoute()
+    console.log(route.params.id);//111
+```
+
+- query传参可以直接在标签上写
+
+```kotlin
+    <router-link to="/test?id=999">test</router-link>
+    //接受的时候
+    vue2.0中this.$route.query.id
+    vue3.0中import { useRoute } from 'vue-router'
+    const route = useRoute()
+    console.log(route.query.id);//999
+```
+
+- 编程式导航的传参，params使用name,query使用path
+
+```jsx
+    //vue3.0中
+    import { useRouter } from 'vue-router'
+    const route = useRouter()
+        // ! query编程式导航传参
+            route.push({
+                path:"/lianxi",
+                query:{
+                    id:666
+                }
+            });
+ //! params编程式导航传参
+  route.push({
+     name:'lianxi',
+         params:{
+          id:666
+         }
+     });
+ //接受参数的方法跟上面的一样
+ //vue3.0中
+ import { useRoute } from 'vue-router'
+ const route = useRoute()
+ console.log(route.query.id);//999
+```
+
+- **注意：**上面的编程式导航用到了上面提到的两个API，一个是我们需要进行设置的，一个是我们用来读取的
+
+```kotlin
+就像vue2.0中的this.$router.push()和this.$route.query.id等是不是很像呢
+```
+
+### 5、replaceApi
+
+```jsx
+<router-link to="/home" replace></router-link>
+
+route.push({
+    path:"/home",
+    replace:true
+})
+```
+
+### 6、命名视图
+
+```jsx
+<router-view name="LeftSidebar"></router-view>
+<router-view></router-view>
+<router-view name="RightSidebar"></router-view>
+//在路由的设置js文件中进行配置下
+ const route = [
+     {
+         path:"/home",
+         name:"home",
+         components:{
+             default:Home,//默认显示home页面
+             LeftSidebar:LeftSidebar,//显示左侧页面
+             RightSidebar//显示右侧页面
+         }
+     }
+ ]
+```
+
+### 7、重定向和别名（可以有多个别名）
+
+```csharp
+    route = [
+        {
+            path:"/",
+            redirect:"/home"//重定向
+        },
+        {
+            path:"/test",
+            name:"test",
+            component:Test,
+            alias:"/aa",//别名使用时直接使用aa就可以了
+            alias:["/aa","/cc"],//此时用哪个都可以，这是多个别名
+        }
+    ]
+    <router-link to="/aa"></router-link>
+```
+
+### 8、使用props获取路由传递的参数
+
+```csharp
+    //在路由配置的组件中，我们进行配置
+    const routes = [
+        {
+            path:"/aa/:id",
+            name:"aa",
+            component:Aa,
+            props:true//要加这个
+        }
+    ]
+    //在页面中
+    <router-link to= "/aa/666">点击跳转并传参</router-link>
+    //在aa的页面中
+    props:['id'],
+    <template>
+        {{id}}//直接就能获取到我们传递过来的参数
+    </template>
+```
+
+### 9、多个命名视图的时候，props也要写多个
+
+```cpp
+    const routes = [
+        {
+            path:"/use/:id",
+            name:"use",
+            components:{
+                default:Use,
+                slide:Slide,
+                rightSlide
+            },
+            props:{
+                default:true,
+                slide:false,
+                rightSlide:false
+            }
+        }
+    ]
+```
+
+### 10、全局路由守卫
+
+> （vue-router4.0中将next取消了，可写可不写，return false取消导航，undefined或者是return true验证导航通过）
+
+- router.beforeEach((to,from)=>{}),next是可选参数，可写可不写，return false是取消导航，如果返回值为true或者是undefined意味着通过验证
+
+- router.afterEach((to,from)=>{})
+
+- console.log(to.fullPath);//1可以直接将当前的URL路径及传参打印出来
+
+### 11、路由独享
+
+```jsx
+    const routes = [
+        {
+            path:"/home",
+            name:"home",
+            component:Home,
+            beforeEnter:(to,from) =>{
+                //to是当用户点击进入当前页面的时候,我们可以进行一些拦截设置
+                //from当来自其他页面进入当前页面的时候，我们也可以进行拦截提示用户
+                alert('我是路由独享守卫！！！')
+            }
+        }
+    ]
+```
+
+### 12、组件中的路由守卫
+
+```jsx
+import { onBeforeRouteLeave, onBeforeRouteUpdate } from 'vue-router';
+        onBeforeRouteUpdate((to,from)=>{//当前组件路由改变后，进行触发
+            console.log(to);
+        })
+        onBeforeRouteLeave((to,from)=>{//离开当前的组件，触发
+            alert('我离开啦')
+        })
+```
+
+### 13、新增的一些方法
+
+- **addRoute**：新添加路由页面(也可以添加子页面路由)
+
+- 添加一级路由
+
+```jsx
+// todo 这是新添加的路由页面，如果有重复的属性，会先删除前面的，添加后面的路由页面
+router.addRoute({
+  path:"/router",
+  name:"router",
+  component:()=>import('../views/router.vue')
+})
+```
+
+- 添加二级路由
+
+```csharp
+// 1 添加子路由，第一个参数是父路由的name名，后面是子路由的数据
+router.addRoute({ name: 'admin', path: '/admin', component: Admin })//1 父路由
+router.addRoute('admin', { path: 'settings', component: AdminSettings })//1 子路由
+```
+
+- 如果添加的路由有点问题，可以将下面的这句代码加上看看
+
+```csharp
+// * 如果上面添加的路由页面没有变化，那么就添加这行代码
+router.replace(router.currentRoute.value.fullPath)//替换当前路由页面的路由
+```
+
+- **removeRoute**：删除路由
+
+```bash
+router.removeRoute('router');
+```
+
+
+
+## 五、深入Vue3源码
 
 ### 前置知识
 
