@@ -24,8 +24,6 @@ image
 
 ![img](https:////upload-images.jianshu.io/upload_images/100363-051cdf2ef60377ef?imageMogr2/auto-orient/strip|imageView2/2/w/188/format/webp)
 
-image
-
 ## iconfont 三种使用姿势
 
 ### unicode
@@ -44,8 +42,6 @@ image
 **使用方法：**
  第一步：引入自定义字体 `font-face
 
-
-
 ```css
  @font-face {
    font-family: "iconfont";
@@ -58,8 +54,6 @@ image
 ```
 
 第二步：定义使用iconfont的样式
-
-
 
 ```css
 .iconfont {
@@ -74,8 +68,6 @@ image
 
 第三步：挑选相应图标并获取字体编码，应用于页面
 
-
-
 ```csharp
 <i class="iconfont">&#xe604;</i>
 ```
@@ -84,13 +76,9 @@ image
 
 ![img](https:////upload-images.jianshu.io/upload_images/100363-20bb7e440740f9b4?imageMogr2/auto-orient/strip|imageView2/2/w/800/format/webp)
 
-image
-
 其实它的原理也很简单，就是通过 `@font-face` 引入自定义字体(其实就是一个字体库)，它里面规定了`&#xe604` 这个对应的形状就长这企鹅样。其实类似于 '花裤衩'，在不同字体设定下长得是不同的一样。
 
 ![img](https:////upload-images.jianshu.io/upload_images/100363-13ba2bde1ee03ec8?imageMogr2/auto-orient/strip|imageView2/2/w/175/format/webp)
-
-image
 
 不过它的缺点也显而易见，`unicode`的书写不直观，语意不明确。光看``这个`unicode`你完全不知道它代表的是什么意思。这时候就有了 `font-class`。
 
@@ -104,15 +92,11 @@ image
 **使用方法：**
  第一步：拷贝项目下面生成的fontclass代码：
 
-
-
 ```undefined
 ../font_8d5l8fzk5b87iudi.css
 ```
 
 第二步：挑选相应图标并获取类名，应用于页面：
-
-
 
 ```jsx
 <i class="iconfont icon-xxx"></i>
@@ -122,11 +106,13 @@ image
 
 ![img](https:////upload-images.jianshu.io/upload_images/100363-546226e904d0587d?imageMogr2/auto-orient/strip|imageView2/2/w/800/format/webp)
 
-image.png
+它的主要原理其实是和 `unicode` 一样的，它只是多做了一步，将原先`&#xe604`这种写法换成了`.icon-QQ`，它在每个 class 的 before 属性中写了`unicode`,省去了人为写的麻烦。
 
-它的主要原理其实是和 `unicode` 一样的，它只是多做了一步，将原先`&#xe604`这种写法换成了`.icon-QQ`，它在每个 class 的 before 属性中写了`unicode`,省去了人为写的麻烦。如 `.icon-QQ:before { content: "\e604"; }`
+如 `.icon-QQ:before { content: "\e604"; }`
 
-相对于`unicode` 它的修改更加的方便与直观。但也有一个大坑，之前楼主一个项目中用到了两组`font-class` 由于没有做好命名空间，所有的class都是放在`.iconfont` 命名空间下的，一上线引发了各种雪崩问题，修改了半天，所以使用`font-class`一定要注意命名空间的问题。
+相对于`unicode` 它的修改更加的方便与直观。
+
+但也有一个大坑，之前楼主一个项目中用到了两组`font-class` 由于没有做好命名空间，所有的class都是放在`.iconfont` 命名空间下的，一上线引发了各种雪崩问题，修改了半天，所以使用`font-class`一定要注意命名空间的问题。
 
 ### symbol
 
@@ -143,15 +129,11 @@ image.png
 **使用方法：**
  第一步：拷贝项目下面生成的symbol代码：
 
-
-
 ```undefined
 引入  ./iconfont.js
 ```
 
 第二步：加入通用css代码（引入一次就行）：
-
-
 
 ```css
 <style type="text/css">
@@ -166,8 +148,6 @@ image.png
 
 第三步：挑选相应图标并获取类名，应用于页面：
 
-
-
 ```html
 <svg class="icon" aria-hidden="true">
     <use xlink:href="#icon-xxx"></use>
@@ -176,14 +156,11 @@ image.png
 
 使用svg-icon的好处是我再也不用发送`woff|eot|ttf|` 这些很多个字体库请求了，我所有的svg都可以内联在html内。
 
-
-
 ![img](https:////upload-images.jianshu.io/upload_images/100363-f3a8eb1f7c619264?imageMogr2/auto-orient/strip|imageView2/2/w/760/format/webp)
 
-image
+ 还有一个就是 svg 是一个真正的矢量，不管你再怎么的放缩它都不会失真模糊，而且svg可以控制的属性也更加的丰富，也能做出更加生动和复杂的图标。现在ui设计师平时都喜欢使用 sketch 来工作，只要轻松一键就能导出 svg 了，所以 svg 也更受设计师的青睐。[Inline SVG vs Icon Fonts ](https://link.jianshu.com?t=https://css-tricks.com/icon-fonts-vs-svg/) 这篇文章详细的比较了 `svg` 和 `icon-font`的优劣，大家可以去看看。
 
-
- 还有一个就是 svg 是一个真正的矢量，不管你再怎么的放缩它都不会失真模糊，而且svg可以控制的属性也更加的丰富，也能做出更加生动和复杂的图标。现在ui设计师平时都喜欢使用 sketch 来工作，只要轻松一键就能导出 svg 了，所以 svg 也更受设计师的青睐。[Inline SVG vs Icon Fonts ](https://link.jianshu.com?t=https://css-tricks.com/icon-fonts-vs-svg/) 这篇文章详细的比较了 `svg` 和 `icon-font`的优劣，大家可以去看看。PS：这里其实还用到了 `SVG Sprite` 技术。简单的理解就是类 svg 的似雪碧图，它在一个 svg 之中运用 symbol 标示了一个一个的 svg 图标，这样一个页面中我们遇到同样的 svg 就不用重复再画一个了，直接使用`<use xlink:href="#icon-QQ" x="50" y="50" />` 就能使用了，具体的细节可以看这篇文章开头的文章 [未来必热：SVG Sprite技术介绍](https://link.jianshu.com?t=http://www.zhangxinxu.com/wordpress/2014/07/introduce-svg-sprite-technology/)，在之后的文章中也会手摸手叫你自己如何制作 `SVG Sprite`。
+PS：这里其实还用到了 `SVG Sprite` 技术。简单的理解就是类 svg 的似雪碧图，它在一个 svg 之中运用 symbol 标示了一个一个的 svg 图标，这样一个页面中我们遇到同样的 svg 就不用重复再画一个了，直接使用`<use xlink:href="#icon-QQ" x="50" y="50" />` 就能使用了，具体的细节可以看这篇文章开头的文章 [未来必热：SVG Sprite技术介绍](https://link.jianshu.com?t=http://www.zhangxinxu.com/wordpress/2014/07/introduce-svg-sprite-technology/)，在之后的文章中也会手摸手叫你自己如何制作 `SVG Sprite`。
 
 
 
@@ -191,8 +168,6 @@ image
 
 我们有了图标，接下来就是如何在自己的项目中优雅的使用它了。
  之后的代码都是基于 vue 的实例(ps: react 也很简单，原理都是类似的)
-
-
 
 ```html
 //components/Icon-svg
@@ -271,8 +246,6 @@ Vue.component('icon-svg', IconSvg)
 
 我们发现`vue-cli`默认情况下会使用 `url-loader` 对svg进行处理，会将它放在`/img` 目录下，所以这时候我们引入`svg-sprite-loader` 会引发一些冲突。
 
-
-
 ```js
 //默认`vue-cli` 对svg做的处理，正则匹配后缀名为.svg的文件，匹配成功之后使用 url-loader 进行处理。
  {
@@ -294,8 +267,6 @@ Vue.component('icon-svg', IconSvg)
  代码如下
 
 ![img](https:////upload-images.jianshu.io/upload_images/100363-98ad3d61812e3279?imageMogr2/auto-orient/strip|imageView2/2/w/490/format/webp)
-
-image
 
 这样配置好了，只要引入svg之后填写类名就可以了
 
@@ -338,27 +309,19 @@ requireAll(req)
 
 ![img](https:////upload-images.jianshu.io/upload_images/100363-d3d152798999858b?imageMogr2/auto-orient/strip|imageView2/2/w/1156/format/webp)
 
-image
-
 ## 更进一步优化自己的svg
 
 首先我们来看一下 从 `阿里iconfont` 网站上导出的 svg 长什么样？
 
 ![img](https:////upload-images.jianshu.io/upload_images/100363-b0137c76f677ab36?imageMogr2/auto-orient/strip|imageView2/2/w/1200/format/webp)
 
-image
-
 没错虽然 iconfont 网站导出的 svg 内容已经算蛮精简的了，但你会发现其实还是与很多无用的信息，造成了不必要的冗余。就连 iconfont 网站导出的 svg 都这样，更不用说那些更在意 ui漂不漂亮不懂技术的设计师了(可能)导出的svg了。好在 `svg-sprite-loader`也考虑到了这点，它目前只会获取 svg 中 path 的内容，而其它的信息一概不会获取。生成 svg 如下图：
 
 ![img](https:////upload-images.jianshu.io/upload_images/100363-0998b6e83ee5c6be?imageMogr2/auto-orient/strip|imageView2/2/w/1146/format/webp)
 
-image
-
 但任何你在 path 中产生的冗余信息它就不会做处理了。如注释什么的
 
 ![img](https:////upload-images.jianshu.io/upload_images/100363-12a41677964b95fe?imageMogr2/auto-orient/strip|imageView2/2/w/1200/format/webp)
-
-image
 
 这时候我们就要使用另一个很好用的东西了-- [svgo](https://link.jianshu.com?t=https://github.com/svg/svgo)
 
@@ -428,3 +391,54 @@ font-class是unicode使用方式的一种变种，主要是解决unicode书写�
 ```jsx
  <i class="iconfont icon-user"></i>
 ```
+
+
+
+
+
+# Vue项目中使用图标的两种常用方式
+
+https://blog.csdn.net/u012456390/article/details/120179769
+
+https://www.jianshu.com/p/fadd72d01a7f
+
+https://www.cnblogs.com/chinabin1993/p/8184114.html
+
+https://blog.wbjiang.cn/article/170 vue项目中引入iconfont
+
+
+
+https://www.cnblogs.com/chinabin1993/p/8184296.html	
+
+https://blog.csdn.net/zxp2415983574/article/details/107150591
+
+在线比较推荐Symbol方式引入
+
+第一步：拷贝项目下面生成的symbol代码：
+`//at.alicdn.com/t/font_xxxxxxxxx.js`
+第二步：加入通用css代码（引入一次就行）：
+
+```
+<style type="text/css">
+.icon {
+   width: 1em; height: 1em;
+   vertical-align: -0.15em;
+   fill: currentColor;
+   overflow: hidden;
+}
+</style>
+```
+
+第三步：挑选相应图标并获取类名，应用于页面：
+```
+<svg class="icon" aria-hidden="true">
+<use xlink:href="#icon-xxx"></use>
+</svg>
+```
+
+
+
+
+# React使用iconfont的各种方式
+
+https://www.jianshu.com/p/bb8fa3dc6429

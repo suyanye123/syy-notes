@@ -189,9 +189,149 @@ newDom.style.background = 'red';
 <span v-bind:style="{'display':config.isHaveSearch ? 'block':'none'}" >动态绑定样式</span>
 ```
 
+### 6.vue动态绑定class的最常用几种方式： 
+
+ **第一种**：（最简单的绑定）
+
+1.绑定单个class
+
+ html部分：
+
+```
+ <div :class="{'active':isActive}"></div>
+```
+
+ js部分：判断是否绑定一个active
+
+```
+data() {
+    return {
+      isActive: true
+    };
+  }
+```
+
+结果渲染为：
+
+```
+<div class="active"></div>
+```
+
+ 
+
+2.若要绑定多个class，需要逗号隔开就行：（这里的activeTwo加不加引号都可以，也一样都能渲染，如下）
+
+```
+ <div class="activeOne" v-bind:class="{ activeTwo: isActive, 'activeThree': hasError }"></div>
+```
+
+js部分：判断是否绑定对应class
+
+```
+  data() {
+    return {
+      isActive: true,
+      hasError: true
+    };
+  }
+```
+
+结果渲染为：
+
+```
+<div class="activeOne activeTwo activeThree"></div>
+```
+
+ 
+
+**第二种：**（绑定的数据对象）
+
+```
+<div :class="classObject"></div>
+data: {
+  classObject: {
+    active: true,
+  }
+}
+```
+
+ 
+
+**第三种**：（绑定一个返回对象的计算属性）[
+](https://cn.vuejs.org/v2/guide/computed.html)
+
+```
+<div :class="classObject"></div>
+```
+
+[![复制代码](https://common.cnblogs.com/images/copycode.gif)](javascript:void(0);)
+
+```
+export default {
+  data() {
+    return {
+    isActive: true,
+    };
+  },
+  computed: {
+  classObject: function () {
+    return {
+      active: this.isActive,
+    }
+  }
+}
+```
+
+[![复制代码](https://common.cnblogs.com/images/copycode.gif)](javascript:void(0);)
+
+结果渲染为：
+
+```
+<div class="active"></div>
+```
+
+ 
+
+**第四种**：（单纯数组方法）
+
+```
+<div :class="[activeClass, errorClass]"></div>
+ data() {
+    return {
+      activeClass: "active",
+      errorClass: "disActive"
+    };
+  },
+```
+
+结果渲染为：
+
+```
+<div class="active disActive"></div>
+```
+
+ 
+
+**第五种：**（数组与三元运算符结合判断选择需要的class）
+
+```
+<div :class="[isActive?'active':'disActive']"></div>
+ data() {
+    return {
+      isActive: false,
+    };
+  },
+```
+
+结果渲染为：
+
+```
+<div class="disActive"></div>
+```
 
 
-### 6.v-if
+
+### 7.v-if
 
 使用template对元素进行包裹，不会影响DOM结构，但只能配合v-if，不能使用v-show
 
@@ -206,7 +346,7 @@ v-if 和 v-for 同时使用时存在bug
 
 
 
-### 7.vue动态定义图片相对路径
+### 8.vue动态定义图片相对路径
 
 当我在html模块或者css中引入图片的时候用相对路径，例：
 

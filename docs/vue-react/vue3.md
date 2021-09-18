@@ -441,9 +441,146 @@ shallowRef、shallowReactive
 //函数复用
 ```
 
+### 使用vuex
+
+> 先引用 vuex   import { useStore } from 'vuex'
+>
+> 然后setup里面  const store = useStore()
+>
+>
+> 然后就可以把 store 当成$store 那样使用了，可以用watch，也可以用 computed。
+>
+> 最后vue3的vuex的state，可以使用 reactive ，这样就不用 computed 了。如果想只读的话，可以加上 readonly
+
+```js
+//组件中
+import { watch } from 'vue'
+import { useStore } from 'vuex'
+export default {
+  setup (props, context) {
+    const $store = useStore()
+    watch(() => $store.state.demo.count, (val, old) => {
+      console.log(val, old)
+    })
+    return {}
+  }
+}
+```
+
+```js
+// use this file at setup function
+
+import { watch } from 'vue'
+import { useStore } from '@/store';
+import { useRouter } from 'vue-router';
+import { get } from 'lodash-es';
+
+/**
+ * Auth Guard 拦截
+ */
+export default function useAuth() {
+    const store = useStore()
+    const router = useRouter();
+
+    if (!get(router.currentRoute.value.meta, 'auth')) {
+        return {}
+    }
+
+    // 监听是否是 401 请求
+    watch(() => store.state.poppy.is401,
+        (newValue, oldValue) => {
+            if (newValue && !oldValue) {
+                router.push({
+                    name: 'user.login',
+                    query: {
+                        go: router.currentRoute.value.path
+                    }
+                }).then()
+            }
+        }, {
+            deep: true
+        }
+    );
+}
+```
 
 
 
+```js
+// 可以看出与vue2的写法有些区别，但是用法一样
+// 但是需要注意的是如果在创建项目时没有安装vuex 则需要自己安装 
+// 安装命令是 npm install vuex@next --save 
+// 这里需要注意命令的不同,安装的版本就不同
+import { createStore } from 'vuex'
+
+export default createStore({
+    state: { // 用来写要存储的状态（数据）
+        name: '张三',
+        age: 16
+    },
+    getters: { // 相当于vue中的计算属性
+        changeAge(state) {
+            return state.age + '岁'
+        } 
+    },
+    mutations: { // 修改state数据的唯一方法就是提交mutation
+        changeName(state, value) {
+            state.name = value
+        },
+
+        changeProducts(state, value=[]) {
+            state.products = value
+        }
+    },
+    actions: { // 异步处理数据的方法 通过提交mutation修改数据 不建议直接修改 这里直接修改也可以 但是当前情况下框架不完善 所以不建议直接修改
+        getProducts({commit}) {
+        setTimeout(() => {
+            commit('changeProducts', [{name: '这是一个商品'}])
+        }, 1000)
+        }
+    },
+    modules: { // 模块化方法
+    },
+    plugins: [] // 插件使用的位置
+})
+```
+
+```vue
+<template>
+  <div class="home">
+    {{name}} - {{age}}
+    <button @click="changeName('李四')">修改名字</button>
+    <button @click="getProducts">点击获取商品数据</button>
+    <ul>
+      <li v-for="(item, i) in products" :key="i">{{item.name}}</li>
+    </ul>
+  </div>
+</template>
+<script>
+// defineComponent 定义一个组件的方法 返回值是传递给函数的对象 也可以接收一个函数作为参数
+// 函数的名将可以作为组件的名字使用 该方法用在ts代码中会更有用，因为ts中可以注明配置项的参数类型
+// 在js中使用意义不是很大， 但是我们这里尽量尊重vue3
+// computed 计算属性 返回一个ref类型的数据 ref是vue3用来声明具有相应式的基本数据类型的方法
+import { defineComponent, computed } from 'vue'
+// useStore 可以将store中的数据和方法获取到的方法
+import { useStore } from 'vuex';
+export default defineComponent({
+  // vue3的组合api 运行在beforeCreate之前 为了方式this使用错误 setup中直接将this的值设置成了undefined 所以在setup中没有this
+  setup() {
+    let store = useStore()
+    // console.log(store.state);
+    // 在setup中定义的方法和数据如果需要在页面中使用 则需要先将数据或者方法返回
+    return {
+      name: computed(() => store.state.name),
+      age: computed(() => store.getters.changeAge),
+      changeName: (name) => store.commit('changeName', name), // 使用mutation方法的函数
+      getProducts: () => store.dispatch('getProducts'), // 调用actions函数的方法
+      products: computed(() => store.state.products)
+    }
+  }
+})
+</script>
+```
 
 
 
@@ -872,6 +1009,8 @@ Vue.createApp(HelloVueApp).mount('#hello-vue')
 ### defineComponent
 
 > 实现方式的 defineComponent 只是返回传递给它的对象。但是，在类型方面，返回的值具有一个合成类型的构造函数，用于手动渲染函数、 TSX 和 IDE 工具支持
+
+https://blog.csdn.net/weixin_39720860/article/details/113406363
 
 ```js
 import { defineComponent } from 'vue'
