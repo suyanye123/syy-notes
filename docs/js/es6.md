@@ -349,7 +349,7 @@ console.log(student.getName()); // Ming
 
 使用场景：多用于定义回调函数
 
-```
+```js
 // 形参的情况
 // 1.没有形参的时候
 let fun1 = () => console.log('我是箭头函数')
@@ -378,7 +378,7 @@ console.log(fun5(20, 30))
 1. 箭头函数没有自己 this，箭头函数的 this 不是调用的时候决定的，而是在定义的时候处在的对象就是它的 this（这个规则与常规函数的 this 指向相反）
 2. 扩展理解：箭头函数的 this 看外层的是否有函数，如果有，外层函数的 this 就是内部箭头函数的 this，如果没有，则 this 是 window
 
-```
+```js
 <button id="btn1">btn1</button>
 <button id="btn2">btn2</button>
 
@@ -395,7 +395,7 @@ btn2.onclick = () => {
 
 将箭头函数改为外层有函数的形式：
 
-```
+```js
 var obj = {
   name: '箭头函数',
   getNmae() {
@@ -409,7 +409,7 @@ var obj = {
 
 再举个栗子：
 
-```
+```js
 let a = {
   b: 'wy',
   c() {
@@ -425,7 +425,7 @@ a.c()() // wy
 
 箭头函数外层有函数c，和函数c的 this 一样。
 
-```
+```js
 var a = {
     b: 'wy',
     c: () => {
@@ -440,6 +440,14 @@ a.c() // ss
 
 
 
+#### 不定参
+
+```
+//箭头函数没有arguments
+```
+
+
+
 ### 2.6 三点运算符
 
 用途
@@ -448,7 +456,7 @@ a.c() // ss
 
 用来取代 arguments，但比 arguments 灵活，只能是最后部分形参参数
 
-```
+```js
 function foo(a, ...value) {
   console.log(value) // [7, 45, 22]
 }
@@ -459,7 +467,7 @@ foo(5, 7, 45, 22)
 
 2.扩展运算符
 
-```
+```js
 let arr = [1, 6]
 let arr1 = [2, 3, 4, 5]
 arr = [1, ...arr1, 6]
