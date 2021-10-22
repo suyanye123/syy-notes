@@ -72,7 +72,158 @@ map foreach
 
 ### 六、拷贝，浅拷贝有哪些方法
 
-浅拷贝： …展开 ， 
+浅拷贝： …展开 ，
+
+### 什么是浅拷贝？什么是深拷贝？
+
+浅拷贝：浅拷贝是创建一个新对象，这个对象有着原始对象属性值的一份精确拷贝。如果属性是基本类型，拷贝的就是基本类型的值，如果属性是引用类型，拷贝的就是内存地址 ，所以**如果其中一个对象改变了这个地址，就会影响到另一个对象**。
+
+深拷贝：深拷贝会将源对象从内存中完整的拷贝一份出来放在堆内存中，**修改源对象不会对新对象产生任何影响。**
+
+### 如何实现浅拷贝
+
+#### Object.assign
+
+```
+const source = {
+	a: 1,
+  b: 'i am b',
+  c: {
+    d: 'i am d',
+    e: 2,
+  }
+}
+const target = Object.assign({}, source);
+
+source.a = 11; // 修改源对象的基本类型值，
+console.log(target.a); // 1   TODO: 目标对象的基础类型值不会改变
+
+source.c.d = 'i am copy d'; // 修改源对象的引用类型，
+console.log(target.c.d); // i am copy d   TODO: 目标对象的引用类型值会改变
+```
+
+####  扩展运算符
+
+```
+const source = {
+	a: 1,
+  b: 'i am b',
+  c: {
+    d: 'i am d',
+    e: 2,
+  }
+}
+const target = {...source}
+
+source.a = 11; // 修改源对象的基本类型值，
+console.log(target.a); // 1   TODO: 目标对象的基础类型值不会改变
+
+source.c.d = 'i am copy d'; // 修改源对象的引用类型，
+console.log(target.c.d); // i am copy d   TODO: 目标对象的引用类型值会改变
+```
+
+#### 数组API
+
+```js
+//Array.prototype.slice
+const source = [{a: 1}, {b: 2}, {c: 3}];
+
+const target = source.slice(0,2); //  [{a: 1}, {b: 2}]
+
+source[0].a = 11;
+console.log(target[0].a); // 11   修改源对象的引用类型,目标对象的引用类型值会改变
+
+// Array.prototype.concat
+const source = [{a: 1}, {b: 2}, {c: 3}];
+
+const target = source.concat([{d: 4}]); //   [{a: 1}, {b: 2}, {c: 3}, {d: 4}];
+
+source[0].a = 11;
+console.log(target[0].a); // 11   修改源对象的引用类型,目标对象的引用类型值会改变
+```
+
+### 如何实现深拷贝？
+
+#### JSON.parse(JSON.stringify(...))
+
+```js
+const source = {
+	a: 1,
+  b: 'i am b',
+  c: {
+    d: 'i am d',
+    e: 2,
+  },
+  f: () => console.log('i am f'), // function
+  g: undefined,	// undefined
+  h: Symbol('i am h'), // Symbol
+  k: new Date(0),
+  l: /23232/,
+  m: NaN,
+  n: Infinity,
+}
+// 对象循环引用
+// source.o = source
+
+// 给对象添加不可枚举类型
+Object.defineProperty(source, 'j', {
+	value: 'i am j',
+  enumerable: false,
+})
+
+// 给对象添加Symbol类型的属性
+const p = Symbol.for('p')
+source[p] = 'i am p';
+
+const target = JSON.parse(JSON.stringify(source))
+
+source.a = 11; // 修改源对象的基本类型值，
+console.log(target.a); // 1   TODO: 目标对象的基础类型值不会改变
+
+source.c.d = 'i am copy d'; // 修改源对象的引用类型，
+console.log(target.c.d); // i am d  目标对象的引用类型值【不会】改变
+//当源对象中存在undefined、function等类型的值时，在copy过程会丢失该属性,源对象的属性是Symbol类型时，在copy过程会丢失该属性,无法拷贝对象的不可枚举类型,无法拷贝对象的原型链,无法拷贝Date引用类型，会变成字符串,拷贝RegExp类型的引用时会变成空对象,当源对象中有值为NaN、Infinity 类型时会出现序列化为null,当源对象中出现对象的循环引用问题，会直接报错. 在我们使用JSON API来实现深拷贝的时候会有很多限制，但是在项目中实现简单的对象copy还是最方便的方式之一。
+```
+
+#### MessageChannel实现
+
+```js
+//这个方法可以实现对象中不包含函数和symbol类型的拷贝
+function cloneByMessageChannel(sourceObj) {
+	return new Promise((resolve) => {
+  	const { port1, port2 } = new MessageChannel()
+    port1.onmessage = (ev) => {
+      resolve(ev.data)
+    }
+    port2.postMessage(sourceObj)
+  })
+}
+(async () => {
+	const targetObj = await cloneByMessageChannel(sourceObj)
+  console.log('targetObj', targetObj)
+})()
+```
+
+#### 自己实现一个深拷贝
+
+```
+function cloneDeeps(source) {
+	const target = {};
+  for(let key in source) {
+  	if (typeof source[key] === 'object') {
+     target[key] = cloneDeeps(source[key]);
+    } else {
+    	target[key] = source[key]
+    }
+  }
+  return target;
+}
+//上面按钮可以实现简单的深拷贝功能了，但是还有几个值得优化的地方
+1、当传入的对象是null，目前方法会返回{}
+2、当值为RegExp和Date类型的时候会返回{}
+3、没有兼容数组
+4、不可枚举类型不能拷贝
+```
 
 
 

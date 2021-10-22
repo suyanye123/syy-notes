@@ -490,3 +490,4 @@ HTML5 中的一些有趣的新特性：
 对本地离线存储的更好的支持
 新的特殊内容元素，比如 article、footer、header、nav、section
 新的表单控件，比如 calendar、date、time、email、url、search
+
