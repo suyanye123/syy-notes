@@ -1,3 +1,149 @@
+---
+sidebarDepth: 2
+
+---
+
+# 常用正则
+
+## 验证相关
+
+### 是否是金额（精确到分）
+
+```js
+/^(0|([1-9]\d*))(\.\d{1,2})?$/
+
+/(?:^[1-9]([0-9]+)?(?:\.[0-9]{1,2})?$)|(?:^(?:0){1}$)|(?:^[0-9]\.[0-9](?:[0-9])?$)/
+```
+
+### 是否是手机号
+
+```js
+/^1\d{10}$/
+
+/^1[3-9]\d{9}$/
+```
+
+### 是否是邮箱号
+
+```js
+/^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
+```
+
+### 是否是 QQ 号
+
+```js
+/^[1-9]{1}\d{4,11}$/;
+```
+
+### 是否是链接地址
+
+```js
+/^(https|http):\/\/[A-Za-z0-9-_]+\.[A-Za-z0-9]+[\/=\?%\-&_~`@[\]\':+!]*([^<>\"\"])*$/;
+```
+
+### 是否是身份证号码
+
+```js
+/(^\d{8}(0\d|11|12)([0-2]\d|30|31)\d{3}$)|(^\d{6}(18|19|20)\d{2}(0\d|11|12)([0-2]\d|30|31)\d{3}(\d|X|x)$)/;
+```
+
+## 格式相关
+
+### 344 格式手机号
+
+- 从左到右
+
+```js
+/(^\d{3}|\d{4}\B)/g;
+// 例：
+"15512341234".replace(/(^\d{3}|\d{4}\B)/g, "$1 ");
+```
+
+- 从右到左
+
+```js
+/\B(?=(?:\d{4})+$)/g;
+// 例：
+"15512341234".replace(/\B(?=(?:\d{4})+$)/g, " ");
+```
+
+### 隐藏手机号中间 4 位
+
+```js
+/(\d{3})\d{4}(\d{4})/;
+// 例：
+"15512341234".replace(/(\d{3})\d{4}(\d{4})/, "$1****$2");
+```
+
+##### 
+
+
+
+# 时间戳
+
+## 获取当前时间戳
+
+##### 第一种方法：(这种方法只精确到秒)
+
+```javascript
+var timestamp = Date.parse(new Date());
+```
+
+##### 第二种方法：(精确到毫秒)
+
+```javascript
+var timestamp=new Date().getTime()；
+```
+
+------
+
+## 时间戳转化为年月日小时分钟
+
+```js
+var date = new Date(newDate);
+var year = date.getFullYear();
+var month = date.getMonth() + 1;
+var day = date.getDate();
+if (month < 10) {
+    month = "0" + month;
+}
+if (day < 10) {
+    day = "0" + day;
+}
+var hours = date.getHours();
+if(hours < 10){
+hours = "0" + hours;
+}
+var minutes = date.getMinutes();
+if(minutes < 10){
+minutes = "0" + minutes;
+}
+
+var nowDate = year + "-" + month + "-" + day+ " "+ hours + ":" + minutes;
+```
+
+
+
+## [Moment.js](http://momentjs.cn/)
+
+##### 	日期格式化
+
+```js
+moment().format('MMMM Do YYYY, h:mm:ss a'); // 四月 29日 2021, 11:13:36 上午
+```
+
+##### 	相对时间
+
+```
+moment("20111031", "YYYYMMDD").fromNow(); // 9 年前
+moment("20120620", "YYYYMMDD").fromNow(); // 9 年前
+moment().startOf('day').fromNow();        // 11 小时前
+moment().endOf('day').fromNow();          // 13 小时内
+moment().startOf('hour').fromNow();       // 14 分钟前
+```
+
+
+
 ## **1.加载js || css || style**
 
 ```js
