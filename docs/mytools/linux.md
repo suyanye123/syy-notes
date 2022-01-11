@@ -1,5 +1,11 @@
 # Linux常用指令
 
+### 寻找文件
+
+```bash
+ find / -name config.php
+```
+
 ### 解压
 
 ```bash
@@ -97,6 +103,9 @@ sudo yum install yarn
 curl -sL https://rpm.nodesource.com/setup_14.x | sudo bash -
 sudo yum install -y nodejs
 
+#安装vi
+apt-get update	#更新源
+apt-get install vim		#下载安装vim
 ```
 
 ### CentOS7防火墙

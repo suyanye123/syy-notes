@@ -108,3 +108,29 @@ var decrypt = new JSEncrypt()//创建解密对象实例
   var uncrypted = decrypt.decrypt(encrypted)//解密之前拿公钥加密的内容
 ```
 
+
+
+
+
+### 难点
+
+#### 1.全局样式
+
+[清除浮动](https://blog.csdn.net/qq_44280574/article/details/108323859)
+
+```css
+//main.scss中
+.fr {
+  position: relative;
+  float: right;
+}
+.clearfix:after {
+  visibility: hidden;
+  display: block;
+  font-size: 0;
+  content: " ";
+  clear: both;
+  height: 0;
+}
+```
+
