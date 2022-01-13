@@ -3,7 +3,7 @@
 ### 寻找文件
 
 ```bash
- find / -name config.php
+find / -name config.php
 ```
 
 ### 解压
