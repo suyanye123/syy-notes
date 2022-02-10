@@ -1217,7 +1217,7 @@ for-in循环用来遍历对象属性。
 
 for-of循环用来遍历数据—例如数组中的值。
 
-or-of循环不仅支持数组，还支持大多数类数组对象，例如DOM [NodeList对象](https://developer.mozilla.org/en-US/docs/Web/API/NodeList)。
+for-of循环不仅支持数组，还支持大多数类数组对象，例如DOM [NodeList对象](https://developer.mozilla.org/en-US/docs/Web/API/NodeList)。
 
 for-of循环也支持字符串遍历，它将字符串视为一系列的Unicode字符来进行遍历
 
