@@ -2,15 +2,37 @@
 
 ### 难点及坑
 
-#### 1.autocomplete="off"在chrom中失效
+#### 1.密码自动填充
+
+> 设置autocomplete="off"在chrom中失效
 
 ```
 问题：在表单的输入框中，有时候我们并不希望点击输入框时，会出现提示信息。这时，在输入框中添加属性:autocomplete="off”，一般能达到目的。而在chrom里面就失效。
 失效的原因是：浏览器会根据输入框的input的type属性为password的时候，自动将用户名和密码框填充。
-解决方法：因为浏览器是否自动填充内容，根据type=password来判断的。此时先将作为密码的输入框的type设成text,当点击密码输入框的时候，将其type属性设为password,这样问题就解决了。
+
+解决方法1：因为浏览器是否自动填充内容，根据type=password来判断的。此时先将作为密码的输入框的type设成text,当点击密码输入框的时候，将其type属性设为password,这样问题就解决了。
+
+解决方法2：可以在不需要默认填写的input框中设置  autocomplete= "new-password"
 ```
 
-#### 2.element el-tree 数据回显 全选子节点解决方案
+```vue
+ <el-input autocomplete="off"
+                  v-model="modifyForm.confrimPassword"
+                  :maxlength="18"
+                  type="text"
+                  :placeholder="$t('modifyPassword.placeholder.confirmPassword')"
+                  @οnpaste="()=>{return false}"
+                  @οncοntextmenu="()=>{return false}"
+                  @οncοpy="''"
+                  @oncut="''">
+        </el-input>
+```
+
+
+
+#### 2.el-tree默认全选子节点
+
+>  el-tree 半选状态的父节点 ，数据回显，子节点会变成全选 
 
 element el tree 默认check-strictly 为false 也就是叶子节点和父节点是关联的状态 
 所以返回的数据只要包含父节点 子节点全部选中
@@ -243,9 +265,11 @@ accept=”audio/*”和 accept=”video/*” 属性 在 Webkit浏览器下也会
         ],
 ```
 
-#### 6.vue-router路由跳转created不执行，页面不刷新的解决办法
+#### 6.页面刷新created不执行
 
-当使用路由参数时，多个路由绑定同一个组件，再切换页面时，因为多个路由都渲染同个组件，此时不会销毁再创建组件而是会复用组件，这也就导致路由参数发生变化，但是页面不会刷新的问题
+> 页面刷新created不执行
+
+- 当使用路由参数时，多个路由绑定同一个组件，再切换页面时，因为多个路由都渲染同个组件，此时不会销毁再创建组件而是会复用组件，这也就导致路由参数发生变化，但是页面不会刷新的问题
 
 解决办法：
 可以通过vue-router 的钩子函数 beforeRouteEnter beforeRouteUpdate beforeRouteLeave 路由进入钩子
@@ -264,4 +288,4 @@ beforeRouteLeave(to, from, next) {
 }
 ```
 
-还有可能是因为设置了 keep-alive
+- 还有可能是因为在路由里设置了 keep-alive

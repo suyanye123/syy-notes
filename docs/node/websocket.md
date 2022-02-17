@@ -1,4 +1,6 @@
-# 关于websocket
+# websocket
+
+> https://www.ruanyifeng.com/blog/2017/05/websocket.html
 
 ## 背景分析:
 
@@ -12,12 +14,14 @@
 7.服务器关闭TCP连接
 
 HTTP协议是无状态的，服务器只会响应来自客户端的请求，但是它与客户端之间不具备持续连接。
-
+HTTP协议只能实现客户端请求，服务端响应的这种单项通信。
 当用户在浏览器上进行操作时，可以请求服务器上的api；但是反过来却不可能：服务器端发生了一个事件，无法将这个事件的信息实时主动地通知客户端。只有在客户端查询服务器当前状态时，所发生事件的信息才会从服务器传递到客户端。
 
 
 
 ## 那怎么去实时地知道服务器的状态呢？
+
+在WebSocket出现之前，一般通过两种方式来实现Web实时用：轮询机制和流技术；其中轮询有不同的轮询，还有一种叫Comet的长轮询。
 
 方法有两个：
 
@@ -39,6 +43,14 @@ WebSocket协议需要浏览器和服务器都支持才可以使用：
 
 支持WebSocket协议的服务器有：Node 0、Apach7.0.2、Nginx1.3
 
+其余的特点有：
+
+- 握手阶段采用 HTTP 协议。
+- 数据格式轻量，性能开销小。客户端与服务端进行数据交换时，服务端到客户端的数据包头只有2到10字节，客户端到服务端需要加上另外4字节的掩码。HTTP每次都需要携带完整头部。
+- 更好的二进制支持，可以发送文本，和二进制数据
+- 没有同源限制，客户端可以与任意服务器通信
+- 协议标识符是ws（如果加密，则是wss），请求的地址就是后端支持websocket的API。
+
 
 
 ## http 长连接和 websocket 的长连接区别
@@ -51,7 +63,7 @@ keep-alive双方并没有建立正真的连接会话，服务端可以在任何�
 
 
 
-## Socket.IO 的引入
+# Socket.IO 的引入
 
 Node.js上需要写一些程序，来处理TCP请求。
 
@@ -582,7 +594,7 @@ server {
 
 
 
-# WebSocket 简介
+## WebSocket 简介
 
 传统的客户端和服务器通信协议是HTTP：客户端发起请求，服务端进行响应，服务端从不主动勾搭客户端。
 
@@ -592,7 +604,7 @@ server {
 
 更完美的方式是使用WebSocket，浏览器原生支持，W3C标准协议，客户端和服务器建立持久性连接可以互发消息。
 
-# socket.io 简介
+## socket.io 简介
 
 socket.io 是一个类库，内部封装了WebSocket，可以在浏览器与服务器之间建立实时通信。
 
@@ -600,11 +612,9 @@ socket.io 是一个类库，内部封装了WebSocket，可以在浏览器与服�
 
 开发一个实时应用主要分两部分：服务端和客户端，socket.io分别提供了相应的npm包供我们方便地调用。
 
-接下来就通过一个生动形象且有趣的栗子分别介绍这两大块。
 
-现在假设李白，瑶，吕布，后羿，貂蝉5个人加入了一个叫 KPL 的房间，在文章结束时我们将拥有一个麻雀虽小五脏俱全的峡谷英雄在线聊天室
 
-# [服务端api](https://socket.io/docs/server-api/)
+## [服务端api](https://socket.io/docs/server-api/)
 
 首先安装socket.io提供的服务端npm包：
 
@@ -667,7 +677,33 @@ io.on('connect', client => { // client 即是连接上来的一个客户端
 
 服务端的功能到这基本上就开发完了。创建了一个房间，并在收到成员消息时立即同步给房间里的其他成员
 
-# [客户端api](https://socket.io/docs/client-api/)
+## [客户端api](https://socket.io/docs/client-api/)
+
+> https://developer.mozilla.org/zh-CN/docs/Web/API/WebSocket mdn文档
+
+- socket.on()方法：
+
+> socket.on()用于监听获取服务端（后端）发送过来的数据
+
+    - socket.on('monitorName', callBack)有两个参数：
+    
+        + monitorName：是监听的标识，是自定义的，只要和后端约定好可行了！！)
+    
+        + callBack：是一个回调函数，里面的参数就是后端发送过来的数据
+
+- socket.emit()方法：
+
+> socket.emit()用于向服务端（后端）发送数据
+>
+> socket.on()方法 和 socket.emit()方法 在前后端是成对出现的
+
+    - socket.emit('monitorName', sendData)有两个参数：
+    
+        + monitorName：是监听的标识，是自定义的，只要和后端约定好可行了！！)
+    
+        + sendData：可以是字符串，也可以是{}JSON对象，这是向后端发送过去的数据
+
+
 
 socket.io 为客户端提供了另一个npm包，直接安装
 
@@ -679,38 +715,54 @@ npm i socket.io-client
 
 ```js
 import io from 'socket.io-client'
-
 const socket = io() // 建立连接
 ```
 
-向服务器发送消息
+```JS
+//js，使用webSocket的代码都在这里。做的事情就是给页面的元素绑定事件。
+//然后创建WebSocket对象，监听对象的连接、接收消息、关闭等事件，将数据反馈到页面中
 
-```diff
-  const socket = io()
-+ socket.emit('talk', '我打野，不给就送')
-```
+const msgBox = document.getElementById("msg-need-send")
+const sendBtn = document.getElementById("send-btn")
+const exit = document.getElementById("exit")
+const receiveBox = document.getElementById("receive-box")
 
-接收服务器发来的消息
+// 创建一个webSocket对象
+const ws = new WebSocket("ws://127.0.0.1:3000/websocket/test")
+ws.onopen = e => {
+  // 连接后监听
+  console.log(`WebSocket 连接状态： ${ws.readyState}`)
+}
 
-```diff
-  const socket = io()
-+ socket.on('talk', message => {
-+ })
-```
-
-李白看到了瑶的消息，强忍住问候对方家人的冲动，像哄那啥似地说道：
-
-```diff
-  socket.on('talk', message => {
-+   socket.emit('talk', '你买个石头骑在我头上他不香么')
+ws.onmessage = data => {
+  // 当服务端返回数据的时候，放到页面里
+  receiveBox.innerHTML += `<p>${data.data}</p>`
+  receiveBox.scrollTo({
+    top: receiveBox.scrollHeight,
+    behavior: "smooth"
   })
+}
+
+ws.onclose = data => {
+  // 监听连接关闭
+  console.log("WebSocket连接已关闭")
+  console.log(data);
+}
+
+sendBtn.onclick = () => {
+  // 点击发送按钮。将数据发送给服务端
+  ws.send(msgBox.value)
+}
+exit.onclick = () => {
+  // 客户端主动关闭连接
+  ws.close()
+}
 ```
 
-客户端的功能到这基本上也开发完了。核心api就是on和emit用于收发消息，既简单又优雅。
 
-# 最后
 
-至此一个可以实时发送接收消息的聊天室就完成了，虽然简陋，但核心功能完备。
+## **总结**
 
-瑶最终倔强地打了野，李白选择了上路，3分钟被对面捶到高地，后羿在家里等鸟，吕布和貂蝉躲在蓝buff旁边的草丛里聊天，就这样在李白和瑶互相拉票举报对方的全局消息中游戏结束
+上边简单实现了一个webSocket通信。实际的东西还有很多，比如webSocket扩展，心跳检测，数据加密，身份认证等知识点。
 
+https://www.cnblogs.com/chyingp/p/websocket-deep-in.html

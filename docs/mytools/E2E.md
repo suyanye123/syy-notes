@@ -628,3 +628,13 @@ let res = await request(server).get('/');
 ### 参考源码
 
 [koa-test](https://github.com/michaelliao/learn-javascript/tree/master/samples/node/web/test/koa-test)
+
+
+
+## E2E
+
+https://www.wenjiangs.com/doc/haerjhafgasdfs
+
+
+
+https://www.zhihu.com/question/51764943
