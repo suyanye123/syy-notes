@@ -1,6 +1,18 @@
 # Typescript
 
-类型
+### 类型推论
+
+> TypeScript 会在没有明确的指定类型的时候推测出一个类型，这就是类型推论。
+
+**如果定义的时候没有赋值，不管之后有没有赋值，都会被推断成 `any` 类型而完全不被类型检查**：
+
+```js
+let myFavoriteNumber;
+myFavoriteNumber = 'seven';
+myFavoriteNumber = 7;
+```
+
+### 基础 类型
 
 - any	任意类型，会传染
 - unknown    任意类型，安全的any，不会传染
