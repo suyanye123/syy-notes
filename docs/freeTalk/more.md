@@ -2,7 +2,9 @@
 
 JS数据类型
 
-number，string，boolean，object，null，undefined ，ES6 中添加了一种原始数据类型 symbol，ES7新增bigInt。
+number，string，boolean，null，undefined ，ES6 中添加了一种原始数据类型 symbol，ES7新增bigInt。
+
+object，array，function  引用数据类型
 
 什么是BFC：
 
@@ -90,7 +92,7 @@ map foreach
 
 浅拷贝： …展开 ，
 
-### 什么是浅拷贝？什么是深拷贝？
+### 什么是浅拷贝？什么是深拷贝？E:\syy-template\src\pages\other\index.vue
 
 浅拷贝：浅拷贝是创建一个新对象，这个对象有着原始对象属性值的一份精确拷贝。如果属性是基本类型，拷贝的就是基本类型的值，如果属性是引用类型，拷贝的就是内存地址 ，所以**如果其中一个对象改变了这个地址，就会影响到另一个对象**。
 

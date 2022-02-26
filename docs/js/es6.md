@@ -224,7 +224,8 @@ console.log(arr2)
 let：声明一个变量
 
 - 在块级作用域内有效
-- 不能重复声明
+  - 不能重复声明
+
 - 不会预处理，不存在变量提升
 
 const：定义一个常量
@@ -547,7 +548,7 @@ Symbol.iterator：对象的 Symbol.iterator 属性，指向该对象的默认遍
 
 
 
-### 2.10 iterator 接口机制
+### 2.10 iterator 接口机制 迭代器
 
 iterator 是一种接口机制，为各种不同的数据结构提供统一的访问机制
 

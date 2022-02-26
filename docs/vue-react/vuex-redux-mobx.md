@@ -169,3 +169,299 @@ const store = new Vuex.Store({
 
 ```
 
+
+
+
+
+## 二、Redux
+
+###  redux 工作流程
+
+![image-20200826085826481](https://img-blog.csdnimg.cn/20200830142119865.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQwNTA4ODMy,size_16,color_FFFFFF,t_70#pic_center)
+
+### redux 的三个核心概念
+
+> redux三大核心  
+>
+> 1.单一数据源store
+>
+> 整个应用的state被存储在一棵object tree中，并且这个object  tree只存在于唯一一个store中
+>
+> 通过creatStore 来构建 store
+>
+> 通过 subscribe来注册监听
+>
+> 2.state是只读的，唯一改变state的方法就是触发action
+>
+> ```
+> store.dispatch({type:'COMPLETE_TODO',index:1})
+> ```
+>
+> 3.使用纯函数reducer来执行修改 
+>
+> 为了描述action如何改变state tree，你需要去编写reducers
+>
+> reducers只是一些纯函数，接受先前的state和action，并返回新的state
+>
+> 响应发送过来的action，函数接受两个参数，一个是初始化state，一个是发送过来的action，必须有return返回值
+
+#### 8.3.1 action
+
+1. 标识要执行行为的对象（**只是描述了有事情要发生，并没有描述如何去更新 state**）
+2. 包含2个方面的属性：
+   - type：标识属性，值为字符串，唯一，必要属性
+   - data：数据属性，值类型任意，可选属性
+3. 例子：
+
+```js
+const action = {
+  type: 'INCREMENT',
+  data: 2
+}
+```
+
+1. **Action Creator（创建 action 的工厂函数）**
+
+```js
+export const increment = (number) => ({type: 'INCREMENT', data: number})
+```
+
+#### 8.3.2 reducer
+
+1. **根据老的 state 和 action，产生新的 state** 的**纯函数**
+2. 例子：
+
+```js
+export default function counter(state=0, action) {
+  switch (action.type) {
+    case 'INCREMENT':
+      return state + action.data
+    case 'DECREMENT':
+      return state - action.data
+    default:
+      return state
+  }
+}
+```
+
+1. 注意
+   - **返回一个新的状态 state 给 store**
+   - **不要修改原来的状态**
+
+#### 8.3.3 store
+
+1. **将 state，action 与 reducer 联系在一起的对象**
+2. 如何得到此对象？
+
+```js
+import {createStore} from 'redux'
+import reducer from './reducers'
+
+const store = createStore(reducer)
+```
+
+1. 此对象的功能？
+   - getState()：得到 state
+   - dispatch(action)：分发 action，触发 reducer 调用，产生新的 state
+   - subscribe(listener)：注册监听，当产生了新的 state 时，自动调用
+
+**问题**
+
+1.redux 与 react 组件的代码耦合度太高
+
+2.编码不够简洁（经常重复写 this.props.store）
+
+### react-redux
+
+####  理解
+
+1. 一个 react 插件库
+2. 专门用来简化 react 应用中使用的 redux
+
+####  React-Redux 将所有组件分成两大类
+
+1.UI 组件
+
+- 只负责 UI 的呈现，不带有任何业务逻辑
+- 通过 props 接收数据（一般数据和函数）
+- **不使用任何 Redux 的 API**
+- **一般保存在 components 文件夹下**
+
+2.容器组件
+
+- 负责管理数据和业务逻辑，不负责 UI 的呈现
+- **使用 Redux 的 API**
+- **一般保存在 containers 文件夹下**
+
+####  相关 API
+
+1.**Provider：让所有组件都可以得到 state 数据**
+
+```jsx
+import {Provider} from 'react-redux'
+
+<Provider store={store}>
+  <App />
+</Provider>
+```
+
+2.**connect()：用于包装 UI 组件生成容器组件**
+
+将 UI 组件与 Redux 关联起来生成一个容器组件，为了向 UI 组件中传递 props 属性。
+
+Provider 内部的组件想要获取到 redux 中的数据和方法，就必须要用 connect 进行一层包裹封装。内部轻松获得 state 的数据，并为 actionCreator 的函数调用 dispatch。
+
+```
+import {connect} from 'react-redux'
+
+// 用connect包装Counter组件再返回出去
+export default connect(
+  mapStateToprops, // 是个回调函数，将状态映射成属性，返回对象
+  mapDispatchToProps // 是个对象，包含actions中的方法（将在内部被转换成调用dispatch的函数）
+)(Counter)
+```
+
+3.mapStateToprops()：将保存在 redux 中的数据（即 state 对象）转换为 UI 组件的标签属性props
+
+```
+const mapStateToprops = function (state) {
+  return {
+    value: state
+  }
+}
+```
+
+4.mapDispatchToProps()：将分发 action 的函数转换为 UI 组件的标签属性 props
+
+可以直接指定为 actions 对象或包含多个 action 方法的对象
+
+```
+// 包含多个 action 方法的对象，mapDispatchToProps即{increment, decrement}
+import {increment, decrement} from '../redux/actions'
+// 或 指定为 actions 对象
+import * as mapDispatchToProps from '../redux/actions'
+```
+
+**问题**
+
+1.redux 默认是**不能进行异步处理的**
+
+2.应用中又需要在 redux 中执行异步任务（ajax，定时器）
+
+###  redux 异步编程
+
+下载 redux 插件（异步中间件）：npm install --save redux-thunk
+
+store.js 中应用
+
+```
+import {createStore, applyMiddleware} from 'redux'
+import thunk from 'redux-thunk'
+
+const store = createStore(
+  counter,
+  applyMiddleware(thunk) // 应用异步中间件
+)
+```
+
+actions.js 中添加异步 action
+
+```
+export const incrementAsync = (number) => {
+  return dispatch => { // 异步action会返回一个函数
+    // 异步的代码必须被封装到action中
+    setTimeout(() => {
+      // 1s后才去分发一个同步的action（dispatch一个同步action）
+      dispatch(increment(number))
+    }, 1000)
+  }
+}
+```
+
+然后在 UI组件的 propTypes 和容器组件的 connect() 中添加对应的异步 action 即可。
+
+
+
+### 核心 API
+
+####  createStore
+
+1. 作用：创建包含指定 reducer 的 store 对象
+2. 编码 store.js：
+
+```js
+import {createStore} from 'redux'
+import counter from './reducers/counter'
+
+const store = createStore(counter)
+```
+
+####  store 对象
+
+1. 作用：redux 库最核心的管理对象
+2. 它内部维护着：state、reducer
+3. 核心方法：getState()，dispatch()，subscribe(listener)
+4. 编码 jsx：
+
+```
+store.getState() // 得到store中存储的state数据
+store.dispatch({type: 'INCREMENT', data: number}) // 分发action对象，通知reducer更新state数据
+store.subscribe(render) // 订阅监听，store中的状态变化就会调用进行重绘
+```
+
+#### applyMiddleware()
+
+1.作用：应用上基于 redux 的中间件（插件库）
+
+2.编码 store.js：
+
+```
+import {createStore, applyMiddleware} from 'redux'
+import thunk from 'redux-thunk'  // redux异步中间件
+
+const store = createStore(
+  counter,
+  applyMiddleware(thunk) // 应用上异步中间件
+)
+```
+
+#### combineReducers()
+
+1.作用：合并多个 reducer 函数
+
+2.编码 reduces.js：
+
+```
+export default combineReducers({
+  user,
+  chatUser,
+  chat
+})
+```
+
+
+
+
+
+###  redux 调试工具
+
+安装 chrome 浏览器插件：redux-devtools
+
+> 遇到的问题：下载 2.15.1 老版本后报错：*TypeError:* *Cannot* *read* *property* *'state'* *of* undefined，下载最新版本 2.17.0 后解决
+
+要想能使用调试工具还需要在项目中下载工具依赖包：npm install --save-dev redux-devtools-extension
+
+编码 store.js：
+
+```
+import { composeWithDevTools } from 'redux-devtools-extension'
+
+const store = createStore(
+  counter,
+  composeWithDevTools(applyMiddleware(thunk))
+)
+```
+
+
+
+## 
