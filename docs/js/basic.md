@@ -383,7 +383,7 @@ function bubble(e) {
 
 实现：
 
-```
+```js
 <input type="button" name="" id="btn" value="添加" />
 <ul id="ul1">
   <li>1</li>
@@ -998,7 +998,7 @@ await只能用在async函数中，否则会报错。
 
 **关键**：**将父类的一个实例对象作为子类的原型**
 
-```
+```js
 function Parent() {
   this.name = 'wo'
   this.gender = '男'
@@ -1043,7 +1043,7 @@ console.log(child2.list) // [1, 2, 3, 4]
 
 **关键**：**在子类型构造函数中通过 call 调用父类型构造函数**
 
-```
+```js
 function Parent(name, age) {
   this.name = name
   this.age = age
@@ -1068,7 +1068,7 @@ child.sayHi() // Uncaught TypeError:child.sayHi is not a function
 
 组合上述两种方法，用**原型链**实现对原型属性和方法的继承，用**构造函数**技术来实现实例属性的继承。（常用）
 
-```
+```js
 function Parent(name) {
   this.name = name
 }
@@ -1103,7 +1103,7 @@ c.say() // say
 
 是组合式的优化
 
-```
+```js
 var Parent = {
   name: 'jacky',
   age: 22,
@@ -1123,7 +1123,7 @@ console.log(child2.courses) //  ["前端", "后端", "全栈"]
 
 ### Object.create() 也可以替换为 ES5 的写法
 
-```
+```js
 function create(o) {
     function F() {} // 创建一个空的构造函数
     F.prototype = o // 原型指向o
@@ -1135,7 +1135,7 @@ function create(o) {
 
 仅仅就是把组合式中的 new Parent() 替换为了原型式 Object.create()，这样就解决了引用类型值的属性会共享的问题
 
-```
+```js
 function Parent(name, courses) {
   this.name = name
   this.courses = courses
@@ -1166,7 +1166,7 @@ console.log(c2.courses) // [1]
 
 使用场景：专门为对象来做某种固定方式的增强。
 
-```
+```js
 function createAnother(o) {
   var clone = Object.create(o)
   clone.say = function () {
@@ -1198,7 +1198,7 @@ child2.say() // say
 
 借用**寄生式**实现封装，**组合式**实现继承。（**构造函数**（call）传递参数并实现继承父类自身属性/方法+ **原型式**（Object.create()）实现继承父类原型的属性/方法）
 
-```
+```js
 function Parent(name) {
     this.name = name
 }
@@ -1241,7 +1241,7 @@ c.eat() // eat
 
 还可以这样写：
 
-```
+```js
 function Parent(value) {
   this.val = value
 }
@@ -1271,7 +1271,7 @@ child instanceof Parent // true
 
 ### 7、ES6 extends 继承（最优方式）
 
-```
+```js
 class Father {
   constructor(name, age) {
     this.name = name
@@ -1317,6 +1317,10 @@ son.getInfo() // jacky 22 前端开发
 2. ES6 的继承是先创建父类的实例对象 this，再用子类的构造函数修改 this。
 3. 因为子类没有自己的 this 对象，所以必须先调用父类的 super() 方法。
 
+
+
+
+
 ## 8.call、apply、prototype
 
 
@@ -1342,7 +1346,7 @@ ES6提供了一些列内置函数，以便更为直接地访问操纵原型。
 - Object.getPrototypeOf 获得一个对象的原型
 - Object.setPrototypeOf 设置一个对象的原型；
 
-```
+```js
 var cat = {
   say() {
     console.log("meow~");
