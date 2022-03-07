@@ -183,7 +183,7 @@ watch: {
     // 初始化时，让handler调用一次，默认为false
     immediate: true,
     // WatchOptionsWithHandler，当isHot发生改变时调用handler，返回新值与旧值
-      handler(newvalue, oldvalue) {},
+     handler(newvalue, oldvalue) {},
     },
 },
 // 监视属性第二种写法
