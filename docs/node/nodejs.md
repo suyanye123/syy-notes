@@ -1,3 +1,13 @@
+# Node
+
+> 设置npm的registry
+>
+> `npm config set registry http://registry.npmjs.org` 原地址
+>
+> `npm config set registry https://registry.npm.taobao.org npm info underscore ` 切换淘宝
+>
+> `npm --registry https://registry.npm.taobao.org info underscore`
+
 ## 基本模块
 
 因为Node.js是运行在服务区端的JavaScript环境，服务器程序和浏览器程序相比，最大的特点是没有浏览器的安全限制了，而且，服务器程序必须能接收网络请求，读写文件，处理二进制内容，所以，Node.js内置的常用模块就是为了实现基本的服务器功能。这些模块在浏览器环境中是无法被执行的，因为它们的底层代码是用C/C++在Node.js运行环境中实现的。

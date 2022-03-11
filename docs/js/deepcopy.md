@@ -74,7 +74,7 @@ console.log(obj) // {username: 'wy', info: {num: 102}}
 
 与 Object.assign() 相似，**当数组中的元素均为一维是深拷贝，数组中元素一维以上是值的引用**
 
-```
+```js
 let arr = [1, 3, {username: 'wy'}, [4]]
 
 // 如果不传参,相当于拷贝了一份
@@ -107,7 +107,7 @@ slice(idx1, idx2)
 
 同样，**当数组中的元素均为一维是深拷贝，数组中元素一维以上是值的引用**
 
-```
+```js
 let arr = [1, 3, {username: 'wy'}, [4]]
 // 返回截取的数组片段
 let arr2 = arr.slice(0, 2)
@@ -145,7 +145,7 @@ console.log(arr) // [1, 3, {username: 'wd'}, [4, "test"]]
 1. **typeOf 返回的数据类型：**String，Number，Boolean，Undefined，Object（null也会返回一个Object，因为null默认是一个空对象），Function
 2. Object.prototype.toString()
 
-```
+```js
 let result = 'abc'
 console.log(Object.prototype.toString.call(result)) // [object String]
 result = null
@@ -155,7 +155,7 @@ console.log(Object.prototype.toString.call(result)) // [object Array]
 console.log(Object.prototype.toString.call(result).slice(8, -1)) // Array
 ```
 
-```
+```js
 let obj = {username: 'wy', age: 18}
 for(let i in obj) {
   console.log(i) // username age
@@ -168,7 +168,7 @@ for(let i in arr) {
 
 完整实现深度克隆：
 
-```
+```js
 // 定义检测数据类型的功能函数
 function checkedType(target) {
   return Object.prototype.toString.call(target).slice(8, -1)
@@ -216,7 +216,7 @@ console.log(obj, obj2) //{username: "wy", age: 18} {username: "wd", age: 18}
 
 ### 2. JSON.parse(JSON.stringify())
 
-```
+```js
 let arr = [1, 3, {username: 'wy'}]
 // 相当于拷贝了一份
 let arr2 = JSON.parse(JSON.stringify(arr))
@@ -235,7 +235,7 @@ console.log(arr, arr2) // [1, 3, {username: 'wy'}] [1, 3, {username: 'wd'}]
 
 更重要的是，这种方法只能克隆原始对象自身的值，不能克隆它继承的值，参考如下代码：
 
-```
+```js
 var clone = function (obj) {
   return JSON.parse(JSON.stringify(obj));
 }

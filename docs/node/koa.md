@@ -6,7 +6,7 @@
 
 Express是第一代最流行的web框架，它对Node.js的http进行了封装，用起来如下：
 
-```
+```js
 var express = require('express');
 var app = express();
 
@@ -21,7 +21,7 @@ app.listen(3000, function () {
 
 虽然Express的API很简单，但是它是基于ES5的语法，要实现异步代码，只有一个方法：回调。如果异步嵌套层次过多，代码写起来就非常难看：
 
-```
+```js
 app.get('/test', function (req, res) {
     fs.readFile('/file1', function (err, data) {
         if (err) {
@@ -44,7 +44,7 @@ app.get('/test', function (req, res) {
 
 随着新版Node.js开始支持ES6，Express的团队又基于ES6的generator重新编写了下一代web框架koa。和Express相比，koa 1.0使用generator实现异步，代码看起来像同步的：
 
-```
+```js
 var koa = require('koa');
 var app = koa();
 
@@ -59,7 +59,7 @@ app.listen(3000);
 
 用generator实现异步比回调简单了不少，但是generator的本意并不是异步。Promise才是为异步设计的，但是Promise的写法……想想就复杂。为了简化异步代码，ES7（目前是草案，还没有发布）引入了新的关键字`async`和`await`，可以轻松地把一个function变为异步模式：
 
-```
+```js
 async function () {
     var data = await fs.read('/file1');
 }
@@ -73,7 +73,7 @@ koa团队并没有止步于koa 1.0，他们非常超前地基于ES7开发了koa2
 
 koa2的代码看上去像这样：
 
-```
+```js
 app.use(async (ctx, next) => {
     await next();
     var data = await doReadFile();
@@ -92,7 +92,7 @@ app.use(async (ctx, next) => {
 
 首先，我们创建一个目录`hello-koa`并作为工程目录用VS Code打开。然后，我们创建`app.js`，输入以下代码：
 
-```
+```js
 // 导入koa，和koa 1.x不同，在koa2中，我们导入的是一个class，因此用大写的Koa表示:
 const Koa = require('koa');
 
@@ -113,7 +113,7 @@ console.log('app started at port 3000...');
 
 对于每一个http请求，koa将调用我们传入的异步函数来处理：
 
-```
+```js
 async (ctx, next) => {
     await next();
     // 设置response的Content-Type:
@@ -133,7 +133,7 @@ async (ctx, next) => {
 
 方法一：可以用npm命令直接安装koa。先打开命令提示符，务必把当前目录切换到`hello-koa`这个目录，然后执行命令：
 
-```
+```bash
 C:\...\hello-koa> npm install koa@2.0.0
 ```
 
@@ -141,7 +141,7 @@ npm会把koa2以及koa2依赖的所有包全部安装到当前目录的node_modu
 
 方法二：在`hello-koa`这个目录下创建一个`package.json`，这个文件描述了我们的`hello-koa`工程会用到哪些包。完整的文件内容如下：
 
-```
+```js
 {
     "name": "hello-koa2",
     "version": "1.0.0",
@@ -216,7 +216,7 @@ app started at port 3000...
 
 还可以直接用命令`node app.js`在命令行启动程序，或者用`npm start`启动。`npm start`命令会让npm执行定义在`package.json`文件中的start对应命令：
 
-```
+```json
 "scripts": {
     "start": "node app.js"
 }
@@ -226,7 +226,7 @@ app started at port 3000...
 
 让我们再仔细看看koa的执行逻辑。核心代码是：
 
-```
+```js
 app.use(async (ctx, next) => {
     await next();
     ctx.response.type = 'text/html';
@@ -242,7 +242,7 @@ app.use(async (ctx, next) => {
 
 例如，可以用以下3个middleware组成处理链，依次打印日志，记录处理时间，输出HTML：
 
-```
+```js
 app.use(async (ctx, next) => {
     console.log(`${ctx.request.method} ${ctx.request.url}`); // 打印URL
     await next(); // 调用下一个middleware
@@ -266,7 +266,7 @@ middleware的顺序很重要，也就是调用`app.use()`的顺序决定了middl
 
 此外，如果一个middleware没有调用`await next()`，会怎么办？答案是后续的middleware将不再执行了。这种情况也很常见，例如，一个检测用户权限的middleware可以决定是否继续处理请求，还是直接返回403错误：
 
-```
+```js
 app.use(async (ctx, next) => {
     if (await checkUserPermission(ctx)) {
         await next();
@@ -290,7 +290,7 @@ app.use(async (ctx, next) => {
 
 正常情况下，我们应该对不同的URL调用不同的处理函数，这样才能返回不同的结果。例如像这样写：
 
-```
+```js
 app.use(async (ctx, next) => {
     if (ctx.request.path === '/') {
         ctx.response.body = 'index page';
@@ -336,7 +336,7 @@ app.use(async (ctx, next) => {
 
 接下来，我们修改`app.js`，使用`koa-router`来处理URL：
 
-```
+```js
 const Koa = require('koa');
 
 // 注意require('koa-router')返回的是函数:
@@ -426,7 +426,7 @@ app.use(bodyParser());
 
 现在我们就可以处理post请求了。写一个简单的登录表单：
 
-```
+```js
 router.get('/', async (ctx, next) => {
     ctx.response.body = `<h1>Index</h1>
         <form action="/signin" method="post">
@@ -488,7 +488,7 @@ url2-koa/
 
 我们先在`controllers`目录下编写`index.js`：
 
-```
+```js
 var fn_index = async (ctx, next) => {
     ctx.response.body = `<h1>Index</h1>
         <form action="/signin" method="post">
@@ -534,7 +534,7 @@ module.exports = {
 
 现在，我们修改`app.js`，让它自动扫描`controllers`目录，找到所有`js`文件，导入，然后注册每个URL：
 
-```
+```js
 // 先导入fs模块，然后用readdirSync列出文件
 // 这里可以用sync是因为启动时只运行一次，不存在性能问题:
 var files = fs.readdirSync(__dirname + '/controllers');
@@ -570,7 +570,7 @@ for (var f of js_files) {
 
 如果上面的大段代码看起来还是有点费劲，那就把它拆成更小单元的函数：
 
-```
+```js
 function addMapping(router, mapping) {
     for (var url in mapping) {
         if (url.startsWith('GET ')) {
@@ -609,7 +609,7 @@ addControllers(router);
 
 最后，我们把扫描`controllers`目录和创建`router`的代码从`app.js`中提取出来，作为一个简单的middleware使用，命名为`controller.js`：
 
-```
+```js
 const fs = require('fs');
 
 function addMapping(router, mapping) {
@@ -631,7 +631,7 @@ module.exports = function (dir) {
 
 这样一来，我们在`app.js`的代码又简化了：
 
-```
+```js
 ...
 
 // 导入controller middleware:
@@ -661,7 +661,7 @@ Nunjucks是什么东东？其实它是一个模板引擎。
 
 模板引擎就是基于模板配合数据构造出字符串输出的一个组件。比如下面的函数就是一个模板引擎：
 
-```
+```js
 function examResult (data) {
     return `${data.name}同学一年级期末考试语文${data.chinese}分，数学${data.math}分，位于年级第${data.ranking}名。`
 }
@@ -669,7 +669,7 @@ function examResult (data) {
 
 如果我们输入数据如下：
 
-```
+```js
 examResult({
     name: '小明',
     chinese: 78,
@@ -704,7 +704,7 @@ examResult({
 
 模板还需要能执行一些简单逻辑，比如，要按条件输出内容，需要if实现如下输出：
 
-```
+```js
 {{ name }}同学，
 {% if score >= 90 %}
     成绩优秀，应该奖励
@@ -767,7 +767,7 @@ use-nunjucks/
 
 紧接着，我们要编写使用Nunjucks的函数`render`。怎么写？方法是查看Nunjucks的[官方文档](http://mozilla.github.io/nunjucks/)，仔细阅读后，在`app.js`中编写代码如下：
 
-```
+```js
 const nunjucks = require('nunjucks');
 
 function createEnv(path, opts) {
@@ -808,33 +808,33 @@ var env = createEnv('views', {
 
 我们编写一个`hello.html`模板文件，放到`views`目录下，内容如下：
 
-```
+```html
 <h1>Hello {{ name }}</h1>
 ```
 
 然后，我们就可以用下面的代码来渲染这个模板：
 
-```
+```js
 var s = env.render('hello.html', { name: '小明' });
 console.log(s);
 ```
 
 获得输出如下：
 
-```
+```html
 <h1>Hello 小明</h1>
 ```
 
 咋一看，这和使用JavaScript模板字符串没啥区别嘛。不过，试试：
 
-```
+```js
 var s = env.render('hello.html', { name: '<script>alert("小明")</script>' });
 console.log(s);
 ```
 
 获得输出如下：
 
-```
+```jsx
 <h1>Hello &lt;script&gt;alert("小明")&lt;/script&gt;</h1>
 ```
 
@@ -842,7 +842,7 @@ console.log(s);
 
 此外，可以使用Nunjucks提供的功能强大的tag，编写条件判断、循环等功能，例如：
 
-```
+```jsx
 <!-- 循环输出名字 -->
 <body>
     <h3>Fruits List</h3>
@@ -885,7 +885,7 @@ console.log(env.render('extend.html', {
 
 输出HTML如下：
 
-```
+```html
 <html><body>
 <h1>Hello</h1>
 <p>bla bla bla...</p>

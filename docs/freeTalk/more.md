@@ -1131,5 +1131,53 @@ Keep-Alive 不会永久保持连接，它有一个保持时间，可以在不同
 29、介绍下虚拟 dom
 30、介绍下不可变数据Immutability
 
+
+
+1、https加密原理，证书校验原理；
+
+2、前端跨域问题的原因及解决方式，跨域时的状态码；
+
+3、前端安全问题及应对策略；
+
+4、如何提升前端性能，有哪些指标？
+
+5、前端加密方式有哪些？
+
+6、前端如何生成用户唯一id（guid）？
+
+7、typescript解决了什么问题，有什么优缺点？
+
+8、typescript泛型是什么？
+
+9、typescript有哪些工具类型？
+
+10、vue双向绑定原理；
+
+11、computed和watch的区别；
+
+12、vnode diff过程；
+
+13、webpack HMR原理；
+
+14、自己做过最复杂的项目详细介绍（会一直追问）；
+
+15、用性能最高的方法封装函数实现本功能：支持传入一个升序数组，传入一个目标值target，返回target的位置；
+
+16、手写发布订阅模式EventEmitter；
+
+17、写一个函数实现类似Promise.all的功能，但对同时执行的promise个数有限制。函数支持传入一个数组（数组元素为promise），以及一个limit，例如fn([promise1,promise2,promise3,promise4],3),表示同时最多只能执行3个promise，并在所有promise执行完成后返回结果；
+
+
+
+1、tcp协议如何解决丢包问题？错误恢复机制是什么样的？
+
+2、讲一下websocket的原理；
+
+3、xss攻击如何防御；
+
+4、亮点项目介绍（会一直追问😢）；
+
 <a href="javascript:void(function(){document.scrollingElement.scrollIntoView({behavior:'smooth'})})()">回到顶部</a>
+
+
 
