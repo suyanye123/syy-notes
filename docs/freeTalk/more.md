@@ -1,5 +1,7 @@
 ## 高频面试题
 
+https://juejin.cn/post/7073869980411887652
+
 JS数据类型
 
 number，string，boolean，null，undefined ，ES6 中添加了一种原始数据类型 symbol，ES7新增bigInt。
