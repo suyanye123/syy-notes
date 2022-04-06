@@ -22,7 +22,7 @@
    - 使用 promise 实现超时处理
    - 使用 promise 封装处理 ajax 请求
 
-```
+```js
 const p = new Promise((resolve, reject) => { // 同步执行
   // 初始化promise状态：pending
   console.log(111)
@@ -55,7 +55,7 @@ p.then(
 2. 新闻内容获取成功后再次发送请求，获取对应的新闻评论内容
 3. 新闻内容获取失败则不需要再次发送请求
 
-```
+```js
 // 定义获取新闻的功能函数
 function getData(url) {
   let promise = new Promise((resolve, reject) => {
