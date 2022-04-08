@@ -102,6 +102,8 @@ node root.js
 
 #### 3.项目实操
 
+https://www.jianshu.com/p/9a04e809f393
+
 1、改造之后的项目目录长这样，如下：
 
 ```ruby
@@ -241,10 +243,6 @@ export const test = {
 8、以上所有功能代码编写完成后，可以测试下接口是否可用。
 
 在终端中输入 `node app.js`  启动服务
-
-参考 https://www.it610.com/article/1294597933408264192.htm
-
-
 
 https://www.jb51.net/article/162230.htm
 
