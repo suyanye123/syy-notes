@@ -33,6 +33,8 @@ npm run start
 
 ## 2. 连接mysql
 
+### sql语句
+
 - 安装mysql
 
 ```undefined
@@ -73,7 +75,115 @@ connection.end();
 node root.js
 ```
 
-至此，一个简单的sql查询就结束了，接下来咱们修改下脚手架目录，开始开发咱们所需要的api接口；
+
+
+### sequelize驱动
+
+> [sequelize](https://www.sequelize.com.cn/) 是一个基于 promise 的 Node.js ORM, 目前支持 Postgres, MySQL, MariaDB, SQLite 以及 Microsoft SQL Server. 它具有强大的事务支持, 关联关系, 预读和延迟加载,读取复制等功能。
+
+```js
+// sequelizeMysql.js
+import Sequelize from 'sequelize'
+
+const DBConfig = {
+  host: 'localhost', // 服务器地址
+  port: 3306, // 数据库端口号
+  username: 'root', // 数据库用户名
+  password: '111111', // 数据库密码
+  database: 'demo', // 数据库名称
+  prefix: 'api_', // 默认"api_"
+}
+
+export default new Sequelize(
+  DBConfig.database,
+  DBConfig.username,
+  DBConfig.password,
+  {
+    host: DBConfig.host,
+    port: DBConfig.port,
+    dialect: 'mysql', // 要连接的数据库：mysql、postgres、sqlite 和 mssql 之一
+    pool: {
+      max: 50, // 池中最大连接数 默认：5
+      min: 0, // 池中最小连接数 默认：0
+      idle: 10000, // 连接在被释放之前可以空闲的最长时间（以毫秒为单位）默认：10000
+    },
+    timezone: '+08:00',
+  }
+)
+
+```
+
+```js
+//创建表模型
+// UserModel.js
+import Sequelize from 'sequelize'
+import sequelizeMysql from '../utils/sequelizeMysql'
+
+// 创建 model
+const User = sequelizeMysql.define(
+  'user',
+  {
+    id: {
+      type: Sequelize.UUID,
+      defaultValue: Sequelize.UUIDV1,
+      primaryKey: true,
+    },
+    username: {
+      type: Sequelize.STRING(255),
+      allowNull: false, // allowNull不设置默认为true
+    },
+    avatarUrl: {
+      type: Sequelize.STRING(255),
+      field: 'avatar_url', // 自定义表中的列名称
+    },
+    createtime: {
+      type: Sequelize.STRING(255),
+      defaultValue: Date.now(),
+    },
+    isdelete: {
+      type: Sequelize.INTEGER,
+      defaultValue: 0,
+      allowNull: false,
+    },
+  },
+  {
+    // true 表名称和 model 相同: user
+    // false 创建表名称会是复数: users
+    freezeTableName: true,
+    // 是否使用默认的 createdAt updatedAt
+    timestamps: false,
+  }
+)
+
+// 创建表
+User.sync({ force: false })
+
+export default User
+```
+
+```js
+//读写操作
+// UserDao.js
+import UserModel from '../model/UserModel'
+
+export default class UserDao {
+  // 查询用户
+  async findById(data) {
+    const { id } = data
+    return await UserModel.findAll({
+      attributes: { exclude: ['isdelete'] }, // exclude: 返回值排除字段
+      where: {
+        isdelete: 0,
+        id,
+      },
+    })
+  }
+  // 添加用户
+  async add(data) {
+    return await UserModel.create(data)
+  }
+}
+```
 
 
 
@@ -166,15 +276,14 @@ router.get('/getNum', async (ctx, next) => {
 >
 > https://zhuanlan.zhihu.com/p/37837618
 
-场景：目前项目koa2+ts的基础上，想用swagger的功能，由于koa-swagger-decorator支持decorator的写法，可以开箱即用，所以选择了这个插件。
-
 1. 引入
 
 ```js
 import { SwaggerRouter } from 'koa-swagger-decorator';
 import * as path from 'path'
 
-const router = new SwaggerRouter();
+const router = new SwaggerR
+outer();
 
 // swagger docs avaliable at http://localhost:3000/swagger-html
 router.swagger({
@@ -200,7 +309,7 @@ app.use(router.routes())
 
 这样，router的初始化就完成了。接下来就是我们接口的地方，这边以mongodb为例，schema和modal模块的话我们不需要做特殊处理，需要处理的其实就是api实现的方法类里面。我们拿User这里模块来说。decorator这要是对类或者类中的方法，属性进行一个包装（其实就是一个高阶函数的处理）。
 
-```java
+```js
 const userSchema = {
     username: { type: 'string', required: true },
     password: { type: 'string', required: true }
@@ -222,37 +331,91 @@ const userSchema = {
             console.log(err);
         }
     };
+//1.request	 是必须的，它其实就是为你提供了router.get('/register', ()=>{ 需要执行的逻辑 })；
+//2.summary	提供了一个头部的注释
+//3.description	提供较详细的接口描述
+//4.responses	response返回结果的描述
+//5.body	提供请求参数到body
+//6.query	提供请求参数到query中
 ```
 
-**1.request**
+### 注解式路由工具 koa-swagger-decorator
 
-这里request是必须的，它其实就是为你提供了router.get('/register', ()=>{ 需要执行的逻辑 })；
+### 1. 需引入 babel 支持
 
-**2.summary**
+```json
+// npm install --save-dev babel-plugin-transform-decorators-legacy
+// .babelrc
+{
+  "presets": [["env", { "targets": { "node": "current" } }]],
+  "plugins": ["transform-decorators-legacy"]
+}
+```
 
-提供了一个头部的注释
+### 2. 写入配置
 
-**3.description**
+```javascript
+// SwaggerRouter.js
+import { SwaggerRouter } from 'koa-swagger-decorator'
+import * as path from 'path'
 
-提供较详细的接口描述
+const router = new SwaggerRouter()
+// swagger 文档地址： http://localhost:3000/api/swagger-html
+router.swagger({
+  title: 'A project',
+  description: 'Api doc',
+  version: '1.0.0',
+})
 
-**4.responses**
+// 查找对应目录下的controller类: 会将 controller 文件夹下的注解式接口生成一个个的 router
+router.mapDir(path.resolve(__dirname, '../controller/'))
 
-response返回结果的描述
+export default router
 
-**5.body**
+// app.js
+import router from './router/SwaggerRouter'
+app.use(router.routes())
+```
 
-提供请求参数到body
+[![img](https://img2020.cnblogs.com/blog/1855591/202108/1855591-20210826165025381-1001811507.png)](https://img2020.cnblogs.com/blog/1855591/202108/1855591-20210826165025381-1001811507.png)
 
-**6.query**
+### 3. controller 下接口写法
 
-提供请求参数到query中
+```javascript
+// UserController.js
+import {
+  request,
+  summary,
+  description, // 接口名称下方的描述信息
+  query, // get时参数
+  path, // post, put, delete 时地址栏参数
+  body, // body中的参数
+  tags,
+} from 'koa-swagger-decorator'
+// 引入我的业务操作
+import UserService from '../service/UserService'
 
-更多decorator请参考文档：[https://github.com/Cody2333/koa-swagger-decorator](https://link.zhihu.com/?target=https%3A//github.com/Cody2333/koa-swagger-decorator)
+const userService = new UserService()
+const tag = tags(['User'])
+
+export default class UserController {
+  @request('post', '/user/findById')
+  @summary('根据id查询用户数据')
+  @tag
+  @body({
+    id: { type: 'string', required: true },
+  })
+  async findById(ctx) {
+    const bObj = ctx.request.body
+    const data = await userService.findById(bObj)
+    ctx.rest(data)
+  }
+}
+```
 
 ## 总结
 
-[koa-swagger-decorator](https://link.zhihu.com/?target=https%3A//github.com/Cody2333/koa-swagger-decorator)开箱即用的特点省去了我们 不少写decorator的工程，但这也造成了它的一个缺点：入侵性很强，二次开发变得不那么灵活。当然对于我们想要速成的项目来说还是挺方便的。
+[ koa-swagger-decorator ](https://link.zhihu.com/?target=https%3A//github.com/Cody2333/koa-swagger-decorator)开箱即用的特点省去了我们 不少写decorator的工程，但这也造成了它的一个缺点：入侵性很强，二次开发变得不那么灵活。当然对于我们想要速成的项目来说还是挺方便的。
 
 
 

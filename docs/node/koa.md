@@ -371,7 +371,7 @@ router.post('/signin', async (ctx, next) => {
 
 如果能把URL处理函数集中到某个js文件，或者某几个js文件中就好了，然后让`app.js`自动导入所有处理URL的函数。这样，代码一分离，逻辑就显得清楚了。最好是这样：
 
-```
+```js
 url2-koa/
 |
 +- .vscode/
