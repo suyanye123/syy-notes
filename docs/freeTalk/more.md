@@ -2,11 +2,7 @@
 
 https://juejin.cn/post/7073869980411887652
 
-JS数据类型
 
-number，string，boolean，null，undefined ，ES6 中添加了一种原始数据类型 symbol，ES7新增bigInt。
-
-object，array，function  引用数据类型
 
 什么是BFC：
 
@@ -20,16 +16,7 @@ BFC （块级格式化上下文），是一个独立的渲染区域，让处于 
 
 
 
-### 一、ES6新特性
-
-- 迭代器 ，新增for of	 for...of 循环可以遍历数组、Set 和 Map 结构、某些类似数组的对象、对象，以及字符串
-- set map数据结构   Set 数据结构，类似数组。所有的数据都是唯一的，没有重复的值。它本身是一个构造函数
-- promise   async await(ES7)
-- let const
-- 箭头函数、解构赋值、三点展开运算符、模板字符串
-- import、export（Commonjs -- require 引入 module.expose暴露）
-- class
-- proxy、reflect
+- 
 
 ### 二、在new的过程发生了什么
 
@@ -94,7 +81,7 @@ map foreach
 
 浅拷贝： …展开 ，
 
-### 什么是浅拷贝？什么是深拷贝？E:\syy-template\src\pages\other\index.vue
+### 什么是浅拷贝？什么是深拷贝？
 
 浅拷贝：浅拷贝是创建一个新对象，这个对象有着原始对象属性值的一份精确拷贝。如果属性是基本类型，拷贝的就是基本类型的值，如果属性是引用类型，拷贝的就是内存地址 ，所以**如果其中一个对象改变了这个地址，就会影响到另一个对象**。
 
