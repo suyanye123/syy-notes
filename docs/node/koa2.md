@@ -1,296 +1,29 @@
-# koa2学习经历
+# koa2
 
-## koa基础
+## 1. 安装koa脚手架
 
-### 2. 中间件
+- 脚手架生成工具 `koa-generator`
 
-koa是从第一个中间件开始执行，遇到 await next() 进入下一个中间件，一直执行到最后一个中间件，在逆序，执行上一个中间件，一直到第一个中间件执行结束才发出响应。
-
-#### 2.1 自定义中间件
-
-创建文件夹middleware存放各种自定义中间件；
-创建文件 koa-pv.js:
-
-```
-// 自定义中间件 koa-pv
-
-function pv (ctx) {
-    global.console.log('当前路由', ctx.path) // 打印当前路由，node中全局不能用window，需要用global代替
-}
-
-module.exports = function () {
-    return async function(ctx, next) {
-        pv(ctx)
-        await next() // 每个中间件都必须有这一句，用以执行下一个中间件
-    }
-}
-```
-
-然后，在app.js中引入中间件
-
-```
-const pv = require('./middleware/koa-pv')
-
-app.use(pv())
-```
-
-### 3. mongoose的使用
-
-#### 3.1 判断是否安装了mongo:
-
-```
-$ which mongod
-```
-
-#### 3.2 运行 MongoDB
-
-```
-$ sudo mongod  
-
-<!--
-
-首先创建一个数据库存储目录 /data/db：
-
-sudo mkdir -p /data/db
-
-启动 mongodb，默认数据库目录即为 /data/db
-
-参考：http://www.runoob.com/mongodb/mongodb-osx-install.html
-
-如果已经有进程27017，需要先停止：
-
-停止进程：
-    lsof -i :27017
-    kill  -9 3243
--->
-```
-
-#### 3.3 配置mongoose
-
-在文件夹dbs中创建文件 config.js:
-
-```
-// 配置mongo 地址
-module.exports =  {
-    dbs: 'mongodb://127.0.0.1:27017/dbs'
-}
-```
-
-#### 3.4 创建数据表
-
-在文件dbs 中创建文件夹models 用来存放不同的数据表。
-创建文件person.js, 文件名person即为数据表名称。
-
-person.js:
-
-```
-const mongoose = require('mongoose')
-
-// 创建数据表模型，该文件的名字，即person，就是数据表的名字
-// 下面给 person 表声明两个字段name和age
-
-let personSchema = new mongoose.Schema({
-    name: String,
-    age: Number
-})
-
-// 通过建 model 给 person 赋予增删改查等读写的功能
-module.exports = mongoose.model('Person', personSchema)
-```
-
-#### 3.5 连接koa2和mongoose
-
-```
-// 一、引入mongoose
-const mongoose = require('mongoose')
-const dbConfig = require('./dbs/config')
-
-
-// 二、 连接数据库的服务
-mongoose.connect(dbConfig.dbs, {
-  useNewUrlParser: true
-})
-```
-
-#### 3.6 通过mongoose进行数据的增删改查
-
-进入文件 routes/uses.js:
-
-```
-const router = require('koa-router')()
-// 引入mongo模型
-const Person = require('../dbs/models/person')
-
-router.prefix('/users')
-
-router.get('/', function (ctx, next) {
-  ctx.body = 'this is a users response!'
-})
-
-router.get('/bar', function (ctx, next) {
-  ctx.body = 'this is a users/bar response'
-})
-
-
-/**
- *  一、 增加 内容 向person数据模型中
- *
- *     可以通过命令行执行：curl -d 'name=cck&age=27' http://localhost:3000/users/addPerson
- *     若返回: {
-                "code": 0
-              }
-       证明添加数据成功。
-
-       注意： save()方法是model自带的写入数据的方法, 通过实例 person 写入
- */
-
-router.post('/addPerson', async function (ctx) {
-  // 创建实例
-  const person = new Person({
-    name: ctx.request.body.name,
-    age: ctx.request.body.age
-  })
-
-  let code = 0 // 状态码
-
-  try {
-    await person.save()
-    code = 0
-  } catch(e) {
-    code = -1
-  }
-
-  // 返回状态（成功为0， 错误为-1）
-  ctx.body = {
-    code
-  }
-})
-
-/**
- *  二、 读取 内容 从person数据模型中
- *      命令行中输入：curl -d 'name=cck' http://localhost:3000/users/getPerson
- *      返回：{
-                "code": 0,
-                "result": {
-                  "_id": "5beb91bcd6e7060ffcca6a46",
-                  "name": "cck",
-                  "age": 27,
-                  "__v": 0
-                },
-                "results": [
-                  {
-                    "_id": "5beb91bcd6e7060ffcca6a46",
-                    "name": "cck",
-                    "age": 27,
-                    "__v": 0
-                  }
-                ]
-              }
- *
- *    注意： findOne()和find()方法是model自带的读取数据的方法, 注意：这里直接通过模型 Person 写入 ！！！
- *          findOne() 只是找到一条符合条件的内容
- *          find() 可以找到整个符合条件的集合(数组)
- */
-
-router.post('/getPerson', async function (ctx) {
-  const result = await Person.findOne({
-    name: ctx.request.body.name
-  })
-
-  const results = await Person.find({
-    name: ctx.request.body.name
-  })
-
-  // 这里没有考虑异常，直接返回了结果
-  ctx.body = {
-    code: 0,
-    result,
-    results
-  }
-})
-
-/**
- *  三、 修改 内容 从person数据模型中
- *      命令行中输入：curl -d 'name=wy&age=19' http://localhost:3000/users/updatePerson
- *      返回：{
-                "code": 0,
-              }
- *
- *    注意： where()和update()方法是model自带的读取数据的方法, 注意：这里直接通过模型 Person 写入 ！！！
- *          where() 找到符合条件的内容
- *          update() 修改该内容
- */
-
-router.post('/updatePerson', async function (ctx) {
-  // 找到符合条件的name,并修改其age
-  const result = await Person.where({
-    name: ctx.request.body.name
-  }).update({
-    age: ctx.request.body.age
-  })
-
-  // 这里没有考虑异常，直接返回了结果
-  ctx.body = {
-    code: 0
-  }
-})
-
-/**
- *  四、 删除 内容 从person数据模型中
- *
- *    注意： where()和update()方法是model自带的读取数据的方法, 注意：这里直接通过模型 Person 写入 ！！！
- *          where() 找到符合条件的内容
- *          remove() 删除该内容
- */
-
-router.post('/removePerson', async function (ctx) {
-  // 找到符合条件的name,并修改其age
-  const result = await Person.where({
-    name: ctx.request.body.name
-  }).remove()
-
-  // 这里没有考虑异常，直接返回了结果
-  ctx.body = {
-    code: 0
-  }
-})
-
-module.exports = router
-```
-
-
-
-
-
-## 从0开始搭建api接口
-
-### 1.创建项目，用koa脚手架生成目录结构
-
-因为每个项目 起始阶段的配置 往往是相同的 这个时候 就可以使用脚手架 进行自动生成
-
-项目的初始 阶段 就像 vue-cli 创建vue 项目那样
-
-首先 先全局安装一个 koa 的脚手架工具
-
-```
+```shell
 npm i -g koa-generator
 ```
 
-然后是 创建 koa 项目了
--e 是基于 ejs 模板引擎
-因为我学习的第一个模板引擎就是ejs 算是对它情有独钟把
+- 创建 koa 项目
+
+  > -e 是基于 ejs 模板引擎，不写默认是使用的是pug 类似jade的模板
 
 ```javascript
-koa2 -e myapp   // 创建koa2 的项目
+koa2 myapp -e  // 创建koa2 的项目
 koa -e myapp   // 创建koa1 的项目
 ```
 
-进入项目 安装依赖
+- 安装依赖
 
+```js
+npm install
+```
 
-![image](https://www.cnblogs.com/images/cnblogs_com/cckui/1341537/o_koa2.jpg)
-
-dbs为后来创建的操作mongo的文件目录；middleware为后来创建的自定义中间件目录
+>  dbs为后来创建的操作mongo的文件目录；middleware为后来创建的自定义中间件目录
 
 然后就是运行了
 
@@ -298,30 +31,9 @@ dbs为后来创建的操作mongo的文件目录；middleware为后来创建的�
 npm run start  
 ```
 
-项目结构如下
+## 2. 连接mysql
 
-```ruby
-durian/（项目名称）
-         |----  bin  
-                     |---- www （启动文件）
-         |----  node_modules
-                     |---- 安装的各种依赖
-         |----  public
-                     |---- image
-                     |---- style
-                     |---- javascript
-         |----  router
-                     |---- index.js （路由）
-                     |---- users.js
-         |----  view  
-                     |---- layout.jade（.jade 源于 Node.js 的 HTML 模板引擎，类似于.ejs模板 )
-                     |---- index.jade
-                     |---- error.jade
-         |----  app.js
-         |----  package.json
-```
-
-#### 2、连接mysql取数据
+### sql语句
 
 - 安装mysql
 
@@ -363,44 +75,399 @@ connection.end();
 node root.js
 ```
 
-至此，一个简单的sql查询就结束了，接下来咱们修改下脚手架目录，开始开发咱们所需要的api接口；
 
 
+### sequelize驱动
 
-#### 3.项目实操
+> [sequelize](https://www.sequelize.com.cn/) 是一个基于 promise 的 Node.js ORM, 目前支持 Postgres, MySQL, MariaDB, SQLite 以及 Microsoft SQL Server. 它具有强大的事务支持, 关联关系, 预读和延迟加载,读取复制等功能。
 
-1、改造之后的项目目录长这样，如下：
+```js
+// sequelizeMysql.js
+import Sequelize from 'sequelize'
 
-```ruby
-durian/（项目名称）
-         |----  bin  
-                     |---- www （启动文件）
-         |----  dal  
-                     |---- logger.js （打印logger）
-         |----  logs  
-                     |---- xxx （logger输出地址）
-         |----  mysql  
-                     |---- config.js （连接的数据库配置）
-                     |---- mysql.js （sql查询等方法封装）
-                     |---- pool.js （创建链接数据库）
-         |----  node_modules
-                     |---- 安装的各种依赖
-         |----  public
-                     |---- image
-                     |---- style
-                     |---- javascript
-         |----  router
-                     |---- index.js （接口路由）
-                     |---- users.js
-         |----  server
-                     |---- index.js （sql语句）
-         |----  view  
-                     |---- layout.html
-         |----  app.js
-         |----  package.json
+const DBConfig = {
+  host: 'localhost', // 服务器地址
+  port: 3306, // 数据库端口号
+  username: 'root', // 数据库用户名
+  password: '111111', // 数据库密码
+  database: 'demo', // 数据库名称
+  prefix: 'api_', // 默认"api_"
+}
+
+export default new Sequelize(
+  DBConfig.database,
+  DBConfig.username,
+  DBConfig.password,
+  {
+    host: DBConfig.host,
+    port: DBConfig.port,
+    dialect: 'mysql', // 要连接的数据库：mysql、postgres、sqlite 和 mssql 之一
+    pool: {
+      max: 50, // 池中最大连接数 默认：5
+      min: 0, // 池中最小连接数 默认：0
+      idle: 10000, // 连接在被释放之前可以空闲的最长时间（以毫秒为单位）默认：10000
+    },
+    timezone: '+08:00',
+  }
+)
+
 ```
 
-2、配置中间件
+```js
+//创建表模型
+// UserModel.js
+import Sequelize from 'sequelize'
+import sequelizeMysql from '../utils/sequelizeMysql'
+
+// 创建 model
+const User = sequelizeMysql.define(
+  'user',
+  {
+    id: {
+      type: Sequelize.UUID,
+      defaultValue: Sequelize.UUIDV1,
+      primaryKey: true,
+    },
+    username: {
+      type: Sequelize.STRING(255),
+      allowNull: false, // allowNull不设置默认为true
+    },
+    avatarUrl: {
+      type: Sequelize.STRING(255),
+      field: 'avatar_url', // 自定义表中的列名称
+    },
+    createtime: {
+      type: Sequelize.STRING(255),
+      defaultValue: Date.now(),
+    },
+    isdelete: {
+      type: Sequelize.INTEGER,
+      defaultValue: 0,
+      allowNull: false,
+    },
+  },
+  {
+    // true 表名称和 model 相同: user
+    // false 创建表名称会是复数: users
+    freezeTableName: true,
+    // 是否使用默认的 createdAt updatedAt
+    timestamps: false,
+  }
+)
+
+// 创建表
+User.sync({ force: false })
+
+export default User
+```
+
+```js
+//读写操作
+// UserDao.js
+import UserModel from '../model/UserModel'
+
+export default class UserDao {
+  // 查询用户
+  async findById(data) {
+    const { id } = data
+    return await UserModel.findAll({
+      attributes: { exclude: ['isdelete'] }, // exclude: 返回值排除字段
+      where: {
+        isdelete: 0,
+        id,
+      },
+    })
+  }
+  // 添加用户
+  async add(data) {
+    return await UserModel.create(data)
+  }
+}
+```
+
+
+
+## 4.配置
+
+### - 配置环境变量
+
+https://blog.csdn.net/qq_25804071/article/details/68954130
+
+
+
+### - 配置swagger-jsdoc
+
+```shell
+npm install swagger-jsdoc koa2-swagger-ui --save
+```
+
+**新建swagger.js**
+
+```js
+const router = require('koa-router')()
+const jsdoc = require('swagger-jsdoc')
+const path = require('path')
+
+const swaggerDefinition = {
+    info: {
+        title: 'API文档',
+        version: '1.0',
+        description: '文档',
+    },
+    host: 'localhost:8000',//localhost:8000/swagger
+    basePath: '/'
+};
+const options = {
+    swaggerDefinition,
+    apis: ['./controller/*.js'],
+};
+const swaggerSpec = jsdoc(options)
+// 通过路由获取生成的注解文件
+router.get('/swagger.json', async function (ctx) {
+    ctx.set('Content-Type', 'application/json');
+    ctx.body = swaggerSpec;
+})
+module.exports = router
+```
+
+**修改app.js**
+
+```js
+const swagger = require('./service/swagger.js')
+const { koaSwagger } = require('koa2-swagger-ui')
+
+app.use(swagger.routes(), swagger.allowedMethods())
+app.use(koaSwagger({
+  routePrefix: '/swagger', // api文档访问地址
+  swaggerOptions: {
+    url: '/swagger.json', // example path to json
+  }
+}))
+```
+
+**接口配置**
+
+```js
+/**
+ * @swagger
+ * /getNum:
+ *   get:
+ *     tags:
+ *       - tes
+ *     summary: 测试
+ *     parameters:
+ *       - name: num
+ *         description: 数量
+ *         type: integer
+ */
+router.get('/getNum', async (ctx, next) => {
+	console.log(ctx.query.num)
+	ctx.body = ctx.query.num
+})
+```
+
+**查看效果**
+
+打开本地`http://localhost:3000/swagger`
+
+### - 配置swagger-decorator
+
+> 介绍几种基于 swagger 的维护项目接口文档的方式，并分析各种方式的优劣，并且提出了一种基于decorator来自动生成swagger json文档的方法
+>
+> https://zhuanlan.zhihu.com/p/37837618
+
+1. 引入
+
+```js
+import { SwaggerRouter } from 'koa-swagger-decorator';
+import * as path from 'path'
+
+const router = new SwaggerR
+outer();
+
+// swagger docs avaliable at http://localhost:3000/swagger-html
+router.swagger({
+    title: '排课系统',
+    description: 'API DOC',
+    version: '1.0.0'
+});
+
+// 查找对应目录下的controller类
+router.mapDir(path.resolve(__dirname, '../api/'));
+
+export default router;
+```
+
+这是router配置的地方mapDir会去你指定的文件下面找对应注册api方法的class，再将对应api方法注册到路由上。这里，他其实就是对koa-router的一个装饰器函数的封装。值得一提的是，这边许多函数的装饰器都用了ramda进行[柯里化](https://www.zhihu.com/search?q=柯里化&search_source=Entity&hybrid_search_source=Entity&hybrid_search_extra={"sourceType"%3A"article"%2C"sourceId"%3A"140457829"})。
+
+router初始化方法写完了之前，需要把它倒入到主函数里，这里和我们koa-router的引入方式是一样的：
+
+```text
+app.use(router.routes())
+   .use(router.allowedMethods());
+```
+
+这样，router的初始化就完成了。接下来就是我们接口的地方，这边以mongodb为例，schema和modal模块的话我们不需要做特殊处理，需要处理的其实就是api实现的方法类里面。我们拿User这里模块来说。decorator这要是对类或者类中的方法，属性进行一个包装（其实就是一个高阶函数的处理）。
+
+```js
+const userSchema = {
+    username: { type: 'string', required: true },
+    password: { type: 'string', required: true }
+}    
+
+    @request('post', '/register')
+    @summary('注册')
+    @tag
+    @responses({ 200: { description: 'success' }, 400: { description: 'error' } })
+    @body(userSchema)
+    public async register(ctx: any) {
+        const params = ctx.request.query;
+        try {
+            if (params.password && params.password === params.passwordConfim) {
+                let result = await User.create({ ...params });
+                ctx.body = { code: 200, msg: "成功", data: result };
+            }
+        } catch (err) {
+            console.log(err);
+        }
+    };
+//1.request	 是必须的，它其实就是为你提供了router.get('/register', ()=>{ 需要执行的逻辑 })；
+//2.summary	提供了一个头部的注释
+//3.description	提供较详细的接口描述
+//4.responses	response返回结果的描述
+//5.body	提供请求参数到body
+//6.query	提供请求参数到query中
+```
+
+### 注解式路由工具 koa-swagger-decorator
+
+### 1. 需引入 babel 支持
+
+```json
+// npm install --save-dev babel-plugin-transform-decorators-legacy
+// .babelrc
+{
+  "presets": [["env", { "targets": { "node": "current" } }]],
+  "plugins": ["transform-decorators-legacy"]
+}
+```
+
+### 2. 写入配置
+
+```javascript
+// SwaggerRouter.js
+import { SwaggerRouter } from 'koa-swagger-decorator'
+import * as path from 'path'
+
+const router = new SwaggerRouter()
+// swagger 文档地址： http://localhost:3000/api/swagger-html
+router.swagger({
+  title: 'A project',
+  description: 'Api doc',
+  version: '1.0.0',
+})
+
+// 查找对应目录下的controller类: 会将 controller 文件夹下的注解式接口生成一个个的 router
+router.mapDir(path.resolve(__dirname, '../controller/'))
+
+export default router
+
+// app.js
+import router from './router/SwaggerRouter'
+app.use(router.routes())
+```
+
+[![img](https://img2020.cnblogs.com/blog/1855591/202108/1855591-20210826165025381-1001811507.png)](https://img2020.cnblogs.com/blog/1855591/202108/1855591-20210826165025381-1001811507.png)
+
+### 3. controller 下接口写法
+
+```javascript
+// UserController.js
+import {
+  request,
+  summary,
+  description, // 接口名称下方的描述信息
+  query, // get时参数
+  path, // post, put, delete 时地址栏参数
+  body, // body中的参数
+  tags,
+} from 'koa-swagger-decorator'
+// 引入我的业务操作
+import UserService from '../service/UserService'
+
+const userService = new UserService()
+const tag = tags(['User'])
+
+export default class UserController {
+  @request('post', '/user/findById')
+  @summary('根据id查询用户数据')
+  @tag
+  @body({
+    id: { type: 'string', required: true },
+  })
+  async findById(ctx) {
+    const bObj = ctx.request.body
+    const data = await userService.findById(bObj)
+    ctx.rest(data)
+  }
+}
+```
+
+## 总结
+
+[ koa-swagger-decorator ](https://link.zhihu.com/?target=https%3A//github.com/Cody2333/koa-swagger-decorator)开箱即用的特点省去了我们 不少写decorator的工程，但这也造成了它的一个缺点：入侵性很强，二次开发变得不那么灵活。当然对于我们想要速成的项目来说还是挺方便的。
+
+
+
+## 5.项目实操
+
+### 项目目录
+
+> https://www.jianshu.com/p/47259f48c153  参考项目结构搭建过程，[仓库](https://github.com/bayi-lzp/koa-template/blob/master/README.md )
+
+```js
+├─.gitignore                // 忽略文件配置
+├─app.js                    // 应用入口
+├─config                 // 公共配置文件
+├─views                    // 应用入口
+|   ├─dev.js                 
+|   ├─prd.js              
+|   ├─test.js              
+|   └index.js             // 根据环境变量返回对应配置
+├─ecosystem.config.js       // pm2配置文件
+├─package.json              // 依赖文件配置
+├─README.md                 // README.md文档
+├─routes                    // 路由
+|   ├─private.js                // 校验接口
+|   └public.js                  // 公开接口
+├─models                    // 数据库配置及模型
+|   ├─index.js                  // 数据库配置
+|   └user.js                    // 用户的schema文件
+├─middlewares               // 中间件
+|      ├─cors.js                // 跨域中间件
+|      ├─jwt.js                 // jwt中间件
+|      ├─logger.js              // 日志打印中间件
+|      └response.js             // 响应及异常处理中间件
+├─logs                      // 日志目录
+|  └─koa-template.log
+├─lib                       // 工具库
+|  ├─error.js                   // 异常处理
+|  ├─utils.js                   // 自定义方法
+|  └mongoDB.js                  // mongoDB配置
+├─controllers               // 操作业务逻辑
+|      ├─index.js               // 配置
+|      ├─login.js               // 登录
+|      └test.js                 // 测试
+├─services               // 操作数据库
+|      ├─index.js               // 配置
+|      ├─user.js               // 用户
+├─bin                       // 启动目录
+|  └www                         // 启动文件配置
+```
+
+### 中间件
+
+> https://www.jianshu.com/p/9a04e809f393 中间件介绍
 
 在middleware文件夹中创建三个文件，分别是koa_response_data.js、koa_response_duration.js、koa_response_header.js
 
@@ -453,20 +520,105 @@ test: async () => { // 如果函数没使用async 函数内部不可以使用awa
     },
 ```
 
-4、在router目录中写接口名称并把数据赋值给body
+### 路由
 
-```dart
-import testService from '../../../service/test/index'
+- #### 不同请求方式
 
-export const test = {
-    'path': '/test.do',
-    'type': 'get',
-    'control': async (ctx) => {
-        const data = await testService.test();
-        ctx.body = { data }
-    }
-}
+```js
+// Koa-router 请求方式： get 、 put 、 post 、 patch 、 delete 、 del ，而使用方法就是 router.方式() ，比如 router.get() 和 router.post() 。
+//而 router.all() 会匹配所有的请求方法
+
+// 指定一个url匹配
+router.get('/', async (ctx) => {
+    ctx.type = 'html';
+    ctx.body = '<h1>hello world!</h1>';
+})
+    .get("/users", async (ctx) => {
+        ctx.body = '获取用户列表';
+    })
+    .get("/users/:id", async (ctx) => {
+        const { id } = ctx.params
+        ctx.body = `获取id为${id}的用户`;
+    })
+    .post("/users", async (ctx) => {
+        ctx.body = `创建用户`;
+    })
+    .put("/users/:id", async (ctx) => {
+        const { id } = ctx.params
+        ctx.body = `修改id为${id}的用户`;
+    })
+    .del("/users/:id", async (ctx) => {
+        const { id } = ctx.params
+        ctx.body = `删除id为${id}的用户`;
+    })
+    .all("/users/:id", async (ctx) => {
+        ctx.body = ctx.params;
+    });
+
+// ...
 ```
+
+- #### 从请求参数取值
+
+有些时候需要从请求URL上获取特定参数，主要分为两类： `params` 和 `query` 。 这两种参数获取的方式如下：
+
+```js
+//params参数
+router.get('/:category/:title', (ctx, next) => {
+  console.log(ctx.params);
+  // => { category: 'programming', title: 'how-to-node' }
+});
+
+
+//query参数
+router.get("/users", async (ctx) => {
+    console.log('查询参数', ctx.query);
+    ctx.body = '获取用户列表';
+})
+```
+
+
+
+- #### 路由使用中间件
+
+`router` 还支持使用中间件，并且可以针对特定的URL或者多个URL使用中间件：
+
+```js
+// 先后设置两个中间件
+router
+  .use(session())
+  .use(authorize());
+
+// 给指定地址使用中间件
+router.use('/users', userAuth());
+
+// 给数组里面的地址使用中间件
+router.use(['/users', '/admin'], userAuth());
+
+app.use(router.routes());
+```
+
+
+
+- #### 路由重定向
+
+```js
+//使用 `router.redirect(source, destination, [code])` 可以对路由进行重定向，
+router.redirect('/login', 'sign-in');
+```
+
+等价于：
+
+```js
+router.all('/login', ctx => {
+  ctx.redirect('/sign-in');
+  ctx.status = 301;
+});
+```
+
+
+
+
 
 5、浏览器访问接口，看输出内容
 
@@ -505,21 +657,13 @@ export const test = {
 }
 ```
 
-8、以上所有功能代码编写完成后，可以测试下接口是否可用。
-
-在终端中输入 `node app.js`  启动服务
-
-参考 https://www.it610.com/article/1294597933408264192.htm
-
-
-
-https://www.jb51.net/article/162230.htm
 
 
 
 
 
-## 项目打包
+
+## 6.项目打包
 
 ```js
 // webpack.config.js

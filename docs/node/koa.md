@@ -129,99 +129,6 @@ async (ctx, next) => {
 
 由`async`标记的函数称为异步函数，在异步函数中，可以用`await`调用另一个异步函数，这两个关键字将在ES7中引入。
 
-现在我们遇到第一个问题：koa这个包怎么装，`app.js`才能正常导入它？
-
-方法一：可以用npm命令直接安装koa。先打开命令提示符，务必把当前目录切换到`hello-koa`这个目录，然后执行命令：
-
-```bash
-C:\...\hello-koa> npm install koa@2.0.0
-```
-
-npm会把koa2以及koa2依赖的所有包全部安装到当前目录的node_modules目录下。
-
-方法二：在`hello-koa`这个目录下创建一个`package.json`，这个文件描述了我们的`hello-koa`工程会用到哪些包。完整的文件内容如下：
-
-```js
-{
-    "name": "hello-koa2",
-    "version": "1.0.0",
-    "description": "Hello Koa 2 example with async",
-    "main": "app.js",
-    "scripts": {
-        "start": "node app.js"
-    },
-    "keywords": [
-        "koa",
-        "async"
-    ],
-    "author": "Michael Liao",
-    "license": "Apache-2.0",
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/michaelliao/learn-javascript.git"
-    },
-    "dependencies": {
-        "koa": "2.0.0"
-    }
-}
-```
-
-其中，`dependencies`描述了我们的工程依赖的包以及版本号。其他字段均用来描述项目信息，可任意填写。
-
-然后，我们在`hello-koa`目录下执行`npm install`就可以把所需包以及依赖包一次性全部装好：
-
-```
-C:\...\hello-koa> npm install
-```
-
-很显然，第二个方法更靠谱，因为我们只要在`package.json`正确设置了依赖，npm就会把所有用到的包都装好。
-
-*注意*，任何时候都可以直接删除整个`node_modules`目录，因为用`npm install`命令可以完整地重新下载所有依赖。并且，这个目录不应该被放入版本控制中。
-
-现在，我们的工程结构如下：
-
-```
-hello-koa/
-|
-+- .vscode/
-|  |
-|  +- launch.json <-- VSCode 配置文件
-|
-+- app.js <-- 使用koa的js
-|
-+- package.json <-- 项目描述文件
-|
-+- node_modules/ <-- npm安装的所有依赖包
-```
-
-紧接着，我们在`package.json`中添加依赖包：
-
-```
-"dependencies": {
-    "koa": "2.0.0"
-}
-```
-
-然后使用`npm install`命令安装后，在VS Code中执行`app.js`，调试控制台输出如下：
-
-```
-node --debug-brk=40645 --nolazy app.js 
-Debugger listening on port 40645
-app started at port 3000...
-```
-
-我们打开浏览器，输入`http://localhost:3000`，即可看到效果：
-
-![koa-browser](https://www.liaoxuefeng.com/files/attachments/1099750011544960/l)
-
-还可以直接用命令`node app.js`在命令行启动程序，或者用`npm start`启动。`npm start`命令会让npm执行定义在`package.json`文件中的start对应命令：
-
-```json
-"scripts": {
-    "start": "node app.js"
-}
-```
-
 ### koa middleware
 
 让我们再仔细看看koa的执行逻辑。核心代码是：
@@ -464,7 +371,7 @@ router.post('/signin', async (ctx, next) => {
 
 如果能把URL处理函数集中到某个js文件，或者某几个js文件中就好了，然后让`app.js`自动导入所有处理URL的函数。这样，代码一分离，逻辑就显得清楚了。最好是这样：
 
-```
+```js
 url2-koa/
 |
 +- .vscode/
@@ -1294,3 +1201,271 @@ app.use(async (ctx, next) => {
 ### 参考源码
 
 [view-koa](https://github.com/michaelliao/learn-javascript/tree/master/samples/node/web/koa/view-koa)
+
+
+
+
+
+## koa基础
+
+### 2. 中间件
+
+koa是从第一个中间件开始执行，遇到 await next() 进入下一个中间件，一直执行到最后一个中间件，在逆序，执行上一个中间件，一直到第一个中间件执行结束才发出响应。
+
+#### 2.1 自定义中间件
+
+创建文件夹middleware存放各种自定义中间件；
+创建文件 koa-pv.js:
+
+```
+// 自定义中间件 koa-pv
+
+function pv (ctx) {
+    global.console.log('当前路由', ctx.path) // 打印当前路由，node中全局不能用window，需要用global代替
+}
+
+module.exports = function () {
+    return async function(ctx, next) {
+        pv(ctx)
+        await next() // 每个中间件都必须有这一句，用以执行下一个中间件
+    }
+}
+```
+
+然后，在app.js中引入中间件
+
+```
+const pv = require('./middleware/koa-pv')
+
+app.use(pv())
+```
+
+### 3. mongoose的使用
+
+#### 3.1 判断是否安装了mongo:
+
+```
+$ which mongod
+```
+
+#### 3.2 运行 MongoDB
+
+```
+$ sudo mongod  
+
+<!--
+
+首先创建一个数据库存储目录 /data/db：
+
+sudo mkdir -p /data/db
+
+启动 mongodb，默认数据库目录即为 /data/db
+
+参考：http://www.runoob.com/mongodb/mongodb-osx-install.html
+
+如果已经有进程27017，需要先停止：
+
+停止进程：
+    lsof -i :27017
+    kill  -9 3243
+-->
+```
+
+#### 3.3 配置mongoose
+
+在文件夹dbs中创建文件 config.js:
+
+```
+// 配置mongo 地址
+module.exports =  {
+    dbs: 'mongodb://127.0.0.1:27017/dbs'
+}
+```
+
+#### 3.4 创建数据表
+
+在文件dbs 中创建文件夹models 用来存放不同的数据表。
+创建文件person.js, 文件名person即为数据表名称。
+
+person.js:
+
+```
+const mongoose = require('mongoose')
+
+// 创建数据表模型，该文件的名字，即person，就是数据表的名字
+// 下面给 person 表声明两个字段name和age
+
+let personSchema = new mongoose.Schema({
+    name: String,
+    age: Number
+})
+
+// 通过建 model 给 person 赋予增删改查等读写的功能
+module.exports = mongoose.model('Person', personSchema)
+```
+
+#### 3.5 连接koa2和mongoose
+
+```
+// 一、引入mongoose
+const mongoose = require('mongoose')
+const dbConfig = require('./dbs/config')
+
+
+// 二、 连接数据库的服务
+mongoose.connect(dbConfig.dbs, {
+  useNewUrlParser: true
+})
+```
+
+#### 3.6 通过mongoose进行数据的增删改查
+
+进入文件 routes/uses.js:
+
+```js
+const router = require('koa-router')()
+// 引入mongo模型
+const Person = require('../dbs/models/person')
+
+router.prefix('/users')
+
+router.get('/', function (ctx, next) {
+  ctx.body = 'this is a users response!'
+})
+
+router.get('/bar', function (ctx, next) {
+  ctx.body = 'this is a users/bar response'
+})
+
+
+/**
+ *  一、 增加 内容 向person数据模型中
+ *
+ *     可以通过命令行执行：curl -d 'name=cck&age=27' http://localhost:3000/users/addPerson
+ *     若返回: {
+                "code": 0
+              }
+       证明添加数据成功。
+
+       注意： save()方法是model自带的写入数据的方法, 通过实例 person 写入
+ */
+
+router.post('/addPerson', async function (ctx) {
+  // 创建实例
+  const person = new Person({
+    name: ctx.request.body.name,
+    age: ctx.request.body.age
+  })
+
+  let code = 0 // 状态码
+
+  try {
+    await person.save()
+    code = 0
+  } catch(e) {
+    code = -1
+  }
+
+  // 返回状态（成功为0， 错误为-1）
+  ctx.body = {
+    code
+  }
+})
+
+/**
+ *  二、 读取 内容 从person数据模型中
+ *      命令行中输入：curl -d 'name=cck' http://localhost:3000/users/getPerson
+ *      返回：{
+                "code": 0,
+                "result": {
+                  "_id": "5beb91bcd6e7060ffcca6a46",
+                  "name": "cck",
+                  "age": 27,
+                  "__v": 0
+                },
+                "results": [
+                  {
+                    "_id": "5beb91bcd6e7060ffcca6a46",
+                    "name": "cck",
+                    "age": 27,
+                    "__v": 0
+                  }
+                ]
+              }
+ *
+ *    注意： findOne()和find()方法是model自带的读取数据的方法, 注意：这里直接通过模型 Person 写入 ！！！
+ *          findOne() 只是找到一条符合条件的内容
+ *          find() 可以找到整个符合条件的集合(数组)
+ */
+
+router.post('/getPerson', async function (ctx) {
+  const result = await Person.findOne({
+    name: ctx.request.body.name
+  })
+
+  const results = await Person.find({
+    name: ctx.request.body.name
+  })
+
+  // 这里没有考虑异常，直接返回了结果
+  ctx.body = {
+    code: 0,
+    result,
+    results
+  }
+})
+
+/**
+ *  三、 修改 内容 从person数据模型中
+ *      命令行中输入：curl -d 'name=wy&age=19' http://localhost:3000/users/updatePerson
+ *      返回：{
+                "code": 0,
+              }
+ *
+ *    注意： where()和update()方法是model自带的读取数据的方法, 注意：这里直接通过模型 Person 写入 ！！！
+ *          where() 找到符合条件的内容
+ *          update() 修改该内容
+ */
+
+router.post('/updatePerson', async function (ctx) {
+  // 找到符合条件的name,并修改其age
+  const result = await Person.where({
+    name: ctx.request.body.name
+  }).update({
+    age: ctx.request.body.age
+  })
+
+  // 这里没有考虑异常，直接返回了结果
+  ctx.body = {
+    code: 0
+  }
+})
+
+/**
+ *  四、 删除 内容 从person数据模型中
+ *
+ *    注意： where()和update()方法是model自带的读取数据的方法, 注意：这里直接通过模型 Person 写入 ！！！
+ *          where() 找到符合条件的内容
+ *          remove() 删除该内容
+ */
+
+router.post('/removePerson', async function (ctx) {
+  // 找到符合条件的name,并修改其age
+  const result = await Person.where({
+    name: ctx.request.body.name
+  }).remove()
+
+  // 这里没有考虑异常，直接返回了结果
+  ctx.body = {
+    code: 0
+  }
+})
+
+module.exports = router
+```
+
+
+
+
+
+## 

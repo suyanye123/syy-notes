@@ -18,7 +18,7 @@ https://www.liaoxuefeng.com/wiki/1022910821149312/1023025235359040
 
 在前面的JavaScript课程中，我们已经知道，JavaScript有且仅有一个全局对象，在浏览器中，叫`window`对象。而在Node.js环境中，也有唯一的全局对象，但不叫`window`，而叫`global`，这个对象的属性和方法也和浏览器环境的`window`不同。进入Node.js交互环境，可以直接输入：
 
-```
+```powershell
 > global.console
 Console {
   log: [Function: bound ],
@@ -37,7 +37,7 @@ Console {
 
 `process`也是Node.js提供的一个对象，它代表当前Node.js进程。通过`process`对象可以拿到许多有用信息：
 
-```
+```shell
 > process === global.process;
 true
 > process.version;
@@ -58,7 +58,7 @@ JavaScript程序是由事件驱动执行的单线程模型，Node.js也不例外
 
 如果我们想要在下一次事件响应中执行代码，可以调用`process.nextTick()`：
 
-```
+```shell
 // test.js
 
 // process.nextTick()将在下一轮事件循环中调用:
@@ -70,7 +70,7 @@ console.log('nextTick was set!');
 
 用Node执行上面的代码`node test.js`，你会看到，打印输出是：
 
-```
+```shell
 nextTick was set!
 nextTick callback!
 ```
@@ -112,7 +112,7 @@ Node.js内置的`fs`模块就是文件系统模块，负责读写文件。
 
 回顾一下什么是异步方法。因为JavaScript的单线程模型，执行IO操作时，JavaScript代码无需等待，而是传入回调函数后，继续执行后续JavaScript代码。比如jQuery提供的`getJSON()`操作：
 
-```
+```js
 $.getJSON('http://example.com/ajax', function (data) {
     console.log('IO结果返回后执行...');
 });
@@ -121,7 +121,7 @@ console.log('不等待IO结果直接执行后续代码...');
 
 而同步的IO操作则需要等待函数返回：
 
-```
+```js
 // 根据网络耗时，函数将执行几十毫秒~几秒不等:
 var data = getJSONSync('http://example.com/ajax');
 ```
@@ -132,11 +132,9 @@ var data = getJSONSync('http://example.com/ajax');
 
 按照JavaScript的标准，异步读取一个文本文件的代码如下：
 
-```
+```js
 'use strict';
-
 var fs = require('fs');
-
 fs.readFile('sample.txt', 'utf-8', function (err, data) {
     if (err) {
         console.log(err);
@@ -152,7 +150,7 @@ fs.readFile('sample.txt', 'utf-8', function (err, data) {
 
 由于`err`是否为`null`就是判断是否出错的标志，所以通常的判断逻辑总是：
 
-```
+```js
 if (err) {
     // 出错了
 } else {
@@ -164,11 +162,9 @@ if (err) {
 
 下面的例子演示了如何读取一个图片文件：
 
-```
+```js
 'use strict';
-
 var fs = require('fs');
-
 fs.readFile('sample.png', function (err, data) {
     if (err) {
         console.log(err);
@@ -183,7 +179,7 @@ fs.readFile('sample.png', function (err, data) {
 
 `Buffer`对象可以和String作转换，例如，把一个`Buffer`对象转换成String：
 
-```
+```js
 // Buffer -> String
 var text = data.toString('utf-8');
 console.log(text);
@@ -191,7 +187,7 @@ console.log(text);
 
 或者把一个String转换成`Buffer`：
 
-```
+```js
 // String -> Buffer
 var buf = Buffer.from(text, 'utf-8');
 console.log(buf);
@@ -203,7 +199,7 @@ console.log(buf);
 
 用`fs`模块同步读取一个文本文件的代码如下：
 
-```
+```js
 'use strict';
 
 var fs = require('fs');
@@ -216,7 +212,7 @@ console.log(data);
 
 如果同步读取文件发生错误，则需要用`try...catch`捕获该错误：
 
-```
+```js
 try {
     var data = fs.readFileSync('sample.txt', 'utf-8');
     console.log(data);
@@ -229,7 +225,7 @@ try {
 
 将数据写入文件是通过`fs.writeFile()`实现的：
 
-```
+```js
 'use strict';
 
 var fs = require('fs');
@@ -248,7 +244,7 @@ fs.writeFile('output.txt', data, function (err) {
 
 和`readFile()`类似，`writeFile()`也有一个同步方法，叫`writeFileSync()`：
 
-```
+```js
 'use strict';
 
 var fs = require('fs');
@@ -261,7 +257,7 @@ fs.writeFileSync('output.txt', data);
 
 如果我们要获取文件大小，创建时间等信息，可以使用`fs.stat()`，它返回一个`Stat`对象，能告诉我们文件或目录的详细信息：
 
-```
+```js
 'use strict';
 
 var fs = require('fs');
@@ -288,7 +284,7 @@ fs.stat('sample.txt', function (err, stat) {
 
 运行结果如下：
 
-```
+```shell
 isFile: true
 isDirectory: false
 size: 181
@@ -582,7 +578,9 @@ console.log('Server is running at http://127.0.0.1:8080/');
 
 
 
-## crypto
+## 加密算法
+
+### crypto
 
 crypto模块的目的是为了提供通用的加密和哈希算法。用纯JavaScript代码实现这些功能不是不可能，但速度会非常慢。Nodejs用C/C++实现这些算法后，通过cypto这个模块暴露为JavaScript接口，这样用起来方便，运行速度也快。
 

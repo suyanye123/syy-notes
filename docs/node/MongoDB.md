@@ -12,6 +12,12 @@ MongoDB 提供了可用于 32 位和 64 位系统的预编译二进制包，你�
 
 下载 .msi 文件，下载后双击该文件，按操作提示安装即可。
 
+> 最后发现凡是在win8或win10下安装msi格式的安装包时都有可能出现该报错。
+>  这是系统的权限问题，解决方式如下：
+>
+> 1. 组合键win+x，选择“命令提示符（管理员）”
+> 2. 运行命令：msiexec /package 安装包路径
+
 
 
 安装过程中，你可以通过点击 "Custom(自定义)" 按钮来设置你的安装目录。
@@ -49,6 +55,7 @@ md "\data\db"
 
 ```
 C:\mongodb\bin\mongod --dbpath c:\data\db
+E:\MongoDB\Server\5.0\bin\mongod --dbpath E:\MongoDB\db
 ```
 
 如果执行成功，会输出如下信息：
@@ -76,7 +83,7 @@ indows Server 2008 R2
 我们可以在命令窗口中运行 mongo.exe 命令即可连接上 MongoDB，执行如下命令：
 
 ```
-C:\mongodb\bin\mongo.exe
+E:\MongoDB\Server\5.0\bin\mongo.exe
 ```
 
 ------

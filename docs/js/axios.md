@@ -376,7 +376,7 @@ axios.all(promises)：用于批量执行多个异步请求
 
 作为函数使用：axios({...})
 
-```
+```js
 // 配置 baseURL
 axios.defaults.baseURL = 'http://127.0.0.1:8000'
 // GET
@@ -467,13 +467,13 @@ btns[2].onclick = () => {
 
 ##### axios.create(config)
 
-1. 根据指定配置创建一个新的 axios，每个新的 axios 都有机子的一套配置
+1. 根据指定配置创建一个新的 axios，每个新的 axios 都有各自的一套配置
 2. 新 axios 只是没有取消请求和批量发请求的方法，其他所有语法都是一致的
 3. 为什么要设计这个语法？
    1. 需求：项目中有部分接口需要的配置与另一部分接口需要的配置不一样
    2. 解决：创建 2 个新 axios，每个都有自己特有的配置，分别应用到不同要求的接口请求中
 
-```
+```js
 axios.defaults.baseURL = 'http://localhost:3000'
 axios({
   url: '/posts', // 请求3000
@@ -507,7 +507,7 @@ instance.get('/xxx')
 
  在请求一个接口前，取消前面一个未完成的请求
 
-```
+```js
 let cancel // 用于保存取消请求的函数
 function getProducts() {
   // 在准备发请求前，取消未完成的请求
@@ -557,7 +557,7 @@ function cancelReq() {
 
 注意：此流程是通过 promise 串连起来的，请求拦截器传递的是 config，响应拦截器传递的是 response
 
-```
+```js
 let cancel // 用于保存取消请求的函数
 const btns = document.querySelectorAll('button')
 axios.defaults.baseURL = 'http://127.0.0.1:8000'
@@ -813,7 +813,7 @@ axios.defaults.transformRequest = data => qs.stringify(data) //数据转换  这
 
 我们封装这里的时候可以借鉴一下官方文档的例子,大致流程就是 客户端发起请求-->[请求拦截器]-->服务器
 
-```
+```js
 axios.interceptors.request.use(config => {
     //header头携带token
     let token = localStorage.getItem('token')
@@ -839,7 +839,7 @@ axios.interceptors.request.use(config => {
 
 这个跟请求拦截器差不多,只不过位置不同 服务端返回信息 ->[拦截的同意处理]->客户端js获取到信息
 
-```
+```js
 axios.interceptors.request.use(response => {
     return response.data //js直接取响应主体内容
 }, error => {
@@ -867,7 +867,7 @@ axios.interceptors.request.use(response => {
 
 在这些错误处理中,需要用什么提示或者处理还得看项目需求,如果需要用elementUI的错误提示,直接引入vue,这样就OK了,做到了全局错误处理,断网处理
 
-```
+```js
 Vue.prototype.$message.error({
             type: "error",
             message: response.data.message
