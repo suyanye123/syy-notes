@@ -22,7 +22,7 @@
    - 使用 promise 实现超时处理
    - 使用 promise 封装处理 ajax 请求
 
-```
+```js
 const p = new Promise((resolve, reject) => { // 同步执行
   // 初始化promise状态：pending
   console.log(111)
@@ -55,7 +55,7 @@ p.then(
 2. 新闻内容获取成功后再次发送请求，获取对应的新闻评论内容
 3. 新闻内容获取失败则不需要再次发送请求
 
-```
+```js
 // 定义获取新闻的功能函数
 function getData(url) {
   let promise = new Promise((resolve, reject) => {
@@ -359,7 +359,9 @@ Promise.resolve(value)方法返回一个以给定值解析后的Promise 对象�
 Promise.resolve()等价于下面的写法:
 
 ```javascript
-Promise.resolve('foo')// 等价于new Promise(resolve => resolve('foo'))
+Promise.resolve('foo')
+// 等价于
+new Promise(resolve => resolve('foo'))
 ```
 
 Promise.resolve方法的参数分成四种情况。
@@ -369,7 +371,16 @@ Promise.resolve方法的参数分成四种情况。
 如果参数是 Promise 实例，那么Promise.resolve将**不做任何修改、原封不动地**返回这个实例。
 
 ```javascript
-const p1 = new Promise(function (resolve, reject) {  setTimeout(() => reject(new Error('fail')), 3000)})const p2 = new Promise(function (resolve, reject) {  setTimeout(() => resolve(p1), 1000)})p2  .then(result => console.log(result))  .catch(error => console.log(error))// Error: fail
+const p1 = new Promise(function (resolve, reject) {
+  setTimeout(() => reject(new Error('fail')), 3000)
+})
+const p2 = new Promise(function (resolve, reject) {
+  setTimeout(() => resolve(p1), 1000)
+})
+p2
+  .then(result => console.log(result))
+  .catch(error => console.log(error))
+// Error: fail
 ```
 
 上面代码中，p1是一个 Promise，3 秒之后变为rejected。p2的状态在 1 秒之后改变，resolve方法返回的是p1。由于p2返回的是另一个 Promise，导致p2自己的状态无效了，由p1的状态决定p2的状态。所以，后面的then语句都变成针对后者（p1）。又过了 2 秒，p1变为rejected，导致触发catch方法指定的回调函数。
@@ -377,7 +388,12 @@ const p1 = new Promise(function (resolve, reject) {  setTimeout(() => reject(new
 （2）参数不是具有then方法的对象，或根本就不是对象
 
 ```javascript
-Promise.resolve("Success").then(function(value) { // Promise.resolve方法的参数，会同时传给回调函数。  console.log(value); // "Success"}, function(value) {  // 不会被调用});
+Promise.resolve("Success").then(function(value) {
+ // Promise.resolve方法的参数，会同时传给回调函数。
+  console.log(value); // "Success"
+}, function(value) {
+  // 不会被调用
+});
 ```
 
 （3）不带有任何参数
@@ -385,7 +401,11 @@ Promise.resolve("Success").then(function(value) { // Promise.resolve方法的参
 Promise.resolve()方法允许调用时不带参数，直接返回一个resolved状态的 Promise 对象。如果希望得到一个 Promise 对象，比较方便的方法就是直接调用Promise.resolve()方法。
 
 ```javascript
-Promise.resolve().then(function () {  console.log('two');});console.log('one');// one two
+Promise.resolve().then(function () {
+  console.log('two');
+});
+console.log('one');
+// one two
 ```
 
 （4）参数是一个thenable对象
@@ -393,7 +413,15 @@ Promise.resolve().then(function () {  console.log('two');});console.log('one');/
 thenable对象指的是具有then方法的对象,Promise.resolve方法会将这个对象转为 Promise 对象，然后就立即执行thenable对象的then方法。
 
 ```javascript
-let thenable = {  then: function(resolve, reject) {    resolve(42);  }};let p1 = Promise.resolve(thenable);p1.then(function(value) {  console.log(value);  // 42});
+let thenable = {
+  then: function(resolve, reject) {
+    resolve(42);
+  }
+};
+let p1 = Promise.resolve(thenable);
+p1.then(function(value) {
+  console.log(value);  // 42
+});
 ```
 
 ### 2、Promise.reject()
@@ -401,19 +429,46 @@ let thenable = {  then: function(resolve, reject) {    resolve(42);  }};let p1 =
 Promise.reject()方法返回一个带有拒绝原因的Promise对象。
 
 ```javascript
-new Promise((resolve,reject) => {    reject(new Error("出错了"));});// 等价于 Promise.reject(new Error("出错了"));  // 使用方法Promise.reject(new Error("BOOM!")).catch(error => {    console.error(error);});
+new Promise((resolve,reject) => {
+    reject(new Error("出错了"));
+});
+// 等价于
+ Promise.reject(new Error("出错了"));  
+
+// 使用方法
+Promise.reject(new Error("BOOM!")).catch(error => {
+    console.error(error);
+});
 ```
 
 值得注意的是，调用resolve或reject以后，Promise 的使命就完成了，后继操作应该放到then方法里面，而**不应该直接写在resolve或reject的后面**。所以，最好在它们前面加上return语句，这样就不会有意外。
 
 ```javascript
-new Promise((resolve, reject) => {  return reject(1);  // 后面的语句不会执行  console.log(2);})
+new Promise((resolve, reject) => {
+  return reject(1);
+  // 后面的语句不会执行
+  console.log(2);
+})
 ```
 
 ### 3、Promise.all()
 
 ```javascript
-let p1 = Promise.resolve(1)let p2 = new Promise(resolve => {  setTimeout(() => {    resolve(2)  }, 1000)})let p3 = Promise.resolve(3)Promise.all([p3, p2, p1])  .then(result => { // 返回的结果是按照Array中编写实例的顺序来    console.log(result) // [ 3, 2, 1 ]  })  .catch(reason => {    console.log("失败:reason")  })
+let p1 = Promise.resolve(1)
+let p2 = new Promise(resolve => {
+  setTimeout(() => {
+    resolve(2)
+  }, 1000)
+})
+let p3 = Promise.resolve(3)
+Promise.all([p3, p2, p1])
+  .then(result => {
+ // 返回的结果是按照Array中编写实例的顺序来
+    console.log(result) // [ 3, 2, 1 ]
+  })
+  .catch(reason => {
+    console.log("失败:reason")
+  }) 
 ```
 
 Promise.all 生成并返回一个新的 Promise 对象，所以它可以使用 Promise 实例的所有方法。参数传递promise数组中**所有的 Promise 对象都变为resolve的时候**，该方法才会返回， 新创建的 Promise 则会使用这些 promise 的值。
@@ -427,7 +482,20 @@ Promise.all 生成并返回一个新的 Promise 对象，所以它可以使用 P
 假如有这样的场景：一个页面有三个区域，分别对应三个独立的接口数据，使用 Promise.all 来并发请求三个接口，如果其中任意一个接口出现异常，状态是reject,这会导致页面中该三个区域数据全都无法出来，显然这种状况我们是无法接受，Promise.allSettled的出现就可以解决这个痛点：
 
 ```javascript
-Promise.allSettled([  Promise.reject({ code: 500, msg: '服务异常' }),  Promise.resolve({ code: 200, list: [] }),  Promise.resolve({ code: 200, list: [] })]).then(res => {  console.log(res)  /* 0: {status: "rejected", reason: {…}} 1: {status: "fulfilled", value: {…}} 2: {status: "fulfilled", value: {…}} */  // 过滤掉 rejected 状态，尽可能多的保证页面区域数据渲染  RenderContent(    res.filter(el => {      return el.status !== 'rejected'    })  )})
+Promise.allSettled([
+  Promise.reject({ code: 500, msg: "服务异常" }),
+  Promise.resolve({ code: 200, list: [] }),
+  Promise.resolve({ code: 200, list: [] }),
+]).then((res) => {
+  console.log(res);
+  /* 0: {status: "rejected", reason: {…}} 1: {status: "fulfilled", value: {…}} 2: {status: "fulfilled", value: {…}} */
+  // 过滤掉 rejected 状态，尽可能多的保证页面区域数据渲染
+  RenderContent(
+    res.filter((el) => {
+      return el.status !== "rejected";
+    })
+  );
+});
 ```
 
 Promise.allSettled跟Promise.all类似, 其参数接受一个Promise的数组, 返回一个新的Promise, **唯一的不同在于, 它不会进行短路**, 也就是说当Promise全部处理完成后,我们可以拿到每个Promise的状态, 而不管是否处理成功。
@@ -439,7 +507,22 @@ Promise.all()方法的效果是"谁跑的慢，以谁为准执行回调"，那�
 Promise.all在接收到的所有的对象promise都变为FulFilled或者Rejected状态之后才会继续进行后面的处理，与之相对的是Promise.race**只要有一个promise对象进入FulFilled或者Rejected状态的话**，就会继续进行后面的处理。
 
 ```javascript
-// `delay`毫秒后执行resolvefunction timerPromisefy(delay) {    return new Promise(resolve => {        setTimeout(() => {            resolve(delay);        }, delay);    });}// 任何一个promise变为resolve或reject的话程序就停止运行Promise.race([    timerPromisefy(1),    timerPromisefy(32),    timerPromisefy(64)]).then(function (value) {    console.log(value);    // => 1});
+// `delay`毫秒后执行resolve
+function timerPromisefy(delay) {
+    return new Promise(resolve => {
+        setTimeout(() => {
+            resolve(delay);
+        }, delay);
+    });
+}
+// 任何一个promise变为resolve或reject的话程序就停止运行
+Promise.race([
+    timerPromisefy(1),
+    timerPromisefy(32),
+    timerPromisefy(64)
+]).then(function (value) {
+    console.log(value);    // => 1
+});
 ```
 
 上面的代码创建了3个promise对象，这些promise对象会分别在1ms、32ms 和 64ms后变为确定状态，即FulFilled，并且在第一个变为确定状态的1ms后，.then注册的回调函数就会被调用。
@@ -451,7 +534,17 @@ ES9 新增 finally() 方法返回一个Promise。在promise结束时，无论结
 比如我们发送请求之前会出现一个loading，当我们请求发送完成之后，不管请求有没有出错，我们都希望关掉这个loading。
 
 ```javascript
-this.loading = truerequest()  .then((res) => {    // do something  })  .catch(() => {    // log err  })  .finally(() => {    this.loading = false  })
+this.loading = true
+request()
+  .then((res) => {
+    // do something
+  })
+  .catch(() => {
+    // log err
+  })
+  .finally(() => {
+    this.loading = false
+  })
 ```
 
 finally方法的回调函数不接受任何参数，这表明，finally方法里面的操作，应该是与状态无关的，不依赖于 Promise 的执行结果。
@@ -463,19 +556,57 @@ finally方法的回调函数不接受任何参数，这表明，finally方法里
 三个亮灯函数已经存在：
 
 ```javascript
-function red() {    console.log('red');}function green() {    console.log('green');}function yellow() {    console.log('yellow');}
+function red() {
+    console.log('red');
+}
+function green() {
+    console.log('green');
+}
+function yellow() {
+    console.log('yellow');
+}
 ```
 
 这道题复杂的地方在于**需要“交替重复”亮灯**，而不是亮完一遍就结束的一锤子买卖，我们可以通过递归来实现：
 
 ```javascript
-// 用 promise 实现let task = (timer, light) => {  return new Promise((resolve, reject) => {    setTimeout(() => {      if (light === 'red') {        red()      }      if (light === 'green') {        green()      }      if (light === 'yellow') {        yellow()      }      resolve()    }, timer);  })}let step = () => {  task(3000, 'red')    .then(() => task(1000, 'green'))    .then(() => task(2000, 'yellow'))    .then(step)}step()
+// 用 promise 实现
+let task = (timer, light) => {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      if (light === 'red') {
+        red()
+      }
+      if (light === 'green') {
+        green()
+      }
+      if (light === 'yellow') {
+        yellow()
+      }
+      resolve()
+    }, timer);
+  })
+}
+let step = () => {
+  task(3000, 'red')
+    .then(() => task(1000, 'green'))
+    .then(() => task(2000, 'yellow'))
+    .then(step)
+}
+step()
 ```
 
 同样也可以通过async/await 的实现：
 
 ```javascript
-//  async/await 实现let step = async () => {  await task(3000, 'red')  await task(1000, 'green')  await task(2000, 'yellow')  step()}step()
+//  async/await 实现
+let step = async () => {
+  await task(3000, 'red')
+  await task(1000, 'green')
+  await task(2000, 'yellow')
+  step()
+}
+step()
 ```
 
 使用 async/await 可以实现用同步代码的风格来编写异步代码,毫无疑问，还是 async/await 的方案更加直观，不过深入理解Promise 是掌握async/await的基础。

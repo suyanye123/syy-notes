@@ -8,11 +8,13 @@ openid用来做用户唯一标识关联用户id，这样后端就可以根据ope
 
 1.小程序调用wx.login()获取code
 
-2.调用后端登录接口,将code作为参数传给后端，后端通过code调用微信后端登录接口换取openid
+2.调用后端登录接口,将code作为参数传给后端，后端通过code调用微信后端登录接口换取openid。返回前端，存储本地。
 
-3.后端通过Openid查询数据库，若查询到用户数据则返回token和refreshToken完成登录流程，若查询不到则设置为未登录状态，仅可浏览部分公开内容
+3.然后前端调用后端提供的登录接口
 
-4.在浏览需要登录权限的页面时，如果返回 invalidToken，则根据refreshToken刷新token，用于维持登录状态
+3.后端通过Openid查询数据库，若查询到用户数据则返回token和refreshToken完成登录流程，若查询不到，则根据手机号，openID注册新用户
+
+4.在浏览需要登录权限的页面时，如果返回 invalid_Token，则根据refreshToken刷新token，用于维持登录状态
 
 
 
