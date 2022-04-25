@@ -214,7 +214,7 @@ module.exports = {
 
 下面是一个基本的生产环境下的webpack.config.js配置
 
-```
+```js
 const { resolve } = require('path')
 const MiniCssExtractorPlugin = require('mini-css-extract-plugin')
 const OptimiziCssAssetsWebpackPlugin = require('optimizi-css-assets-webpack-plugin')
@@ -401,7 +401,7 @@ HMR: hot module replacement 热模块替换 / 模块热替换
 
 代码：只需要在 devServer 中设置 hot 为 true，就会自动开启HMR功能（只能在开发模式下使用）
 
-```
+```js
 devServer: {
   contentBase: resolve(__dirname, 'build'),
   compress: true,
@@ -421,7 +421,7 @@ devServer: {
 
   --> 实现 HMR 需要修改 js 代码（添加支持 HMR 功能的代码）
 
-  ```
+  ```js
   // 绑定
   if (module.hot) {
     // 一旦 module.hot 为true，说明开启了HMR功能。 --> 让HMR功能代码生效
@@ -441,7 +441,7 @@ devServer: {
 
   解决：修改 entry 入口，将 html 文件引入（这样 html 修改整体刷新）
 
-  ```
+  ```js
   entry: ['./src/js/index.js', './src/index.html']
   ```
 
