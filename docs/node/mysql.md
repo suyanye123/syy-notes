@@ -1,4 +1,4 @@
-### 访问数据库
+###                    访问数据库
 
 程序运行的时候，数据都是在内存中的。当程序终止的时候，通常都需要将数据保存到磁盘上，无论是保存到本地磁盘，还是通过网络保存到服务器上，最终都会将数据写入磁盘文件。
 
@@ -813,72 +813,146 @@ process.exit(0);
 
 
 
+# 1.用docker制作mysql容器
 
-
-## 1.用docker制作mysql容器
-
-- 拉取mysql镜像：`docker pull mysql`，【由于最开始mysql8.0会连接不上，所以换一个mysql版本`docker pull mysql:5.7`】
-
+- 拉取mysql镜像：`docker pull mysql`，【我安装的mysql8.0，你也可以安装5.7`docker pull mysql:5.7`】
 - 启动容器在3306端口，密码为默认root：
 
- ```bash
-  docker run -p 3306:3306 --name mysql 
-  -v /mydata/mysql/log:/var/log/mysql 
-  -v /mydata/mysql/data:/var/lib/mysql 
-  -v /mydata/mysql/conf:/etc/mysql 
-  -e MYSQL_ROOT_PASSWORD=root 
-  -d mysql:5.7
-  
- docker run -p 3306:3306 --name mysql -v /mydata/mysql/log:/var/log/mysql -v /mydata/mysql/data:/var/lib/mysql -v /mydata/mysql/conf:/etc/mysql -e MYSQL_ROOT_PASSWORD=root -d mysql:5.7
-  
- //-p 映射端口
- //--name 名称
- //-v 映射文件
- //-e MYSQL_ROOT_PASSWORD mysql密码
- //-d 后台运行并运行 
- ```
+### 1.拉取镜像
 
-  或者
+```bash
+-- 拉取镜像
+#docker pull mysql
 
-`docker run -d --name mysql -p 宿主端口9221:3306 -e MYSQL_ROOT_PASSWORD=你的密码 mysql`
+-- 查看本地镜像
+#docker ps
 
-- 进入容器：`docker exec -it mysql bash`
+-- 创建映射目录
+mkdir  /home/mysql  -p
+mkdir  /home/mysql/logs  -p
+mkdir  /home/mysql/data   -p
+```
 
-- 通过 `mysql -u root -p`进入mysql，并创建数据库“hkzf”
+-- 创建mysql8的配置文件my.cnf
 
-- 编辑配置 `vi /mydata/mysql/conf/my.cnf`
+```bash
+[client]
+port=3306
+#socket = /usr/mysql/mysqld.sock
 
-  ```
-  [client]
-  default-character-set=utf8
-  ​
-  [mysql]
-  default-character-set=utf8
-  ​
-  [mysqld]
-  init_connect='SET conllation_connection = utf8_unicode_ci'
-  init_connect='SET NAMES utf8'
-  character-set-server=utf8
-  collation-server=utf8_unicode_ci
-  skip-character-set-client-handshake
-  skip-name-resolve
-  ```
+default-character-set = utf8mb4
 
-  重启 ` docker restart mysql`
+[mysqld]
 
-- 验证mysql配置是否成功
+pid-file        = /var/run/mysqld/mysqld.pid
+socket          = /var/run/mysqld/mysqld.sock
+datadir         = /var/lib/mysql
 
-  ```
-  docker exec -it mysql /bin/bash  //进入mysql容器中
-  ```
+# Disabling symbolic-links is recommended to prevent assorted security risks
+symbolic-links=0
 
-  ```
-  cat /etc/mysql/my.cnf //检验mysql容器中的配置文件
-  ```
+character_set_server = utf8mb4
 
-  ```
-  exit		//退出mysql容器
-  ```
+collation_server = utf8mb4_bin
+
+secure-file-priv= NULL
+
+# Disabling symbolic-links is recommended to prevent assorted security risks
+
+symbolic-links=0
+
+# Custom config should go here
+
+!includedir /etc/mysql/conf.d/
+```
+
+### 2.运行容器
+
+```bash
+-- 安装运行 端口13307
+docker run -d  \		#在后台创建并启动名
+--restart=always \
+-v /home/mysql/my.cnf:/etc/mysql/my.cnf  \
+-v /home/mysql/logs:/var/log/mysql  \
+-v /home/mysql/data:/var/lib/mysql  \
+-p 13307:3306  \
+-e TZ=Asia/Shanghai		\	#时区
+--name mysql8.0 \					#容器实例名
+--privileged=true \					#容器内的root拥有真正root权限，否则容器内root只是外部普通用户权限
+-e  MYSQL_ROOT_PASSWORD=123 \				#密码
+mysql:latest  \				#镜像名称
+--lower_case_table_names=1  
+
+//-p 映射端口
+//--name 名称
+//-v 映射文件
+//-e MYSQL_ROOT_PASSWORD mysql密码
+//-d 后台运行并运行 
+
+#完整命令
+docker run -d --restart=always -v /home/mysql/my.cnf:/etc/mysql/my.cnf -v /home/mysql/logs:/var/log/mysql -v /home/mysql/data:/var/lib/mysql -p 13307:3306 -e TZ=Asia/Shanghai --name mysql --privileged=true -e  MYSQL_ROOT_PASSWORD=123 mysql:latest --lower_case_table_names=1 
+```
+
+### 3.进入容器、修改密码、创建用户，授权远程连接
+
+```bash
+docker exec -it mysql bash  #进入容器
+mysql -uroot -p #登录
+use mysql;	#切换数据库
+select host,user,authentication_string,plugin from user;	#查询更改
+ALTER USER 'root'@'%' IDENTIFIED BY '@1qa';  #修改密码
+GRANT ALL PRIVILEGES ON *.* TO 'root'@'%';   #修改权限
+CREATE USER 'xxx'@'%'  IDENTIFIED WITH mysql_native_password BY '456';  #创建用户
+GRANT ALL PRIVILEGES ON *.* TO 'xxx'@'%' WITH GRANT OPTION;   #授权
+flush privileges;  #刷新权限
+exit;  #退出Mysql
+```
+
+### 4.可能报错
+
+```
+注意：启动mysql报如下错误，那是因为MYSQL新特性secure_file_priv对读写文件的影响。
+ERROR: mysqld failed while attempting to check config
+mysqld: Error on realpath() on '/var/lib/mysql-files' (Error 2 - No such file or directory)
+2019-09-14T09:52:51.015937Z 0 [ERROR] [MY-010095] [Server] Failed to access directory for --secure-file-priv. Please make sure that directory exists and is accessible by MySQL Server. Supplied value : /var/lib/mysql-files
+
+docker logs mysql	//打印mysql日志
+[Server] Failed to access directory for --secure-file-priv.		#报错信息
+
+解决问题:
+windows下：修改my.ini 在[mysqld]内加入secure_file_priv=/var/lib/mysql
+linux下：修改my.cnf 在[mysqld]内加入secure_file_priv=/var/lib/mysql
+```
+
+### 5.简配版
+
+```bash
+docker run -d --name mysql -p 宿主端口9221:3306 -e MYSQL_ROOT_PASSWORD=你的密码 mysql
+docker exec -it mysql bash	#进入容器
+mysql -u root -p	#进入mysql，并创建数据库“hkzf”
+vi /mydata/mysql/conf/my.cnf		#编辑配置如下
+[client]
+default-character-set=utf8
+​
+[mysql]
+default-character-set=utf8
+​
+[mysqld]
+init_connect='SET conllation_connection = utf8_unicode_ci'
+init_connect='SET NAMES utf8'
+character-set-server=utf8
+collation-server=utf8_unicode_ci
+skip-character-set-client-handshake
+skip-name-resolve
+
+docker restart mysql		#重启
+#验证mysql配置是否成功
+docker exec -it mysql /bin/bash  //进入mysql容器中
+cat /etc/mysql/my.cnf //检验mysql容器中的配置文件
+exit		//退出mysql容器
+```
+
+
 
 ## 2.下载mysql客户端
 
