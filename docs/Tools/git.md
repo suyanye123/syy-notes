@@ -244,9 +244,9 @@ git push [remote] [branch]
 
 
 
-## 拓展
 
-### 1. git托管多平台
+
+## 1. git托管多平台
 
 ##### 方法1：直接修改git文件中config文件
 
@@ -277,7 +277,7 @@ git push origin --all
 
 
 
-### 2. Git Hooks
+## 2. Git Hooks
 
 Git Hooks 就是在 Git 执行特定事件（如commit、push、receive等）时触发运行的脚本，类似于“钩子函数”，没有设置可执行的钩子将被忽略。
 
@@ -336,7 +336,7 @@ PS：仅删除husky配置，`lint-staged`配置不用删除， 参考 [ husky更
 
 
 
-### 3. Github Actions
+## 3. Github Actions
 
 [ Github Actions ](http://www.ruanyifeng.com/blog/2019/09/getting-started-with-github-actions.html) 提供一个 Actions 市场，这是它另一个优势，可以复用别人提供的 action，减少编写 workflow 文件工作量
 
@@ -406,7 +406,7 @@ jobs:
 
 
 
-### 4.  gh-pages插件
+## 4.  gh-pages插件
 
 用于将代码自动提交到 github 的 gh-pages 分支，如果没有则创建该分支
 

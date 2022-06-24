@@ -4,7 +4,7 @@
 >
 > 创建vue3项目的两种方式：
 > 1.vue-cli（版本4.5.0以上） `vue create xxx`
-> 2.通过vite创建  `npm init vite-app xxx`
+> 2.通过vite创建  `npm init vite-app xxx`  `yarn create vite-app xxx`
 
 ## 一、基础
 
