@@ -1,5 +1,34 @@
 # Redis详细入门教程
 
+> Redis 是一个开源（BSD许可）的，内存中的数据结构存储系统，它可以用作数据库、缓存和消息中间件。
+
+Redis 的效率很高，官方给出的数据是 100000+ QPS，这是因为：
+
+> Redis 完全基于内存，绝大部分请求是纯粹的内存操作，执行效率高。
+>
+> Redis 使用单进程单线程模型的（K，V）数据库，将数据存储在内存中，存取均不会受到硬盘 IO 的限制，因此其执行速度极快。 另外单线程也能处理高并发请求，还可以避免频繁上下文切换和锁的竞争，如果想要多核运行也可以启动多个实例。
+>
+> 数据结构简单，对数据操作也简单，Redis 不使用表，不会强制用户对各个关系进行关联，不会有复杂的关系限制，其存储结构就是键值对，类似于 HashMap，HashMap 最大的优点就是存取的时间复杂度为 O(1)。
+>
+> Redis 使用多路 I/O 复用模型，为非阻塞 IO。
+>
+> 注：Redis 采用的 I/O 多路复用函数：epoll/kqueue/evport/select。
+
+[mac os 安装 redis - 简书](https://link.juejin.cn?target=https%3A%2F%2Fwww.jianshu.com%2Fp%2F3bdfda703552)
+
+[在 windows 上安装 Redis - 官方](https://link.juejin.cn?target=https%3A%2F%2Fwww.redis.com.cn%2Fredis-installation)
+
+有意思的是，官方的教程中提到了：
+
+> Redis 官方不建议在 windows 下使用 Redis，所以官网没有 windows 版本可以下载。还好微软团队维护了开源的 window 版本，虽然只有 3.2 版本，对于普通测试使用足够了。
+
+使用 Redis 实现登录挤出功能
+
+https://juejin.cn/post/6854573216879345672 
+
+---
+
+
 作者：QQ 音乐前端团队
 
 > 本文将会从：Redis 使用场景与介绍 -> 数据结构与简单使用 -> 小功能大用处 -> 持久化、主从同步与缓存设计 -> 知识拓展 来书写，初学的童鞋只要能记住 Redis 是用来干嘛，各功能的使用场景有哪些，然后对 Redis 有个大概的认识就好啦，剩下的以后有需要的时候再来查看和实践吧~
