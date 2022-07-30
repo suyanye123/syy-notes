@@ -1,5 +1,9 @@
 ## Docker
 
+> 更改Docker的默认安装路径
+>
+> 用管理员身份打开cmd窗口，然后运行命令：mklink /j "C:\Program Files\Docker" "D:\Program Files\Docker"，在此之前要先创建"D:\Program Files\Docker"目录。最后安装docker就可以了。
+
 ## docker基本命令
 
 ```bash
