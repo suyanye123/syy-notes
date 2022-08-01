@@ -20,6 +20,8 @@ pip install -r requirePackage.txt
 
 https://zhuanlan.zhihu.com/p/521282658
 
+安装中文输入法 https://blog.csdn.net/u014602228/article/details/122619592
+
 #### 常用指令
 
 ```bash
@@ -29,5 +31,8 @@ exit	//退出root
 apt-get update	//更新软件包列表
 apt-get upgrade	//更新软件
 sudo apt-get clean	//清理旧软件缓存
+
+
+reboot  #重启
 ```
 
